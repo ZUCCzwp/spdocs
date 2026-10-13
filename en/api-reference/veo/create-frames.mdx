@@ -1,0 +1,31 @@
+---
+title: 'Create VEO video'
+openapi: 'en/api-reference/openapi.json POST /api/open-api/v1/veo/frames'
+---
+
+<Note>
+  On success you get a `task_id`. Poll with [Query video task](/en/api-reference/common/query), then read `result.video_url`.
+</Note>
+
+## Billing
+
+### Veo 3.1 Fast (`veo_3_1_fast`)
+
+Request `model` is `veo_3_1_fast`. Billing follows `resolution`:
+
+| resolution | Billing model | Notes |
+|------------|---------------|-------|
+| `720p` / `1080p` (default `720p`) | `veo_3_1_fast` | Standard tiers, per task |
+| `4k` | `veo_3_1_fast-4k` | Separate 4K catalog price, per task |
+
+You may also pass `model: "veo_3_1_fast-4k"` directly for 4K billing.
+
+### Veo 3.1 Lite (`veo_3_1_lite`)
+
+Request `model` is `veo_3_1_lite`. **`720p` only** (default); `1080p` / `4k` are not supported.
+
+| resolution | Billing model | Notes |
+|------------|---------------|-------|
+| `720p` (default) | `veo_3_1_lite` | Standard, per task |
+
+Reference images and first/last frames are mutually exclusive: do not send `images[]` together with `first_frame_url` / `last_frame_url`.

@@ -1,0 +1,47 @@
+---
+title: 'SP 查询素材详情'
+openapi: 'POST /api/open-api/v1/seedance/sp/assets/detail'
+---
+
+查询单个 Seedance SP 经济版素材的处理状态与详情。
+
+## 请求参数
+
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `asset_id` | string | 是 | 上传素材时返回的 ID |
+
+## 请求示例
+
+```bash
+curl -X POST '/api/open-api/v1/seedance/sp/assets/detail' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "asset_id": "asset_abc123"
+  }'
+```
+
+## 响应字段
+
+| 字段 | 说明 |
+|------|------|
+| `asset_id` | 素材 ID |
+| `official_id` | 上游官方 ID |
+| `status` | 对外综合状态。提交视频任务前应确认值为 `ACTIVE` |
+| `name` | 素材名称 |
+| `url` | 原始素材 URL（如适用） |
+| `image_url` | 图片素材 URL（如适用） |
+| `created_at` | 创建时间 |
+
+## 状态值
+
+| 状态 | 说明 |
+|------|------|
+| `NONE` | 主素材库状态尚未初始化，请稍后再次查询 |
+| `UPLOADING` | 素材正在上传至主素材库 |
+| `PROCESSING` | 主素材正在处理中 |
+| `ACTIVE` | 主素材处理完成，可以提交视频生成任务，可引用 `asset://{asset_id}` |
+| `FAILED` | 主素材处理失败 |
+| `EXPIRED` | 主素材已过期，当前不可用 |
+| `DELETED` | 主素材已被删除或失效，当前不可用 |

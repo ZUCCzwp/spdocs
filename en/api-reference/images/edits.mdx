@@ -1,0 +1,26 @@
+---
+title: 'GPT Image 2 Edit Image'
+openapi: 'POST /api/open-api/v1/images/edits'
+---
+
+<Note>
+This is a **synchronous** endpoint compatible with OpenAI `POST /v1/images/edits`. Upload the source image via `multipart/form-data`. On success, billing is applied immediately and the edited image is returned in `data` (`b64_json` or `url`).
+</Note>
+
+<Note>
+For synchronous image editing, you can call the same path on the **current website origin** (e.g. `POST /api/open-api/v1/images/edits`).
+</Note>
+
+## Billing (gpt-image-2)
+
+Same as [GPT Image 2 Text-to-Image](/en/api-reference/images/generations): bill by `quality` via `gpt-image-2-sync` / `sync-low` / `sync-medium` / `sync-high`, with prices separate from async tiers.
+
+<Warning>
+Editing often takes **30–120 seconds**. Set client timeout to **≥ 180 seconds**. Each file (`image` / `mask`) must be **≤ 20MB**.
+
+If sync calls return **504 Gateway Timeout**, the request may still be processing upstream — this is often a **Cloudflare** proxy timeout. For production, prefer [GPT Image 2 Image Generation](/en/api-reference/images/create) (async) and poll via [Query Image Task](/en/api-reference/images/query).
+</Warning>
+
+<Info>
+For GPT Image 2.5 sync upgrades (billed by model name), see [GPT Image 2.5 Text-to-Image](/en/api-reference/images/gpt-image-2.5/generations) and [GPT Image 2.5 Edit Image](/en/api-reference/images/gpt-image-2.5/edits).
+</Info>

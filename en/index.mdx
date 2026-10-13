@@ -1,0 +1,62 @@
+---
+title: "Quickstart"
+description: "Get up and running with our API in minutes"
+icon: 'rocket'
+---
+# Quickstart
+
+Welcome to our API service! This guide will help you quickly get started with image and video generation features.
+
+## Step 1: Get your API Key
+
+1. [Register an account](/register)
+2. Log in to your account, and visit the [API Key Management Page](/console?tab=apikeys)
+3. Create a new API Key
+4. Save your key (it will only be displayed once)
+
+## Step 2: Account Recharge
+
+1. Log in to your account, and visit the [Recharge Page](/recharge)
+2. Select the recharge amount (minimum $1)
+3. Complete the payment (supports Alipay, WeChat Pay)
+
+## Step 3: Send a Request
+Get connection info
+API Base URL: the origin of this website
+API Key: The key you just created
+
+### Video Generation Example
+
+```bash theme={null}
+curl --request POST \
+  --url /api/open-api/v1/videos \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '
+{
+  "model": "<string>",
+  "prompt": "<string>",
+  "duration": 123,
+  "orientation": "landscape",
+  "images": [
+    "<string>"
+  ]
+}
+'
+```
+
+## Step 4: Query Task Status
+
+Since we use an asynchronous processing mode, you need to query the task status to get the results:
+
+```bash theme={null}
+curl --request GET \
+  --url /api/open-api/v1/videos/{taskId} \
+  --header 'Authorization: Bearer <token>'
+```
+
+## Next Steps
+
+<Card title="View API Reference" icon="book" href="/en/api-reference/introduction">
+  Learn more about all available API endpoints
+</Card>

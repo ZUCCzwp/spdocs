@@ -1,0 +1,49 @@
+---
+title: 'Introduction'
+description: 'Example section for showcasing API endpoints'
+---
+
+
+
+## Welcome
+
+Welcome to the AI Platform API reference. Our API allows you to programmatically generate high-quality videos and images using state-of-the-art models like Sora, VEO, and GPT Image 2.
+
+## API base URL
+
+Request hosts in this documentation and its examples are written as:
+
+```text
+https://api.example.com
+```
+
+When calling the API, replace it with your **actual API base URL**. Keep the path unchanged, for example:
+
+| In docs | Real request |
+| --- | --- |
+| `https://api.example.com/api/open-api/v1/videos` | `https://<your-api-base>/api/open-api/v1/videos` |
+
+If a sync image host appears as `https://img.example.com`, replace it with your real image endpoint host as well.
+
+<CardGroup cols={2}>
+  <Card
+    title="Video Generation"
+    icon="video"
+    href="/en/api-reference/videos/create"
+  >
+    Start generating videos with our API
+  </Card>
+  <Card
+    title="Image Generation"
+    icon="image"
+    href="/en/api-reference/images/create"
+  >
+    Generate high-quality images with GPT Image 2
+  </Card>
+</CardGroup>
+
+## Authentication
+
+All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+
+
