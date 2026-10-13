@@ -30,9 +30,9 @@
 
 ### Account Management
 
-- [Query User Account Balance](/en/api-reference/common/user-balance.md): GET /user/balance — JimiCoin account balance for the API key owner.
+- [Query User Account Balance](/en/api-reference/common/user-balance.md): GET /user/balance — points account balance for the API key owner.
 - [Query API Key Quota Balance](/en/api-reference/common/key-balance.md): GET /key/balance — per-key usage quota.
-- [查询用户账户余额](/zh/api-reference/common/user-balance.md): GET /user/balance — 查询 API Key 所属用户的吉米币账户余额。
+- [查询用户账户余额](/zh/api-reference/common/user-balance.md): GET /user/balance — 查询 API Key 所属用户的积分账户余额。
 - [查询 API Key 额度余额](/zh/api-reference/common/key-balance.md): GET /key/balance — 查询当前 Key 的调用额度。
 
 ### Sora Video

@@ -1,9 +1,9 @@
 ---
 title: 'Balance alert webhook'
-description: 'Receive a POST when available JimiCoin is low, and verify the signature'
+description: 'Receive a POST when available points is low, and verify the signature'
 ---
 
-When **available JimiCoin** falls below the threshold you set, or a task cannot start because the balance is too low, AI Platform sends one `POST` to the URL you configured. You do not use an API key to receive this request.
+When **available points** falls below the threshold you set, or a task cannot start because the balance is too low, AI Platform sends one `POST` to the URL you configured. You do not use an API key to receive this request.
 
 <Note>
 Configure the webhook on the [recharge page](/recharge). Open **Balance alerts**, choose **Webhook**, enter the URL and an optional secret, enable alerts, then save.
@@ -39,7 +39,7 @@ For the same user, each alert type is sent **at most once every 24 hours** until
 | :--- | :--- | :--- |
 | `event` | string | Same value as `X-Viraltok-Event` |
 | `user_id` | number | Account user ID |
-| `available` | number | Current available JimiCoin |
+| `available` | number | Current available points |
 | `threshold` | number | `balance.below_threshold` only: your alert threshold |
 | `required` | number | `balance.insufficient` only: estimated cost of the task |
 | `occurred_at` | string | Send time, UTC RFC3339 |

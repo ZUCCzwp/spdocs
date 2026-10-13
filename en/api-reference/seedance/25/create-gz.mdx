@@ -59,7 +59,7 @@ Aliases such as `seedance-2.5-gz` and `seedance25-gz` normalize to `seedance2.5-
 
 ## Billing
 
-You are precharged by resolution at submit time. After the task succeeds, usage is settled to actual token usage (one refund or extra-charge row). Requests with reference videos use a different per-million-token rate (JimiCoin, configurable in Console).
+You are precharged by resolution at submit time. After the task succeeds, usage is settled to actual token usage (one refund or extra-charge row). Requests with reference videos use a different per-million-token rate (points, configurable in Console).
 
 - Precharge mode: `per_second`
 - Precharge models: `seedance2.5-gz-480p` / `seedance2.5-gz-720p`
@@ -70,7 +70,7 @@ You are precharged by resolution at submit time. After the task succeeds, usage 
 
 ```text
 precharge = unit_price × precharged seconds
-due JimiCoin = completion_tokens / 1,000,000 × per-million-token price
+due points = completion_tokens / 1,000,000 × per-million-token price
 reconciled to the difference after success
 ```
 

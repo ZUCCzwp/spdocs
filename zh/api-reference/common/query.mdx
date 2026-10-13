@@ -6,7 +6,7 @@ openapi: 'GET /api/open-api/v1/videos/{taskId}'
 > [!IMPORTANT]
 > 视频下载地址（`video_url`）的保存有效期为 **3天**，请及时转存。
 
-响应 `data.cost` 为本次任务扣费金额（吉米币），创建与查询接口均返回；若配置了用户定制单价，则按定制价计费。
+响应 `data.cost` 为本次任务扣费金额（积分），创建与查询接口均返回；若配置了用户定制单价，则按定制价计费。
 
 `seedance2.5-gz` 任务完成后，查询会返回 `data.usage`：
 

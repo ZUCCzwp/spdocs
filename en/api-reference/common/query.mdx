@@ -6,7 +6,7 @@ openapi: 'GET /api/open-api/v1/videos/{taskId}'
 > [!IMPORTANT]
 > The video download URL (`video_url`) is valid for **3 days**. Please download or transfer it in time.
 
-The response field `data.cost` is the billed amount for this task (JimiCoin). It is returned on both create and query endpoints; per-user custom unit prices apply when configured in the console.
+The response field `data.cost` is the billed amount for this task (points). It is returned on both create and query endpoints; per-user custom unit prices apply when configured in the console.
 
 After a `seedance2.5-gz` task completes, the query response includes `data.usage`:
 

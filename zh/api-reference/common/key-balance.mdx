@@ -3,7 +3,7 @@ title: '查询 API Key 额度余额'
 openapi: 'GET /api/open-api/v1/key/balance'
 ---
 
-查询当前 API Key 的**调用额度**（与账户吉米币余额独立）。若在控制台为该 Key 设置了 `total_quota`，则按额度限制；未设置时视为不限额。
+查询当前 API Key 的**调用额度**（与账户积分余额独立）。若在控制台为该 Key 设置了 `total_quota`，则按额度限制；未设置时视为不限额。
 
 ### 响应字段
 
@@ -17,7 +17,7 @@ openapi: 'GET /api/open-api/v1/key/balance'
 
 ### `used_quota` 说明
 
-`used_quota` 表示**当前这把 API Key** 已累计消耗的调用额度，单位与 `total_quota` 一致（吉米币）。
+`used_quota` 表示**当前这把 API Key** 已累计消耗的调用额度，单位与 `total_quota` 一致（积分）。
 
 - **统计范围**：仅包含通过**本 Key** 发起、且已成功扣费的 OpenAPI 调用，不含同账户下其他 Key。
 - **累加时机**：任务提交成功并完成扣费时，将该次任务的 `cost` 累加到 `used_quota`（视频、图片、声音克隆等计费接口均适用）。
@@ -25,7 +25,7 @@ openapi: 'GET /api/open-api/v1/key/balance'
 - **与账户 `used_coin` 的区别**：[`/user/balance`](/zh/api-reference/common/user-balance) 中的 `used_coin` 是**用户账户**维度的历史净消费（全部消费记录减去退款）；`used_quota` 是**单 Key** 维度的额度计数，用于 Key 级上限控制。多 Key 账户下，各 Key 的 `used_quota` 之和通常小于或等于用户 `used_coin`。
 
 <Note>
-实际扣费仍从用户吉米币账户余额中扣除；`total_quota` / `used_quota` 仅用于限制单 Key 的最大可消费额度，不单独充值。
+实际扣费仍从用户积分账户余额中扣除；`total_quota` / `used_quota` 仅用于限制单 Key 的最大可消费额度，不单独充值。
 </Note>
 
 ### 示例

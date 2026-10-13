@@ -3,7 +3,7 @@ title: 'Query User Account Balance'
 openapi: 'GET /api/open-api/v1/user/balance'
 ---
 
-Returns the **JimiCoin account balance** for the user who owns the API key. OpenAPI usage is billed against this account. Call this endpoint before creating tasks to confirm sufficient `available` balance.
+Returns the **points account balance** for the user who owns the API key. OpenAPI usage is billed against this account. Call this endpoint before creating tasks to confirm sufficient `available` balance.
 
 You can also receive a push when the balance is low. See [Balance alert webhook](/en/api-reference/common/balance-webhook).
 
@@ -17,7 +17,7 @@ You can also receive a push when the balance is low. See [Balance alert webhook]
 
 ### About `used_coin`
 
-`used_coin` is **account-wide** net consumption in JimiCoin.
+`used_coin` is **account-wide** net consumption in points.
 
 - **Calculation**: Sum of all `consumption` records minus sum of all `refund` records for the user.
 - **Scope**: Includes billed OpenAPI usage from **all API keys** on the account, not only the key used in the current request.

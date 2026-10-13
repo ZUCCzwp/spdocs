@@ -3,7 +3,7 @@ title: '余额告警 Webhook'
 description: '在可用余额过低时接收 POST 通知，并校验签名'
 ---
 
-当账户**可用吉米币**低于你设定的阈值，或创建任务时余额不足，AI Platform 会向你配置的 HTTPS 地址发送一次 `POST`。你不需要用 API Key 来接收这条请求。
+当账户**可用积分**低于你设定的阈值，或创建任务时余额不足，AI Platform 会向你配置的 HTTPS 地址发送一次 `POST`。你不需要用 API Key 来接收这条请求。
 
 <Note>
 Webhook 在控制台 [充值页](/recharge) 的 **余额通知** 中配置：选择 **Webhook**，填写地址和可选密钥，打开启用开关后保存。
@@ -39,7 +39,7 @@ Webhook 在控制台 [充值页](/recharge) 的 **余额通知** 中配置：选
 | :--- | :--- | :--- |
 | `event` | string | 与 `X-Viraltok-Event` 相同 |
 | `user_id` | number | 账户用户 ID |
-| `available` | number | 当前可用吉米币 |
+| `available` | number | 当前可用积分 |
 | `threshold` | number | 仅 `balance.below_threshold`：你设置的告警阈值 |
 | `required` | number | 仅 `balance.insufficient`：本次任务预估费用 |
 | `occurred_at` | string | 发送时刻，UTC RFC3339 |

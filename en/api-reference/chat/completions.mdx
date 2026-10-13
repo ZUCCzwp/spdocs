@@ -3,7 +3,7 @@ title: 'Chat Completions'
 openapi: 'POST /api/open-api/v1/chat/completions'
 ---
 
-OpenAI-compatible **Chat Completions** for AI Platform LLM models. Send multi-turn `messages`, receive assistant replies, and optionally stream tokens. Billing is **pay-as-you-go** from your JimiCoin balance using token counts returned in `usage`.
+OpenAI-compatible **Chat Completions** for AI Platform LLM models. Send multi-turn `messages`, receive assistant replies, and optionally stream tokens. Billing is **pay-as-you-go** from your points balance using token counts returned in `usage`.
 
 <Info>
 **Agent tools such as Codex default to the Responses API** (`POST /api/open-api/v1/responses`), not this Chat Completions page. Use this endpoint for scripts, backend SDKs, and integrations that require the `messages` format.
@@ -112,7 +112,7 @@ curl -N -X POST '/api/open-api/v1/chat/completions' \
 After a successful completion (non-stream or stream with usage), the platform:
 
 1. Reads `usage.prompt_tokens`, `usage.completion_tokens`, and optional `usage.prompt_tokens_details`.
-2. Charges your account in **JimiCoin** using the model’s configured rates (`pay_as_you_go` / token meter).
+2. Charges your account in **points** using the model’s configured rates (`pay_as_you_go` / token meter).
 3. Records a chat task (`task_id` prefix `chat_`) and a usage line with a detailed fee breakdown.
 
 Token buckets:
@@ -138,7 +138,7 @@ cost = (
 Ratios come from the model config (`open_api_model_configs`). Defaults are listed on [Probe model pricing](/en/api-reference/common/model-catalog). Usage detail lines show these database values directly in the formula.
 
 <Warning>
-Ensure sufficient JimiCoin before calling. If `available` balance is zero or negative, the request is rejected before upstream dispatch. Check [Query user account balance](/en/api-reference/common/user-balance).
+Ensure sufficient points before calling. If `available` balance is zero or negative, the request is rejected before upstream dispatch. Check [Query user account balance](/en/api-reference/common/user-balance).
 </Warning>
 
 ### Errors

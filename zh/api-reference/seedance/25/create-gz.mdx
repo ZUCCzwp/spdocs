@@ -59,7 +59,7 @@ openapi: 'zh/api-reference/openapi.json POST /api/open-api/v1/seedance25/videos'
 
 ## 计费说明
 
-创建时按分辨率预扣。任务成功后按实际 token 用量结算，多退少补，差额记一笔。含参考视频与不含参考视频使用不同的百万 token 单价（吉米币，控制台可配）。
+创建时按分辨率预扣。任务成功后按实际 token 用量结算，多退少补，差额记一笔。含参考视频与不含参考视频使用不同的百万 token 单价（积分，控制台可配）。
 
 - 预扣方式：`per_second`
 - 预扣模型：`seedance2.5-gz-480p` / `seedance2.5-gz-720p`
@@ -70,7 +70,7 @@ openapi: 'zh/api-reference/openapi.json POST /api/open-api/v1/seedance25/videos'
 
 ```text
 预扣 = 对应单价 × 预扣秒数
-应付吉米币 = completion_tokens / 1,000,000 × 百万 token 单价
+应付积分 = completion_tokens / 1,000,000 × 百万 token 单价
 成功后按应付与预扣差额多退少补
 ```
 
