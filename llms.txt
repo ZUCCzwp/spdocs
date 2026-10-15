@@ -9,6 +9,10 @@ Auth: Authorization: Bearer <API Key>
 - [Quickstart](/zh/index.mdx)
 - [Introduction](/zh/api-reference/introduction.mdx)
 - [Model catalog](/zh/api-reference/common/model-catalog.mdx): GET /v1/model/catalog
+- [Upload file](/zh/api-reference/common/files-upload.mdx): POST /v1/files
+- [User balance](/zh/api-reference/common/user-balance.mdx): GET /v1/user/balance
+- [Key balance](/zh/api-reference/common/key-balance.mdx): GET /v1/key/balance
+- [Balance webhook](/zh/api-reference/common/balance-webhook.mdx)
 - [Create image](/zh/api-reference/images/create.mdx): POST /v1/images (gpt-image-2)
 - [Query image](/zh/api-reference/images/query.mdx): GET /v1/images/{task_id}
 - [Query video](/zh/api-reference/common/query.mdx): GET /v1/videos/{task_id}
@@ -20,6 +24,10 @@ Auth: Authorization: Bearer <API Key>
 - [Quickstart](/en/index.mdx)
 - [Introduction](/en/api-reference/introduction.mdx)
 - [Model catalog](/en/api-reference/common/model-catalog.mdx)
+- [Upload file](/en/api-reference/common/files-upload.mdx)
+- [User balance](/en/api-reference/common/user-balance.mdx): GET /v1/user/balance
+- [Key balance](/en/api-reference/common/key-balance.mdx): GET /v1/key/balance
+- [Balance webhook](/en/api-reference/common/balance-webhook.mdx)
 - [Create image](/en/api-reference/images/create.mdx)
 - [Query image](/en/api-reference/images/query.mdx)
 - [Query video](/en/api-reference/common/query.mdx)

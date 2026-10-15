@@ -1,0 +1,43 @@
+---
+title: 'Get user account balance'
+openapi: 'GET /v1/user/balance'
+---
+
+Returns the **points balance** for the account that owns the current API key. OpenAPI charges debit this balance. Call this before creating jobs if you want to confirm funds.
+
+For push alerts when balance is low, see [Balance alert webhook](/en/api-reference/common/balance-webhook).
+
+### Response fields
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `balance` | number | Cumulative account value (available + historical net spend) |
+| `used_coin` | number | Historical net spend (see below) |
+| `available` | number | Spendable balance = `balance` - `used_coin` |
+
+### About `used_coin`
+
+`used_coin` is **account-level** historical net spend in points.
+
+- **Formula**: sum of all `consumption` rows minus all `refund` rows.
+- **Scope**: every API key under the user, not only the key used for this request.
+- **Vs key `used_quota`**: [`/key/balance`](/en/api-reference/common/key-balance) `used_quota` is per-key; `used_coin` is whole-account spend.
+
+### Example
+
+```bash
+curl -X GET 'https://sigrunai.com/v1/user/balance' \
+  -H 'Authorization: Bearer YOUR_API_KEY'
+```
+
+```json
+{
+  "code": 20000,
+  "msg": "ok",
+  "data": {
+    "balance": 100.5,
+    "used_coin": 20.3,
+    "available": 80.2
+  }
+}
+```

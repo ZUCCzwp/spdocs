@@ -1,0 +1,55 @@
+---
+title: 'Upload file'
+openapi: 'POST /v1/files'
+---
+
+Upload an image, video, or audio reference and get a public `url` you can pass into create-task requests.
+
+### Auth
+
+```http
+Authorization: Bearer <your API Key>
+```
+
+### Request
+
+`multipart/form-data` with field name `file`.
+
+| Limit | Details |
+| --- | --- |
+| Size | Max **32MB** |
+| Images | `.jpg` `.jpeg` `.png` `.webp` `.gif` `.bmp` `.avif` `.heic` `.heif` |
+| Videos | `.mp4` `.mov` `.webm` `.mkv` `.avi` `.m4v` |
+| Audio | `.mp3` `.wav` `.m4a` `.aac` `.ogg` `.flac` `.opus` |
+
+### Response fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `url` | string | Public URL for `images` / `videos` / `audios` |
+| `name` | string | Original filename |
+| `media_type` | string | `image` / `video` / `audio` |
+| `bytes` | int | File size in bytes |
+
+### Example
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/files' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -F 'file=@./ref.png'
+```
+
+Success response:
+
+```json
+{
+  "code": 20000,
+  "msg": "ok",
+  "data": {
+    "url": "https://cdn.sigrunai.com/openapi/files/xxxxxxxx.png",
+    "name": "ref.png",
+    "media_type": "image",
+    "bytes": 123456
+  }
+}
+```

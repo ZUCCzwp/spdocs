@@ -166,6 +166,43 @@
         }
       }
     },
+    "/v1/files": {
+      "post": {
+        "summary": "上传文件",
+        "description": "multipart 上传图片/视频/音频，返回公网 url。",
+        "operationId": "uploadFile",
+        "tags": ["Common"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file"],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "上传成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileUploadResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/model/catalog": {
       "get": {
         "summary": "查询模型目录",
@@ -190,6 +227,46 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CatalogResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/user/balance": {
+      "get": {
+        "summary": "查询用户账户余额",
+        "description": "返回当前 API Key 所属用户的积分余额。",
+        "operationId": "getUserBalance",
+        "tags": ["Account"],
+        "responses": {
+          "200": {
+            "description": "余额信息",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserBalanceResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/key/balance": {
+      "get": {
+        "summary": "查询 API Key 额度余额",
+        "description": "返回当前 API Key 的调用额度（与账户积分独立）。",
+        "operationId": "getKeyBalance",
+        "tags": ["Account"],
+        "responses": {
+          "200": {
+            "description": "Key 额度",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyBalanceResponse"
                 }
               }
             }
@@ -343,6 +420,25 @@
           "result": { "$ref": "#/components/schemas/TaskResult" }
         }
       },
+      "FileUploadResponse": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "integer", "example": 20000 },
+          "msg": { "type": "string" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "url": { "type": "string", "format": "uri" },
+              "name": { "type": "string" },
+              "media_type": {
+                "type": "string",
+                "enum": ["image", "video", "audio"]
+              },
+              "bytes": { "type": "integer" }
+            }
+          }
+        }
+      },
       "TaskQueryResponse": {
         "type": "object",
         "properties": {
@@ -376,6 +472,38 @@
                 "type": "array",
                 "items": { "$ref": "#/components/schemas/CatalogItem" }
               }
+            }
+          }
+        }
+      },
+      "UserBalanceResponse": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "integer", "example": 20000 },
+          "msg": { "type": "string" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "balance": { "type": "number" },
+              "used_coin": { "type": "number" },
+              "available": { "type": "number" }
+            }
+          }
+        }
+      },
+      "KeyBalanceResponse": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "integer", "example": 20000 },
+          "msg": { "type": "string" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "total_quota": { "type": "number" },
+              "used_quota": { "type": "number" },
+              "available_quota": { "type": "number" },
+              "unlimited": { "type": "boolean" }
             }
           }
         }

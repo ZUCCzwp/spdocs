@@ -2,13 +2,13 @@
   "openapi": "3.1.0",
   "info": {
     "title": "AI Platform OpenAPI",
-    "description": "Async image and video generation. Create a task, then poll task_id. Result URLs are kept about 3 days.",
+    "description": "异步图片与视频生成。创建后轮询 task_id；结果 URL 约保留 3 天。",
     "version": "1.0.0"
   },
   "servers": [
     {
       "url": "https://sigrunai.com",
-      "description": "AI Platform production"
+      "description": "AI Platform 生产环境"
     }
   ],
   "security": [
@@ -19,8 +19,8 @@
   "paths": {
     "/v1/images": {
       "post": {
-        "summary": "Create image task",
-        "description": "Create an async GPT Image 2 task.",
+        "summary": "创建图片任务",
+        "description": "创建 GPT Image 2 异步生图任务。",
         "operationId": "createImage",
         "tags": [
           "Images"
@@ -63,7 +63,7 @@
     },
     "/v1/images/{taskId}": {
       "get": {
-        "summary": "Query image task",
+        "summary": "查询图片任务",
         "operationId": "getImage",
         "tags": [
           "Images"
@@ -94,8 +94,8 @@
     },
     "/v1/videos": {
       "post": {
-        "summary": "Create video task",
-        "description": "Unified video create. Available models: seedance2.0-md, seedance2.5-30s.",
+        "summary": "创建视频任务",
+        "description": "统一视频创建入口。当前可用 model：seedance2.0-md、seedance2.5-30s。",
         "operationId": "createVideo",
         "tags": [
           "Videos"
@@ -145,7 +145,7 @@
     },
     "/v1/videos/{taskId}": {
       "get": {
-        "summary": "Query video task",
+        "summary": "查询视频任务",
         "operationId": "getVideo",
         "tags": [
           "Videos"
@@ -174,10 +174,51 @@
         }
       }
     },
+    "/v1/files": {
+      "post": {
+        "summary": "上传文件",
+        "description": "multipart 上传图片/视频/音频，返回公网 url。",
+        "operationId": "uploadFile",
+        "tags": [
+          "Common"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "上传成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileUploadResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/model/catalog": {
       "get": {
-        "summary": "Model catalog",
-        "description": "No auth required. Lists enabled public billing models.",
+        "summary": "查询模型目录",
+        "description": "无需鉴权。返回当前启用的公开计费模型。",
         "operationId": "modelCatalog",
         "tags": [
           "Common"
@@ -206,6 +247,50 @@
           }
         }
       }
+    },
+    "/v1/user/balance": {
+      "get": {
+        "summary": "Get user account balance",
+        "description": "Returns points balance for the account that owns the current API key.",
+        "operationId": "getUserBalance",
+        "tags": [
+          "Account"
+        ],
+        "responses": {
+          "200": {
+            "description": "Balance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserBalanceResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/key/balance": {
+      "get": {
+        "summary": "Get API key quota balance",
+        "description": "Returns call quota for the current API key (independent of account points).",
+        "operationId": "getKeyBalance",
+        "tags": [
+          "Account"
+        ],
+        "responses": {
+          "200": {
+            "description": "Key quota",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyBalanceResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -214,7 +299,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "API Key",
-        "description": "API key from the console. Format: Bearer sk_xxx"
+        "description": "控制台创建的 API Key，格式：Bearer sk_xxx"
       }
     },
     "schemas": {
@@ -410,6 +495,41 @@
           }
         }
       },
+      "FileUploadResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 20000
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "name": {
+                "type": "string"
+              },
+              "media_type": {
+                "type": "string",
+                "enum": [
+                  "image",
+                  "video",
+                  "audio"
+                ]
+              },
+              "bytes": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
       "TaskQueryResponse": {
         "type": "object",
         "properties": {
@@ -472,6 +592,64 @@
                 "items": {
                   "$ref": "#/components/schemas/CatalogItem"
                 }
+              }
+            }
+          }
+        }
+      },
+      "UserBalanceResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 20000
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "balance": {
+                "type": "number"
+              },
+              "used_coin": {
+                "type": "number"
+              },
+              "available": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      },
+      "KeyBalanceResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 20000
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "total_quota": {
+                "type": "number"
+              },
+              "used_quota": {
+                "type": "number"
+              },
+              "available_quota": {
+                "type": "number"
+              },
+              "unlimited": {
+                "type": "boolean"
               }
             }
           }

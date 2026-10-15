@@ -1,0 +1,55 @@
+---
+title: '上传文件'
+openapi: 'POST /v1/files'
+---
+
+上传图片、视频或音频参考素材，返回可在创建任务时使用的公网 `url`。
+
+### 鉴权
+
+```http
+Authorization: Bearer <你的 API Key>
+```
+
+### 请求
+
+`multipart/form-data`，字段名必须为 `file`。
+
+| 限制 | 说明 |
+| --- | --- |
+| 大小 | 最大 **32MB** |
+| 图片 | `.jpg` `.jpeg` `.png` `.webp` `.gif` `.bmp` `.avif` `.heic` `.heif` |
+| 视频 | `.mp4` `.mov` `.webm` `.mkv` `.avi` `.m4v` |
+| 音频 | `.mp3` `.wav` `.m4a` `.aac` `.ogg` `.flac` `.opus` |
+
+### 响应字段
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `url` | string | 公网可访问地址，可填入 `images` / `videos` / `audios` |
+| `name` | string | 原始文件名 |
+| `media_type` | string | `image` / `video` / `audio` |
+| `bytes` | int | 文件字节数 |
+
+### 示例
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/files' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -F 'file=@./ref.png'
+```
+
+成功响应示例：
+
+```json
+{
+  "code": 20000,
+  "msg": "ok",
+  "data": {
+    "url": "https://cdn.sigrunai.com/openapi/files/xxxxxxxx.png",
+    "name": "ref.png",
+    "media_type": "image",
+    "bytes": 123456
+  }
+}
+```

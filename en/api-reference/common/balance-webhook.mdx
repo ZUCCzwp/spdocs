@@ -1,0 +1,136 @@
+---
+title: 'Balance alert webhook'
+description: 'Receive a signed POST when available balance is low'
+---
+
+When **available points** fall below your threshold, or a create call fails for insufficient balance, the platform `POST`s once to your HTTPS URL. You do not need an API key to receive it.
+
+<Note>
+Configure the webhook on the console [Recharge](https://sigrunai.com/recharge) page under **Balance alerts**: choose **Webhook**, set the URL and optional secret, enable, then save.
+</Note>
+
+## What you need
+
+1. A public `http` or `https` URL (not `localhost`).
+2. (Recommended) a secret to verify `X-Viraltok-Signature`.
+3. Respond with **2xx** within about **10 seconds**. Delivery is single-shot; no automatic retries.
+
+Per user, each alert type fires at most **once every 24 hours** until balance recovers.
+
+## Request
+
+| Item | Value |
+| :--- | :--- |
+| Method | `POST` |
+| `Content-Type` | `application/json` |
+| Timeout | 10 seconds |
+
+### Headers
+
+| Header | Purpose |
+| :--- | :--- |
+| `X-Viraltok-Event` | Event type before parsing the body |
+| `X-Viraltok-Timestamp` | Unix seconds; required for signature check; reject stale timestamps |
+| `X-Viraltok-Signature` | Present only if you saved a secret. Format `sha256=<hex>` |
+
+### Body fields
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `event` | string | Same as `X-Viraltok-Event` |
+| `user_id` | number | Account user ID |
+| `available` | number | Current available points |
+| `threshold` | number | Only for `balance.below_threshold` |
+| `required` | number | Only for `balance.insufficient`: estimated job cost |
+| `occurred_at` | string | Send time, UTC RFC3339 |
+
+### Events
+
+| `event` | When |
+| :--- | :--- |
+| `balance.below_threshold` | After a charge, available balance is below your threshold |
+| `balance.insufficient` | Create failed because balance could not cover the cost |
+
+### Example: below threshold
+
+```json
+{
+  "event": "balance.below_threshold",
+  "user_id": 123,
+  "available": 80.2,
+  "threshold": 100,
+  "occurred_at": "2026-08-25T07:00:00Z"
+}
+```
+
+### Example: insufficient to create
+
+```json
+{
+  "event": "balance.insufficient",
+  "user_id": 123,
+  "available": 1.5,
+  "required": 8,
+  "occurred_at": "2026-08-25T07:01:00Z"
+}
+```
+
+## Verify the signature (recommended)
+
+Sign the **raw request body bytes**, not re-serialized JSON.
+
+```
+HMAC_SHA256(secret, "{X-Viraltok-Timestamp}.{raw_body}")
+```
+
+Compare the lowercase hex to the value after `sha256=` with a constant-time compare.
+
+<Warning>
+Use the raw HTTP body. Re-`JSON.stringify` before signing will fail.
+</Warning>
+
+Also reject timestamps older than about 5 minutes.
+
+### Node.js
+
+```javascript
+import crypto from 'node:crypto';
+
+function verifyWebhook({ rawBody, timestamp, signatureHeader, secret }) {
+  const expected =
+    'sha256=' +
+    crypto
+      .createHmac('sha256', secret)
+      .update(`${timestamp}.${rawBody}`)
+      .digest('hex');
+  const a = Buffer.from(signatureHeader || '', 'utf8');
+  const b = Buffer.from(expected, 'utf8');
+  if (a.length !== b.length) return false;
+  return crypto.timingSafeEqual(a, b);
+}
+```
+
+### Python
+
+```python
+import hashlib
+import hmac
+
+def verify_webhook(raw_body: bytes, timestamp: str, signature_header: str, secret: str) -> bool:
+    digest = hmac.new(
+        secret.encode("utf-8"),
+        f"{timestamp}.".encode("utf-8") + raw_body,
+        hashlib.sha256,
+    ).hexdigest()
+    expected = f"sha256={digest}"
+    return hmac.compare_digest(signature_header, expected)
+```
+
+If no secret is configured, `X-Viraltok-Signature` is omitted—protect the endpoint another way.
+
+## Tips
+
+- Return 2xx first, then process asynchronously.
+- Branch on `event`; do not assume `threshold` or `required` always exist.
+- You can also poll [`/user/balance`](/en/api-reference/common/user-balance).
+- Channel is **email or webhook**, not both for the same alert path.

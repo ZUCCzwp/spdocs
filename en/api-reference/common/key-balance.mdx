@@ -1,0 +1,50 @@
+---
+title: 'Get API key quota balance'
+openapi: 'GET /v1/key/balance'
+---
+
+Returns the **call quota** for the current API key (independent of account points). If you set `total_quota` in the console, the key is capped; `0` means unlimited.
+
+### Response fields
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `name` | string | Key name |
+| `total_quota` | number | Total quota; `0` means unlimited |
+| `used_quota` | number | Used quota (see below) |
+| `available_quota` | number | Remaining = `total_quota` - `used_quota`; `0` when unlimited |
+| `unlimited` | boolean | Whether the key has no quota cap |
+
+### About `used_quota`
+
+`used_quota` is the **current key’s** cumulative charged usage in the same unit as `total_quota` (points).
+
+- **Scope**: only jobs charged through **this** key.
+- **When it increases**: after a job is submitted and charged (`cost` added to `used_quota`).
+- **Enforcement**: if `total_quota > 0` and `used_quota >= total_quota`, new billable requests with this key are rejected.
+- **Vs account `used_coin`**: [`/user/balance`](/en/api-reference/common/user-balance) is account-wide net spend; `used_quota` is per-key.
+
+<Note>
+Charges still debit the user points balance. `total_quota` / `used_quota` only cap how much one key may spend.
+</Note>
+
+### Example
+
+```bash
+curl -X GET 'https://sigrunai.com/v1/key/balance' \
+  -H 'Authorization: Bearer YOUR_API_KEY'
+```
+
+```json
+{
+  "code": 20000,
+  "msg": "ok",
+  "data": {
+    "name": "production-key",
+    "total_quota": 1000,
+    "used_quota": 120.5,
+    "available_quota": 879.5,
+    "unlimited": false
+  }
+}
+```

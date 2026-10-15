@@ -53,8 +53,17 @@
                 "group": "Common",
                 "pages": [
                   "en/api-reference/common/model-catalog",
+                  "en/api-reference/common/files-upload",
                   "en/api-reference/common/query",
                   "en/api-reference/images/query"
+                ]
+              },
+              {
+                "group": "Account",
+                "pages": [
+                  "en/api-reference/common/user-balance",
+                  "en/api-reference/common/key-balance",
+                  "en/api-reference/common/balance-webhook"
                 ]
               }
             ]
@@ -129,8 +138,17 @@
                 "group": "通用",
                 "pages": [
                   "zh/api-reference/common/model-catalog",
+                  "zh/api-reference/common/files-upload",
                   "zh/api-reference/common/query",
                   "zh/api-reference/images/query"
+                ]
+              },
+              {
+                "group": "账户管理",
+                "pages": [
+                  "zh/api-reference/common/user-balance",
+                  "zh/api-reference/common/key-balance",
+                  "zh/api-reference/common/balance-webhook"
                 ]
               }
             ]
