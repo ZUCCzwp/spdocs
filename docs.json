@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "aspen",
+  "theme": "palm",
   "name": "AI Platform",
   "colors": {
     "primary": "#16A34A",
@@ -169,7 +169,8 @@
   },
   "logo": {
     "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "dark": "/logo/dark.svg",
+    "href": "https://sigrunai.com"
   },
   "navbar": {
     "links": []
