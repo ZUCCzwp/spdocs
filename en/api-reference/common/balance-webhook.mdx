@@ -12,7 +12,7 @@ Configure the webhook on the console [Recharge](https://sigrunai.com/recharge) p
 ## What you need
 
 1. A public `http` or `https` URL (not `localhost`).
-2. (Recommended) a secret to verify `X-Viraltok-Signature`.
+2. (Recommended) a secret to verify `X-Sigrunai-Signature`.
 3. Respond with **2xx** within about **10 seconds**. Delivery is single-shot; no automatic retries.
 
 Per user, each alert type fires at most **once every 24 hours** until balance recovers.
@@ -29,15 +29,15 @@ Per user, each alert type fires at most **once every 24 hours** until balance re
 
 | Header | Purpose |
 | :--- | :--- |
-| `X-Viraltok-Event` | Event type before parsing the body |
-| `X-Viraltok-Timestamp` | Unix seconds; required for signature check; reject stale timestamps |
-| `X-Viraltok-Signature` | Present only if you saved a secret. Format `sha256=<hex>` |
+| `X-Sigrunai-Event` | Event type before parsing the body |
+| `X-Sigrunai-Timestamp` | Unix seconds; required for signature check; reject stale timestamps |
+| `X-Sigrunai-Signature` | Present only if you saved a secret. Format `sha256=<hex>` |
 
 ### Body fields
 
 | Field | Type | Description |
 | :--- | :--- | :--- |
-| `event` | string | Same as `X-Viraltok-Event` |
+| `event` | string | Same as `X-Sigrunai-Event` |
 | `user_id` | number | Account user ID |
 | `available` | number | Current available points |
 | `threshold` | number | Only for `balance.below_threshold` |
@@ -80,7 +80,7 @@ Per user, each alert type fires at most **once every 24 hours** until balance re
 Sign the **raw request body bytes**, not re-serialized JSON.
 
 ```
-HMAC_SHA256(secret, "{X-Viraltok-Timestamp}.{raw_body}")
+HMAC_SHA256(secret, "{X-Sigrunai-Timestamp}.{raw_body}")
 ```
 
 Compare the lowercase hex to the value after `sha256=` with a constant-time compare.
@@ -126,7 +126,7 @@ def verify_webhook(raw_body: bytes, timestamp: str, signature_header: str, secre
     return hmac.compare_digest(signature_header, expected)
 ```
 
-If no secret is configured, `X-Viraltok-Signature` is omitted—protect the endpoint another way.
+If no secret is configured, `X-Sigrunai-Signature` is omitted—protect the endpoint another way.
 
 ## Tips
 

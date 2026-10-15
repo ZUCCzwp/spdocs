@@ -12,7 +12,7 @@ Webhook 在控制台 [充值页](https://sigrunai.com/recharge) 的 **余额通�
 ## 你需要准备什么
 
 1. 一个公网可访问的 `http` 或 `https` URL（不能指向本机 `localhost`）。
-2. （推荐）一段密钥，用于校验 `X-Viraltok-Signature`。
+2. （推荐）一段密钥，用于校验 `X-Sigrunai-Signature`。
 3. 接收端在约 **10 秒**内返回 **2xx**。当前实现发送一次，不自动重试。
 
 同一用户在余额回升前，同类通知 **24 小时内最多一次**。
@@ -29,15 +29,15 @@ Webhook 在控制台 [充值页](https://sigrunai.com/recharge) 的 **余额通�
 
 | 头 | 作用 |
 | :--- | :--- |
-| `X-Viraltok-Event` | 事件类型，便于在解析 body 前分流 |
-| `X-Viraltok-Timestamp` | Unix 秒。验签时必须用这个值；也可用来拒绝过期请求（防重放） |
-| `X-Viraltok-Signature` | 仅在你保存了密钥时出现。格式 `sha256=<hex>` |
+| `X-Sigrunai-Event` | 事件类型，便于在解析 body 前分流 |
+| `X-Sigrunai-Timestamp` | Unix 秒。验签时必须用这个值；也可用来拒绝过期请求（防重放） |
+| `X-Sigrunai-Signature` | 仅在你保存了密钥时出现。格式 `sha256=<hex>` |
 
 ### Body 字段
 
 | 字段 | 类型 | 说明 |
 | :--- | :--- | :--- |
-| `event` | string | 与 `X-Viraltok-Event` 相同 |
+| `event` | string | 与 `X-Sigrunai-Event` 相同 |
 | `user_id` | number | 账户用户 ID |
 | `available` | number | 当前可用积分 |
 | `threshold` | number | 仅 `balance.below_threshold`：你设置的告警阈值 |
@@ -56,9 +56,9 @@ Webhook 在控制台 [充值页](https://sigrunai.com/recharge) 的 **余额通�
 ```http
 POST /webhook HTTP/1.1
 Content-Type: application/json
-X-Viraltok-Event: balance.below_threshold
-X-Viraltok-Timestamp: 1756100000
-X-Viraltok-Signature: sha256=d7c4f8...
+X-Sigrunai-Event: balance.below_threshold
+X-Sigrunai-Timestamp: 1756100000
+X-Sigrunai-Signature: sha256=d7c4f8...
 ```
 
 ```json
@@ -88,7 +88,7 @@ X-Viraltok-Signature: sha256=d7c4f8...
 签名对象是 **原始请求体字节**，不是格式化后的 JSON。
 
 ```
-HMAC_SHA256(secret, "{X-Viraltok-Timestamp}.{raw_body}")
+HMAC_SHA256(secret, "{X-Sigrunai-Timestamp}.{raw_body}")
 ```
 
 把结果编成小写 hex，与头里 `sha256=` 后面的值做恒定时间比较。
@@ -122,8 +122,8 @@ app.post('/webhook', (req, res) => {
   const rawBody = req.body.toString('utf8');
   const ok = verifyWebhook({
     rawBody,
-    timestamp: req.get('X-Viraltok-Timestamp'),
-    signatureHeader: req.get('X-Viraltok-Signature'),
+    timestamp: req.get('X-Sigrunai-Timestamp'),
+    signatureHeader: req.get('X-Sigrunai-Signature'),
     secret: process.env.BALANCE_WEBHOOK_SECRET,
   });
   if (!ok) return res.status(401).end();
@@ -149,7 +149,7 @@ def verify_webhook(raw_body: bytes, timestamp: str, signature_header: str, secre
     return hmac.compare_digest(signature_header, expected)
 ```
 
-未配置密钥时没有 `X-Viraltok-Signature`。此时请用防火墙或仅内网 URL 保护端点。
+未配置密钥时没有 `X-Sigrunai-Signature`。此时请用防火墙或仅内网 URL 保护端点。
 
 ## 对接建议
 
