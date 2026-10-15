@@ -1,82 +1,42 @@
 ---
-title: 'Probe model pricing'
-openapi: 'GET /api/openapi/model/catalog'
+title: 'Model catalog'
+openapi: 'GET /v1/model/catalog'
 ---
 
-Probe **public model pricing** for active AI Platform OpenAPI billing models: model IDs, display names, types, default unit prices, and billing modes. Use this endpoint to discover which `model` values you can pass to create endpoints and to estimate cost before submitting tasks.
+Lists enabled public billing models: `model_name`, display name, type, default unit price, and pricing mode. Use it to confirm which `model` values you can pass.
 
 <Note>
-This endpoint returns **platform default prices**. If your account has custom per-model pricing configured in the console, actual charges on create/query responses use your account rate instead. The list always shows the public baseline `unit_price`.
+Prices here are platform defaults. If your account has a custom price, reconcile with `cost` on create/query responses.
 </Note>
 
-### Authentication
+### Auth
 
-No API key is required. You may call this endpoint without an `Authorization` header.
+No API key required.
 
 ### Query parameters
 
-| Parameter | Type | Required | Description |
+| Param | Type | Required | Description |
 | :--- | :--- | :--- | :--- |
-| `search` | string | No | Substring filter matched against `model_name`, `display_name`, `model_type`, and `remark`. Omit to return all active models. |
+| `search` | string | no | Substring filter on `model_name`, `display_name`, `model_type`, `remark` |
 
 ### Response fields
 
-Each item in `data.list` describes one active billing model:
-
 | Field | Type | Description |
 | :--- | :--- | :--- |
-| `model_name` | string | Public OpenAPI model ID — use this value in `model` on create endpoints |
-| `display_name` | string | Human-readable model label |
-| `model_type` | string | Product category (for example `video`, `image`, `audio`, `llm`) |
-| `price_mode` | string | Billing mode (see below) |
-| `unit_price` | number | Default platform unit price in points |
-| `official_price` | number | Reference list price when configured; omitted when not set |
-| `remark` | string | Optional notes about the model or pricing |
-| `group` | string | Optional grouping label for related models |
+| `model_name` | string | Value for the create `model` field |
+| `display_name` | string | Display name |
+| `model_type` | string | e.g. `images`, `videos` |
+| `price_mode` | string | e.g. `per_task`, `per_second` |
+| `unit_price` | number | Default unit price (credits) |
+| `remark` | string | Optional notes |
+| `group` | string | Optional group label |
 
-### Billing modes (`price_mode`)
-
-| Value | Meaning |
-| :--- | :--- |
-| `per_task` | Flat fee per request or task (default) |
-| `per_second` | Unit price multiplied by video duration in seconds |
-| `per_million_tokens` | Unit price multiplied by token count ÷ 1,000,000 |
-| `per_10k_char` | Unit price per 10,000 characters (SoundClone) |
-| `pay_as_you_go` | Usage-based billing from reported token or usage metadata |
-
-Actual task cost appears in the `cost` field on create and query responses after billing runs.
-
-### Example
-
-List all models:
+### Examples
 
 ```bash
-curl -X GET '/api/openapi/model/catalog'
+curl -X GET 'https://aiplatform.ccwu.cc/v1/model/catalog'
 ```
-
-Search for Seedance models:
 
 ```bash
-curl -X GET '/api/openapi/model/catalog?search=seedance'
-```
-
-```json
-{
-  "code": 20000,
-  "msg": "ok",
-  "data": {
-    "list": [
-      {
-        "model_name": "seedance2.5",
-        "display_name": "Seedance 2.5",
-        "model_type": "video",
-        "price_mode": "per_second",
-        "unit_price": 0.05,
-        "official_price": 0.08,
-        "remark": "",
-        "group": "Seedance 2.5 Video"
-      }
-    ]
-  }
-}
+curl -X GET 'https://aiplatform.ccwu.cc/v1/model/catalog?search=seedance'
 ```

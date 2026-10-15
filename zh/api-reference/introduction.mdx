@@ -1,45 +1,67 @@
 ---
 title: '介绍'
-description: 'API 接口示例部分'
+description: 'AI Platform OpenAPI 接入说明'
 ---
 
 ## 欢迎
 
-欢迎来到 AI Platform API 参考文档。我们的 API 允许您通过编程方式使用 Sora、VEO 和 GPT Image 2 等尖端模型生成高质量的视频和图片。
+欢迎使用 AI Platform OpenAPI。你可以通过统一的异步接口生成图片与视频，再用 `task_id` 轮询结果。
+
+当前可用模型（以 [模型目录](/zh/api-reference/common/model-catalog) 实时返回为准）：
+
+| 类型 | `model` | 说明 |
+| --- | --- | --- |
+| 图片 | `gpt-image-2` | 异步生图；可用 `quality` 或 `gpt-image-2-low` / `medium` / `high` 计费档 |
+| 视频 | `seedance2.0-md` | 5 / 10 / 15 秒 |
+| 视频 | `seedance2.5-30s` | 固定 30 秒 |
 
 ## API 基础地址
 
-文档与示例中的请求主机统一写作：
+OpenAPI 与控制台**同源**。文档示例使用：
 
 ```text
-https://api.example.com
+https://aiplatform.ccwu.cc
 ```
 
-调用时请将其替换为**实际的 API 基础网站地址**（即真实 Base URL）。路径保持不变，例如：
+控制台 **API 密钥** 页展示的「API 基础地址」即为该 origin（不含路径）：
 
-| 文档示例 | 实际请求 |
+```text
+https://aiplatform.ccwu.cc
+```
+
+接口路径以 `/v1` 开头。若你部署在自有域名，将主机替换为当前站点 origin，路径保持不变。
+
+| 能力 | 方法与路径 |
 | --- | --- |
-| `https://api.example.com/api/open-api/v1/videos` | `https://<你的API基础地址>/api/open-api/v1/videos` |
-
-同步生图直连主机若写作 `https://img.example.com`，同样替换为实际生图服务地址。
+| 创建图片任务 | `POST /v1/images` |
+| 查询图片任务 | `GET /v1/images/{task_id}` |
+| 创建视频任务 | `POST /v1/videos` |
+| 查询视频任务 | `GET /v1/videos/{task_id}` |
+| 模型目录（无需 Key） | `GET /v1/model/catalog` |
 
 <CardGroup cols={2}>
-  <Card
-    title="生成视频"
-    icon="video"
-    href="/zh/api-reference/videos/create"
-  >
-    开始使用我们的 API 生成视频
-  </Card>
   <Card
     title="生成图片"
     icon="image"
     href="/zh/api-reference/images/create"
   >
-    使用 GPT Image 2 生成高质量图片
+    GPT Image 2 异步生图
+  </Card>
+  <Card
+    title="生成视频"
+    icon="video"
+    href="/zh/api-reference/seedance/md/create"
+  >
+    Seedance 异步生视频
   </Card>
 </CardGroup>
 
 ## 认证
 
-所有 API 接口都使用 Bearer 令牌进行身份验证。
+除模型目录外，所有 OpenAPI 请求在请求头携带：
+
+```http
+Authorization: Bearer <你的 API Key>
+```
+
+在控制台 [API 密钥](/console?tab=apikeys) 创建密钥。

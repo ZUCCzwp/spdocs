@@ -1,39 +1,41 @@
 ---
-title: 'Development Guide'
-description: 'This guide will help you integrate our API service into your application.'
+title: 'Development guide'
+description: 'Async flow, error codes, and best practices'
 icon: 'terminal'
 ---
 
-## Asynchronous Processing
+## Async flow
 
-Our API uses an asynchronous processing mode:
 <Steps>
-<Step title="Submit Task">
-Send a generation request and obtain a Task ID
+<Step title="Submit">
+Call `POST /v1/images` or `POST /v1/videos` and read `data.task_id`.
 </Step>
-<Step title="Poll Status">
-Periodically query the task status
+<Step title="Poll">
+Call the matching `GET .../{task_id}` until `status` is terminal.
 </Step>
-<Step title="Get Results">
-Obtain the generation results once the task is complete
+<Step title="Fetch result">
+On success, use `data.result.image_url` or `data.result.video_url`. On failure, read `data.error_message`.
 </Step>
 </Steps>
 
-## Error Handling
+Poll every 2–5 seconds and set a sensible timeout.
 
-### Common Status Codes
+## Response shape
 
-| Code | Description | Solution |
-| --- | ------ | -------- |
-| 20000 | Success | | 
-| 20002 | Invalid Parameters | Check request parameter format |
-| 20001 | Authentication Failed | Try using a different token |
-| -1 | Server Error | Please try again later |
+Successful calls return `code: 20000` with payload in `data`. Create and query share the same `data` schema.
 
-## Best Practices
+### Common codes
 
-1. **Cache Usage**: Generated image/video links are valid for 3 days.
-2. **Error Retries**: Implement an exponential backoff retry mechanism.
-3. **Monitor Usage**: Regularly check your API usage statistics.
-4. **Secure Storage**: Safely store and manage your API keys.
+| Code | Meaning | What to do |
+| --- | --- | --- |
+| 20000 | Success | — |
+| 20002 | Invalid params | Check `model`, duration, aspect ratio |
+| 20001 | Auth failed | Rotate or recreate the API key |
+| -1 | Server error | Retry later |
 
+## Best practices
+
+1. **Persist media promptly**: result URLs are kept about **3 days**.
+2. **Check the catalog**: confirm live `model` IDs via the [model catalog](/en/api-reference/common/model-catalog).
+3. **Reconcile with `cost`**: `data.cost` is the charged amount (credits).
+4. **Protect keys**: never commit API keys to public repos.

@@ -1,9 +1,22 @@
 ---
-title: 'Query Image Task'
-openapi: 'GET /api/open-api/v1/images/{taskId}'
+title: 'Query image task'
+openapi: 'GET /v1/images/{taskId}'
 ---
 
-> [!IMPORTANT]
-> The image download URL (`image_url`) is valid for **3 days**. Please download or transfer it in time.
+> Image URLs (`result.image_url`) are kept for about **3 days**. Download promptly.
 
-The response field `data.cost` is the billed amount for this task (points). It is returned on both create and query endpoints.
+Create and query share the same `data` shape. `data.cost` is the charged amount (credits).
+
+### Status values
+
+| status | Meaning |
+| :--- | :--- |
+| `queued` / `pending` / `submitted` | Submitted, waiting |
+| `processing` / `in_progress` / `running` | Generating |
+| `completed` / `success` / `succeeded` | Done — read `result.image_url` |
+| `failed` | Failed — see `error_message` |
+
+```bash
+curl -X GET 'https://aiplatform.ccwu.cc/v1/images/img_xxxxxxxx' \
+  -H 'Authorization: Bearer sk_xxx'
+```

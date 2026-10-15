@@ -1,40 +1,35 @@
 ---
 title: "FAQ"
-description: "Frequently asked questions about using our API"
+description: "Common questions about AI Platform OpenAPI"
 icon: 'circle-question'
 ---
 
-# Frequently Asked Questions (FAQ)
+# FAQ
 
-Welcome to our FAQ page. If you can't find the answer to your question here, please [contact us](/en/development).
-
-## Account & Billing
+## Account and billing
 
 <AccordionGroup>
-  <Accordion title="How do I get an API Key?" icon="key">
-    You can log into your account and navigate to the [API Key Management Page](/console?tab=apikeys) to generate and view your unique API Key.
+  <Accordion title="How do I get an API key?" icon="key">
+    Open [API keys](/console?tab=apikeys) after login. Keys are shown once — store them securely.
   </Accordion>
-  <Accordion title="How does the billing work?" icon="credit-card">
-    We use a prepaid billing model. You need to [recharge](/recharge) your account balance (minimum $1, supporting WeChat Pay and Alipay). Different models and parameters deduct varying amounts from your balance. Requests will fail if your balance is insufficient.
+  <Accordion title="What is the API base URL?" icon="link">
+    Same origin as the console, e.g. `https://aiplatform.ccwu.cc` (no path). API paths are `/v1/...`. Copy the base URL from the API keys tab.
   </Accordion>
-  <Accordion title="How do I get notified when the balance is low?" icon="bell">
-    Open **Balance alerts** on the [recharge page](/recharge) and choose email or webhook. Events, headers, and signature verification are documented in [Balance alert webhook](/en/api-reference/common/balance-webhook).
+  <Accordion title="How does billing work?" icon="credit-card">
+    Prepaid credits via [Recharge](/recharge). Check the [model catalog](/en/api-reference/common/model-catalog) for unit prices; reconcile charges with `data.cost` on create/query.
   </Accordion>
 </AccordionGroup>
 
-## Task Management & Status
+## Tasks
 
 <AccordionGroup>
-  <Accordion title="Why did my generation request fail?" icon="circle-exclamation">
-    A task may fail for several reasons:
-    1. Invalid parameters (e.g., unsupported aspect ratios or duration) were provided.
-    2. Your account balance is insufficient to cover the cost.
-    3. High server load or temporary third-party interruptions.
-    
-    You can use the task query endpoint to retrieve the specific `error_msg` or `reason` to diagnose the issue.
+  <Accordion title="Which models are available?" icon="cubes">
+    Trust the live catalog. Common IDs: `gpt-image-2` (plus low/medium/high billing tiers), `seedance2.0-md`, and `seedance2.5-30s`.
   </Accordion>
-  <Accordion title="How do I retrieve my generated results?" icon="magnifying-glass">
-    Because most generation tasks (especially video and high-res images) take time to process, our API uses an asynchronous model.
-    Upon submitting a task, you will receive a `taskId`. You should periodically poll the **Status Query API** with this ID. Once the task status changes to `completed` or `success`, the response will include the generated `url` or `mediaUrl`.
+  <Accordion title="Why did my task fail?" icon="circle-exclamation">
+    Typical causes: invalid parameters for that model, insufficient balance, or a temporary outage. Check `error_message` on the query response.
+  </Accordion>
+  <Accordion title="How do I get the result?" icon="magnifying-glass">
+    Poll `GET /v1/images/{task_id}` or `GET /v1/videos/{task_id}`. When `status` is `completed`, read `result.image_url` or `result.video_url`. Links are kept about 3 days.
   </Accordion>
 </AccordionGroup>

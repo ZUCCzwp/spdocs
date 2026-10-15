@@ -27,7 +27,7 @@
 
 ## Content boundaries
 
-Customer-facing docs describe **only** the AI Platform OpenAPI contract: public paths (`POST /api/open-api/v1/...`), request/response fields, billing model names, task polling, and observable behavior.
+Customer-facing docs describe **only** the AI Platform OpenAPI contract: public paths (`POST /v1/...`), request/response fields, billing model names, task polling, and observable behavior.
 
 ### Never reveal upstream or routing internals
 
@@ -45,7 +45,7 @@ Reading backend code or internal design notes **does not** make those names publ
 | Forbidden (customer docs) | Use instead |
 |---------------------------|-------------|
 | 「上游对接 fal …」 | 「Grok Imagine Image 2.0 异步生图」 |
-| Table row **上游** with vendor paths | **接口** / **API** with `POST /api/open-api/v1/images` |
+| Table row **上游** with vendor paths | **接口** / **API** with `POST /v1/images` |
 | 「fal v2.0 端点」「quality/* 旧端点」 | 「`quality`: `low` \| `medium`」与公开计费模型名 |
 | 「不同上游线路支持不同」 | 「部分模型变体在控制台可用性可能不同」或只写公开 model ID |
 | Internal routing keys as product names | Public OpenAPI `model` values and billing model names |
@@ -66,9 +66,9 @@ When models differ by quality/speed tier (e.g. Fast vs Lite, `quality=low|medium
 ## Agent rules (mandatory before editing MDX)
 
 1. **Scope check** — Every sentence should answer: “What can the customer call on the current website origin?” If it only helps operators debug routing, delete it or move it out of customer docs.
-2. **Grep self-check** — Before finishing, search your diff for: `fal`, `xai/`, `upstream` (when meaning our backend), channel codes, `route3`, vendor domains, and paths that are not under `/api/open-api/v1/`.
+2. **Grep self-check** — Before finishing, search your diff for: `fal`, `xai/`, `upstream` (when meaning our backend), channel codes, `route3`, vendor domains, and paths that are not under `/v1/` (console JWT routes under `/api/openapi/...` are internal, not customer OpenAPI).
 3. **Tables** — Do not add columns like **上游**, **渠道**, **Provider**. Use **接口**, **计费**, **模式**, **字段**.
-4. **Examples** — curl examples use only `/api/open-api/v1/...` (current website origin) and public field names.
+4. **Examples** — curl examples use only `/v1/...` on the site origin (`https://aiplatform.ccwu.cc`) and public field names. API base URL is the origin only (no `/v1`).
 5. **Billing** — Refer to **billing model names** from the console (e.g. `grok-imagine-image-2-1k-medium`), not vendor list prices or USD quotes from vendor sites unless we publish them officially.
 6. **When unsure** — Describe behavior without naming the implementation (“异步任务，轮询 `task_id`”) rather than guessing vendor details.
 

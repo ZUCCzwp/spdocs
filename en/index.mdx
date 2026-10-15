@@ -1,62 +1,75 @@
 ---
 title: "Quickstart"
-description: "Get up and running with our API in minutes"
+description: "Get started with AI Platform OpenAPI in minutes"
 icon: 'rocket'
 ---
+
 # Quickstart
 
-Welcome to our API service! This guide will help you quickly get started with image and video generation features.
+Create images and videos with the same async OpenAPI contract.
 
-## Step 1: Get your API Key
+## Step 1: Get an API key
 
-1. [Register an account](/register)
-2. Log in to your account, and visit the [API Key Management Page](/console?tab=apikeys)
-3. Create a new API Key
-4. Save your key (it will only be displayed once)
+1. [Register](/register)
+2. Open [API keys](/console?tab=apikeys)
+3. Create a key and store it securely (shown once)
 
-## Step 2: Account Recharge
+## Step 2: Top up
 
-1. Log in to your account, and visit the [Recharge Page](/recharge)
-2. Select the recharge amount (minimum $1)
-3. Complete the payment (supports Alipay, WeChat Pay)
+1. Open [Recharge](/recharge)
+2. Complete payment before calling the API
 
-## Step 3: Send a Request
-Get connection info
-API Base URL: the origin of this website
-API Key: The key you just created
+## Step 3: Note the base URL
 
-### Video Generation Example
+The console shows a base URL like (origin only, no path):
 
-```bash theme={null}
-curl --request POST \
-  --url /api/open-api/v1/videos \
-  --header 'Authorization: Bearer <token>' \
-  --header 'Content-Type: application/json' \
-  --data '
-{
-  "model": "<string>",
-  "prompt": "<string>",
-  "duration": 123,
-  "orientation": "landscape",
-  "images": [
-    "<string>"
-  ]
-}
-'
+```text
+https://aiplatform.ccwu.cc
 ```
 
-## Step 4: Query Task Status
+API paths start with `/v1`. Auth: `Authorization: Bearer <API Key>`.
 
-Since we use an asynchronous processing mode, you need to query the task status to get the results:
+### Image example (GPT Image 2)
 
-```bash theme={null}
-curl --request GET \
-  --url /api/open-api/v1/videos/{taskId} \
-  --header 'Authorization: Bearer <token>'
+```bash
+curl -X POST 'https://aiplatform.ccwu.cc/v1/images' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "gpt-image-2",
+    "prompt": "A golden retriever running in sunlight, photorealistic",
+    "quality": "medium",
+    "n": 1
+  }'
 ```
 
-## Next Steps
+### Video example (Seedance 2.0 MD)
 
-<Card title="View API Reference" icon="book" href="/en/api-reference/introduction">
-  Learn more about all available API endpoints
+```bash
+curl -X POST 'https://aiplatform.ccwu.cc/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "seedance2.0-md",
+    "prompt": "A cat running on grass, tracking shot",
+    "duration": 5,
+    "aspect_ratio": "16:9"
+  }'
+```
+
+Success responses look like `{ "code": 20000, "msg": "...", "data": { "task_id": "...", "status": "queued", ... } }`.
+
+## Step 4: Poll the task
+
+```bash
+curl -X GET 'https://aiplatform.ccwu.cc/v1/images/{task_id}' \
+  -H 'Authorization: Bearer sk_xxx'
+```
+
+For video, use `/v1/videos/{task_id}`. When `status` is `completed`, read `data.result.image_url` or `data.result.video_url`.
+
+## Next steps
+
+<Card title="API reference" icon="book" href="/en/api-reference/introduction">
+  Models, parameters, billing, and status codes
 </Card>

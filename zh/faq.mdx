@@ -1,40 +1,35 @@
 ---
 title: "常见问题 (FAQ)"
-description: "有关使用我们 API 的常见问题解答"
+description: "AI Platform OpenAPI 常见问题"
 icon: 'circle-question'
 ---
 
 # 常见问题 (FAQ)
 
-欢迎来到我们的常见问题页面。如果您在这里找不到您问题的答案，请[联系我们](/zh/development)。
-
 ## 账户与计费
 
 <AccordionGroup>
   <Accordion title="如何获取 API 密钥？" icon="key">
-    您可以登录您的账户，并前往 [API 密钥管理页面](/console?tab=apikeys) 创建并获取您的专属 API 密钥。
+    登录后打开 [API 密钥](/console?tab=apikeys) 创建。密钥只显示一次，请立即保存。
   </Accordion>
-  <Accordion title="API 的计费方式是什么？" icon="credit-card">
-    我们采用预付费的计费方式。您需要在您的账户中[充值](/recharge)（支持微信和支付宝，最低 1 美金起充）。不同的模型和参数调用会扣除对应的余额，当余额不足时将无法发起请求。
+  <Accordion title="API 基础地址是什么？" icon="link">
+    与控制台同源，例如 `https://aiplatform.ccwu.cc`（不含路径）。接口路径为 `/v1/...`。在 API 密钥页可直接复制基础地址。
   </Accordion>
-  <Accordion title="如何接收余额过低通知？" icon="bell">
-    打开 [充值页](/recharge) 的 **余额通知**，可选择邮箱或 Webhook。Webhook 的事件、请求头和验签方式见 [余额告警 Webhook](/zh/api-reference/common/balance-webhook)。
+  <Accordion title="如何计费？" icon="credit-card">
+    预付费积分。先在 [充值](/recharge) 页面充值。单价以 [模型目录](/zh/api-reference/common/model-catalog) 为准；实际扣费看创建/查询响应里的 `data.cost`。
   </Accordion>
 </AccordionGroup>
 
-## 任务调用与状态查询
+## 任务调用
 
 <AccordionGroup>
-  <Accordion title="为什么我的生成请求返回任务失败？" icon="circle-exclamation">
-    任务失败可能有多种原因，包括：
-    1. 您传入的参数（如图片尺寸或时长）不符合当前模型的要求。
-    2. 您的账户余额不足以支付当前请求。
-    3. 服务端暂时处于高负载状态。
-    
-    您可以通过任务查询接口获取具体的 `error_msg` 或 `reason` 以便定位问题。
+  <Accordion title="支持哪些模型？" icon="cubes">
+    以目录实时返回为准。当前常见为 `gpt-image-2`（及 low/medium/high 计费档）、`seedance2.0-md`、`seedance2.5-30s`。
   </Accordion>
-  <Accordion title="如何获取生成成功后的结果？" icon="magnifying-glass">
-    由于大多数生成任务（特别是视频生成和高清图像生成）较为耗时，API 设计为异步模式。
-    创建任务后，您将获得一个 `taskId`，您需要通过我们的**状态查询接口**定时轮询该任务。当任务状态变为 `completed` 或 `success` 时，响应中会包含生成的 `url` 或 `mediaUrl`。
+  <Accordion title="为什么任务失败？" icon="circle-exclamation">
+    常见原因：参数不符合该模型约束、余额不足、或服务短暂不可用。请查看查询响应中的 `error_message`。
+  </Accordion>
+  <Accordion title="如何拿到生成结果？" icon="magnifying-glass">
+    创建后轮询 `GET /v1/images/{task_id}` 或 `GET /v1/videos/{task_id}`。`status` 为 `completed` 时读取 `result.image_url` 或 `result.video_url`。结果链接约保留 3 天。
   </Accordion>
 </AccordionGroup>

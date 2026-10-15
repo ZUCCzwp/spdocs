@@ -1,49 +1,67 @@
 ---
 title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+description: 'AI Platform OpenAPI overview'
 ---
-
-
 
 ## Welcome
 
-Welcome to the AI Platform API reference. Our API allows you to programmatically generate high-quality videos and images using state-of-the-art models like Sora, VEO, and GPT Image 2.
+Use AI Platform OpenAPI to create images and videos asynchronously, then poll with `task_id` until the task completes.
+
+Available models (always check the [model catalog](/en/api-reference/common/model-catalog)):
+
+| Type | `model` | Notes |
+| --- | --- | --- |
+| Image | `gpt-image-2` | Async; use `quality` or `gpt-image-2-low` / `medium` / `high` for billing tiers |
+| Video | `seedance2.0-md` | 5 / 10 / 15 seconds |
+| Video | `seedance2.5-30s` | Fixed 30 seconds |
 
 ## API base URL
 
-Request hosts in this documentation and its examples are written as:
+OpenAPI is served on the **same origin** as the console. Examples in these docs use:
 
 ```text
-https://api.example.com
+https://aiplatform.ccwu.cc
 ```
 
-When calling the API, replace it with your **actual API base URL**. Keep the path unchanged, for example:
+The **API keys** tab shows that origin (no path):
 
-| In docs | Real request |
+```text
+https://aiplatform.ccwu.cc
+```
+
+API paths start with `/v1`. On your own domain, replace the host with the current site origin and keep the paths.
+
+| Capability | Method and path |
 | --- | --- |
-| `https://api.example.com/api/open-api/v1/videos` | `https://<your-api-base>/api/open-api/v1/videos` |
-
-If a sync image host appears as `https://img.example.com`, replace it with your real image endpoint host as well.
+| Create image task | `POST /v1/images` |
+| Query image task | `GET /v1/images/{task_id}` |
+| Create video task | `POST /v1/videos` |
+| Query video task | `GET /v1/videos/{task_id}` |
+| Model catalog (no key) | `GET /v1/model/catalog` |
 
 <CardGroup cols={2}>
   <Card
-    title="Video Generation"
-    icon="video"
-    href="/en/api-reference/videos/create"
-  >
-    Start generating videos with our API
-  </Card>
-  <Card
-    title="Image Generation"
+    title="Generate images"
     icon="image"
     href="/en/api-reference/images/create"
   >
-    Generate high-quality images with GPT Image 2
+    GPT Image 2 async generation
+  </Card>
+  <Card
+    title="Generate videos"
+    icon="video"
+    href="/en/api-reference/seedance/md/create"
+  >
+    Seedance async generation
   </Card>
 </CardGroup>
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+Except for the model catalog, send:
 
+```http
+Authorization: Bearer <your API key>
+```
 
+Create keys in the console [API keys](/console?tab=apikeys) tab.

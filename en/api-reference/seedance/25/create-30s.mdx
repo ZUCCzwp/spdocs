@@ -1,79 +1,41 @@
 ---
-title: 'seedance2.5-30s'
-openapi: 'en/api-reference/openapi.json POST /api/open-api/v1/seedance25/videos'
+title: 'Seedance 2.5 30s'
+openapi: 'POST /v1/videos'
 ---
 
-<Note>
-After creation, the response returns a `task_id`. Use the [Query Video Task](/en/api-reference/common/query) endpoint to poll task status and read the video URL from `result.video_url`.
-</Note>
+Create a Seedance **2.5 30s** video via `POST /v1/videos` with `model` set to `seedance2.5-30s`. Poll [Query video task](/en/api-reference/common/query) for `result.video_url`.
 
-This uses the same endpoint as [Create Seedance 2.5 Video](/en/api-reference/seedance/25/create): `POST /api/open-api/v1/seedance25/videos`. For the 15-second model, see [seedance2.5-md](/en/api-reference/seedance/25/create-ar). For the models that keep faces, see [sd2.5-720p](/en/api-reference/seedance/25/create-sd25-720p) (per second) and [sd2.5-720p-ac](/en/api-reference/seedance/25/create-sd25-720p-ac) (per task).
+## Model
 
-<Warning>
-Do **not** call `/api/open-api/v1/seedance/videos` (Seedance 2.0 / Full routes). That would land on the Full channel.
-</Warning>
+| `model` | Billing | Duration |
+| --- | --- | --- |
+| `seedance2.5-30s` | `per_task` | Fixed **30** seconds |
 
-## Supported models
+If you send `duration`, it must be `30`; otherwise it defaults to 30. First/last frame is not supported.
 
-| model | Output length | Notes |
-|-------|---------------|-------|
-| `seedance2.5-30s` | **30 seconds** (fixed) | Text-to-video, reference images / videos / audios |
-
-Aliases such as `seedance-2.5-30s` and `seedance25-30s` normalize to `seedance2.5-30s`.
-
-<Warning>
-Any `duration` you send is ignored. Output is fixed at 30 seconds.
-</Warning>
-
-## Parameter constraints
-
-- **Prompt**: Required, 1–5000 characters.
-- **Duration**: Fixed at 30 seconds. Omit `duration`, or expect it to be ignored.
-- **Aspect ratio** (`aspect_ratio` / `ratio`): **`16:9`** and **`9:16`** only. Default `9:16` when omitted.
-- **Reference images** (`reference_images` / `images`): max **30** public URLs.
-- **Reference videos** (`reference_videos` / `videos`): max **10** public URLs.
-- **Reference audios** (`reference_audios` / `audios`): max **10** public URLs.
-- **Not supported**: `first_image` / `last_image` (first-last frames).
-- **Not supported**: `resolution`, `generate_audio`, `watermark`, `output_format`, and other GZ-only fields.
-- Pass public `https://` URLs for reference videos and audios. Do not send base64 payloads.
-- **Reference images**: pass public URLs. Images that contain faces are face-blurred by the platform before submission.
-
-## Request parameters
+## Request body
 
 | Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `model` | string | Yes | `seedance2.5-30s` |
-| `prompt` | string | Yes | Text prompt |
-| `aspect_ratio` | string | No | Aspect ratio; takes precedence over `ratio` |
-| `ratio` | string | No | Alias for `aspect_ratio` |
-| `reference_images` | string[] | No | Reference image URLs, max 30 |
-| `images` | string[] | No | Alias for `reference_images` |
-| `reference_videos` | string[] | No | Reference video URLs, max 10 |
-| `videos` | string[] | No | Alias for `reference_videos` |
-| `reference_audios` | string[] | No | Reference audio URLs, max 10 |
-| `audios` | string[] | No | Alias for `reference_audios` |
+| --- | --- | --- | --- |
+| `model` | string | yes | `seedance2.5-30s` |
+| `prompt` | string | yes | Max **5000** characters |
+| `aspect_ratio` / `ratio` | string | no | `16:9` or `9:16` only; default `9:16` |
+| `images` / `reference_images` | string[] | no | Up to **30** images |
+| `videos` / `reference_videos` | string[] | no | Up to **10** videos |
+| `audios` / `reference_audios` | string[] | no | Up to **10** audios |
 
-## Billing
+Use public `https://` URLs only.
 
-- Billing mode: **`per_task`**
-- Billing model: `seedance2.5-30s`
-- Output is fixed at 30 seconds. Any `duration` you send is ignored for billing.
-- Charge = unit price × 1
-
-Configure the unit price for this model in Console.
-
-## Example request
+## Example
 
 ```bash
-curl -X POST '/api/open-api/v1/seedance25/videos' \
+curl -X POST 'https://aiplatform.ccwu.cc/v1/videos' \
   -H 'Authorization: Bearer sk_xxx' \
   -H 'Content-Type: application/json' \
   -d '{
     "model": "seedance2.5-30s",
     "prompt": "A cat running on grass, tracking shot",
     "aspect_ratio": "9:16",
-    "reference_images": ["https://example.com/cat.png"],
-    "reference_videos": ["https://example.com/ref.mp4"],
-    "reference_audios": ["https://example.com/ref.mp3"]
+    "images": ["https://example.com/cat.png"]
   }'
 ```

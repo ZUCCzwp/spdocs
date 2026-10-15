@@ -1,8 +1,22 @@
 ---
 title: '查询图片任务'
-openapi: 'GET /api/open-api/v1/images/{taskId}'
+openapi: 'GET /v1/images/{taskId}'
 ---
 
-> 图片下载地址（`image_url`）的保存有效期为 **3天**，请及时转存。
+> 图片地址（`result.image_url`）保存有效期约 **3 天**，请及时转存。
 
-响应 `data.cost` 为本次任务扣费金额（积分），创建与查询接口均返回。
+创建与查询返回同一套 `data` 结构；`data.cost` 为本次扣费（积分）。
+
+### 任务状态
+
+| status | 说明 |
+| :--- | :--- |
+| `queued` / `pending` / `submitted` | 已提交，等待调度 |
+| `processing` / `in_progress` / `running` | 生成中 |
+| `completed` / `success` / `succeeded` | 成功，可读 `result.image_url` |
+| `failed` | 失败，见 `error_message` |
+
+```bash
+curl -X GET 'https://aiplatform.ccwu.cc/v1/images/img_xxxxxxxx' \
+  -H 'Authorization: Bearer sk_xxx'
+```
