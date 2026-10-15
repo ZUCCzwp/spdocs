@@ -3,9 +3,9 @@
   "theme": "maple",
   "name": "AI Platform",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#4504F9",
+    "light": "#707BF3",
+    "dark": "#2601B7"
   },
   "appearance": {
     "default": "dark"
