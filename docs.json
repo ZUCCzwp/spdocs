@@ -3,9 +3,9 @@
   "theme": "maple",
   "name": "AI Platform",
   "colors": {
-    "primary": "#4504F9",
-    "light": "#707BF3",
-    "dark": "#2601B7"
+    "primary": "#2563EB",
+    "light": "#60A5FA",
+    "dark": "#1D4ED8"
   },
   "appearance": {
     "default": "dark"
@@ -207,5 +207,8 @@
   },
   "icons": {
     "library": "tabler"
+  },
+  "background": {
+    "decoration": "grid"
   }
 }
