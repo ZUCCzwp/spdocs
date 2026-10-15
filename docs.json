@@ -209,6 +209,6 @@
     "library": "tabler"
   },
   "background": {
-    "decoration": "grid"
+    "decoration": "gradient"
   }
 }
