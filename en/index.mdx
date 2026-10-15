@@ -24,7 +24,7 @@ Create images and videos with the same async OpenAPI contract.
 The console shows a base URL like (origin only, no path):
 
 ```text
-https://aiplatform.ccwu.cc
+https://sigrunai.com
 ```
 
 API paths start with `/v1`. Auth: `Authorization: Bearer <API Key>`.
@@ -32,7 +32,7 @@ API paths start with `/v1`. Auth: `Authorization: Bearer <API Key>`.
 ### Image example (GPT Image 2)
 
 ```bash
-curl -X POST 'https://aiplatform.ccwu.cc/v1/images' \
+curl -X POST 'https://sigrunai.com/v1/images' \
   -H 'Authorization: Bearer sk_xxx' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -46,7 +46,7 @@ curl -X POST 'https://aiplatform.ccwu.cc/v1/images' \
 ### Video example (Seedance 2.0 MD)
 
 ```bash
-curl -X POST 'https://aiplatform.ccwu.cc/v1/videos' \
+curl -X POST 'https://sigrunai.com/v1/videos' \
   -H 'Authorization: Bearer sk_xxx' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -62,7 +62,7 @@ Success responses look like `{ "code": 20000, "msg": "...", "data": { "task_id":
 ## Step 4: Poll the task
 
 ```bash
-curl -X GET 'https://aiplatform.ccwu.cc/v1/images/{task_id}' \
+curl -X GET 'https://sigrunai.com/v1/images/{task_id}' \
   -H 'Authorization: Bearer sk_xxx'
 ```
 

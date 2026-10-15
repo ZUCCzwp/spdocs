@@ -24,7 +24,7 @@ icon: 'rocket'
 控制台展示的 API 基础地址形如（不含路径）：
 
 ```text
-https://aiplatform.ccwu.cc
+https://sigrunai.com
 ```
 
 接口路径以 `/v1` 开头。鉴权方式：`Authorization: Bearer <API Key>`。
@@ -32,7 +32,7 @@ https://aiplatform.ccwu.cc
 ### 图片示例（GPT Image 2）
 
 ```bash
-curl -X POST 'https://aiplatform.ccwu.cc/v1/images' \
+curl -X POST 'https://sigrunai.com/v1/images' \
   -H 'Authorization: Bearer sk_xxx' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -46,7 +46,7 @@ curl -X POST 'https://aiplatform.ccwu.cc/v1/images' \
 ### 视频示例（Seedance 2.0 MD）
 
 ```bash
-curl -X POST 'https://aiplatform.ccwu.cc/v1/videos' \
+curl -X POST 'https://sigrunai.com/v1/videos' \
   -H 'Authorization: Bearer sk_xxx' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -62,7 +62,7 @@ curl -X POST 'https://aiplatform.ccwu.cc/v1/videos' \
 ## 第四步：轮询任务
 
 ```bash
-curl -X GET 'https://aiplatform.ccwu.cc/v1/images/{task_id}' \
+curl -X GET 'https://sigrunai.com/v1/images/{task_id}' \
   -H 'Authorization: Bearer sk_xxx'
 ```
 

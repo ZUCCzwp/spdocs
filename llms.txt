@@ -1,6 +1,6 @@
 # AI Platform OpenAPI
 
-Base URL: https://aiplatform.ccwu.cc
+Base URL: https://sigrunai.com
 API prefix: /v1
 Auth: Authorization: Bearer <API Key>
 

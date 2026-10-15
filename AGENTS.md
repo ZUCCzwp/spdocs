@@ -68,7 +68,7 @@ When models differ by quality/speed tier (e.g. Fast vs Lite, `quality=low|medium
 1. **Scope check** — Every sentence should answer: “What can the customer call on the current website origin?” If it only helps operators debug routing, delete it or move it out of customer docs.
 2. **Grep self-check** — Before finishing, search your diff for: `fal`, `xai/`, `upstream` (when meaning our backend), channel codes, `route3`, vendor domains, and paths that are not under `/v1/` (console JWT routes under `/api/openapi/...` are internal, not customer OpenAPI).
 3. **Tables** — Do not add columns like **上游**, **渠道**, **Provider**. Use **接口**, **计费**, **模式**, **字段**.
-4. **Examples** — curl examples use only `/v1/...` on the site origin (`https://aiplatform.ccwu.cc`) and public field names. API base URL is the origin only (no `/v1`).
+4. **Examples** — curl examples use only `/v1/...` on the site origin (`https://sigrunai.com`) and public field names. API base URL is the origin only (no `/v1`).
 5. **Billing** — Refer to **billing model names** from the console (e.g. `grok-imagine-image-2-1k-medium`), not vendor list prices or USD quotes from vendor sites unless we publish them officially.
 6. **When unsure** — Describe behavior without naming the implementation (“异步任务，轮询 `task_id`”) rather than guessing vendor details.
 
