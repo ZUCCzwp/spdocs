@@ -210,5 +210,11 @@
   },
   "background": {
     "decoration": "windows"
+  },
+  "styling": {
+    "eyebrows": "breadcrumbs"
+  },
+  "metadata": {
+    "timestamp": true
   }
 }
