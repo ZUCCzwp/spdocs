@@ -16,6 +16,7 @@ Auth: Authorization: Bearer <API Key>
 - [Create image](/zh/api-reference/images/create.mdx): POST /v1/images (gpt-image-2)
 - [Query image](/zh/api-reference/images/query.mdx): GET /v1/images/{task_id}
 - [Query video](/zh/api-reference/common/query.mdx): GET /v1/videos/{task_id}
+- [Omni 10s](/zh/api-reference/gemini-omni/create.mdx): POST /v1/videos · model omni-10s
 - [Seedance 2.0 MD](/zh/api-reference/seedance/md/create.mdx): POST /v1/videos · model seedance2.0-md
 - [Seedance 2.5 30s](/zh/api-reference/seedance/25/create-30s.mdx): POST /v1/videos · model seedance2.5-30s
 
@@ -31,5 +32,6 @@ Auth: Authorization: Bearer <API Key>
 - [Create image](/en/api-reference/images/create.mdx)
 - [Query image](/en/api-reference/images/query.mdx)
 - [Query video](/en/api-reference/common/query.mdx)
+- [Omni 10s](/en/api-reference/gemini-omni/create.mdx): POST /v1/videos · model omni-10s
 - [Seedance 2.0 MD](/en/api-reference/seedance/md/create.mdx)
 - [Seedance 2.5 30s](/en/api-reference/seedance/25/create-30s.mdx)

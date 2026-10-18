@@ -89,6 +89,12 @@
             "tab": "Video APIs",
             "groups": [
               {
+                "group": "Gemini Omni",
+                "pages": [
+                  "en/api-reference/gemini-omni/create"
+                ]
+              },
+              {
                 "group": "Seedance 2.0",
                 "pages": [
                   "en/api-reference/seedance/md/create"
@@ -179,6 +185,12 @@
           {
             "tab": "视频接口",
             "groups": [
+              {
+                "group": "Gemini Omni",
+                "pages": [
+                  "zh/api-reference/gemini-omni/create"
+                ]
+              },
               {
                 "group": "Seedance 2.0",
                 "pages": [

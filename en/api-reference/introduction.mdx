@@ -13,6 +13,7 @@ Available models (always check the [model catalog](/en/api-reference/common/mode
 | --- | --- | --- |
 | Image | `gpt-image-2` | Async; use `quality` or `gpt-image-2-low` / `medium` / `high` for billing tiers |
 | Image | `nano-banana-2` / `nano-banana-2.1` / `nano-banana-pro` | Async; pick tier via `resolution` for billing |
+| Video | `omni-10s` | Omni 10s; fixed 10s, 720p |
 | Video | `seedance2.0-md` | 5 / 10 / 15 seconds |
 | Video | `seedance2.5-30s` | Fixed 30 seconds |
 
@@ -37,6 +38,7 @@ API paths start with `/v1`. On your own domain, replace the host with the curren
 | Create image task | `POST /v1/images` |
 | Query image task | `GET /v1/images/{task_id}` |
 | Create video task | `POST /v1/videos` |
+| Create Omni 10s video | `POST /v1/videos` (`model=omni-10s`) |
 | Query video task | `GET /v1/videos/{task_id}` |
 | Upload file | `POST /v1/files` |
 | Model catalog (no key) | `GET /v1/model/catalog` |
@@ -57,6 +59,13 @@ API paths start with `/v1`. On your own domain, replace the host with the curren
     href="/en/api-reference/images/nano-banana"
   >
     2 / 2.1 / Pro, billed by resolution
+  </Card>
+  <Card
+    title="Omni 10s"
+    icon="video"
+    href="/en/api-reference/gemini-omni/create"
+  >
+    Gemini Omni · fixed 10s 720p
   </Card>
   <Card
     title="Generate videos"

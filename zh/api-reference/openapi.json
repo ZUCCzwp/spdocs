@@ -22,7 +22,9 @@
         "summary": "创建图片任务",
         "description": "创建 GPT Image 2 或 Nano Banana 异步生图任务。",
         "operationId": "createImage",
-        "tags": ["Images"],
+        "tags": [
+          "Images"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -57,7 +59,9 @@
                     "prompt": "保持产品外观，换成摄影棚柔光背景",
                     "ratio": "1:1",
                     "resolution": "4k",
-                    "images": ["https://example.com/product.jpg"]
+                    "images": [
+                      "https://example.com/product.jpg"
+                    ]
                   }
                 }
               }
@@ -82,7 +86,9 @@
       "get": {
         "summary": "查询图片任务",
         "operationId": "getImage",
-        "tags": ["Images"],
+        "tags": [
+          "Images"
+        ],
         "parameters": [
           {
             "name": "taskId",
@@ -110,9 +116,11 @@
     "/v1/videos": {
       "post": {
         "summary": "创建视频任务",
-        "description": "统一视频创建入口。当前可用 model：seedance2.0-md、seedance2.5-30s。",
+        "description": "统一视频创建入口。当前可用 model：omni-10s、seedance2.0-md、seedance2.5-30s。",
         "operationId": "createVideo",
-        "tags": ["Videos"],
+        "tags": [
+          "Videos"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -121,6 +129,14 @@
                 "$ref": "#/components/schemas/VideoCreateRequest"
               },
               "examples": {
+                "omni10s": {
+                  "summary": "omni-10s",
+                  "value": {
+                    "model": "omni-10s",
+                    "prompt": "一只金毛犬在阳光下的草地奔跑，电影感跟拍",
+                    "aspect_ratio": "16:9"
+                  }
+                },
                 "seedanceMd": {
                   "summary": "seedance2.0-md",
                   "value": {
@@ -160,7 +176,9 @@
       "get": {
         "summary": "查询视频任务",
         "operationId": "getVideo",
-        "tags": ["Videos"],
+        "tags": [
+          "Videos"
+        ],
         "parameters": [
           {
             "name": "taskId",
@@ -190,14 +208,18 @@
         "summary": "上传文件",
         "description": "multipart 上传图片/视频/音频，返回公网 url。",
         "operationId": "uploadFile",
-        "tags": ["Common"],
+        "tags": [
+          "Common"
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "multipart/form-data": {
               "schema": {
                 "type": "object",
-                "required": ["file"],
+                "required": [
+                  "file"
+                ],
                 "properties": {
                   "file": {
                     "type": "string",
@@ -227,7 +249,9 @@
         "summary": "查询模型目录",
         "description": "无需鉴权。返回当前启用的公开计费模型。",
         "operationId": "modelCatalog",
-        "tags": ["Common"],
+        "tags": [
+          "Common"
+        ],
         "security": [],
         "parameters": [
           {
@@ -258,7 +282,9 @@
         "summary": "查询用户账户余额",
         "description": "返回当前 API Key 所属用户的积分余额。",
         "operationId": "getUserBalance",
-        "tags": ["Account"],
+        "tags": [
+          "Account"
+        ],
         "responses": {
           "200": {
             "description": "余额信息",
@@ -278,7 +304,9 @@
         "summary": "查询 API Key 额度余额",
         "description": "返回当前 API Key 的调用额度（与账户积分独立）。",
         "operationId": "getKeyBalance",
-        "tags": ["Account"],
+        "tags": [
+          "Account"
+        ],
         "responses": {
           "200": {
             "description": "Key 额度",
@@ -306,7 +334,9 @@
     "schemas": {
       "ImageCreateRequest": {
         "type": "object",
-        "required": ["model"],
+        "required": [
+          "model"
+        ],
         "properties": {
           "model": {
             "type": "string",
@@ -321,7 +351,12 @@
           },
           "quality": {
             "type": "string",
-            "enum": ["auto", "low", "medium", "high"],
+            "enum": [
+              "auto",
+              "low",
+              "medium",
+              "high"
+            ],
             "default": "auto"
           },
           "n": {
@@ -354,27 +389,38 @@
       },
       "VideoCreateRequest": {
         "type": "object",
-        "required": ["model", "prompt"],
+        "required": [
+          "model",
+          "prompt"
+        ],
         "properties": {
           "model": {
             "type": "string",
-            "description": "seedance2.0-md 或 seedance2.5-30s",
-            "example": "seedance2.0-md"
+            "description": "omni-10s、seedance2.0-md 或 seedance2.5-30s",
+            "example": "omni-10s"
           },
           "prompt": {
             "type": "string"
           },
           "duration": {
             "oneOf": [
-              { "type": "integer" },
-              { "type": "string" }
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
             ],
-            "description": "seedance2.0-md：5/10/15；seedance2.5-30s：固定 30"
+            "description": "omni-10s：固定 10；seedance2.0-md：5/10/15；seedance2.5-30s：固定 30"
           },
           "seconds": {
             "oneOf": [
-              { "type": "integer" },
-              { "type": "string" }
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
             ],
             "description": "duration 别名"
           },
@@ -392,71 +438,139 @@
           "size": {
             "type": "string"
           },
+          "resolution": {
+            "type": "string",
+            "description": "omni-10s 固定 720p"
+          },
+          "first_image": {
+            "type": "string",
+            "format": "uri",
+            "description": "omni-10s 首尾帧模式的首帧 URL"
+          },
+          "last_image": {
+            "type": "string",
+            "format": "uri",
+            "description": "omni-10s 尾帧 URL；需与 first_image 一起使用"
+          },
           "images": {
             "type": "array",
-            "items": { "type": "string", "format": "uri" }
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
           },
           "reference_images": {
             "type": "array",
-            "items": { "type": "string", "format": "uri" }
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
           },
           "videos": {
             "type": "array",
-            "items": { "type": "string", "format": "uri" }
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
           },
           "reference_videos": {
             "type": "array",
-            "items": { "type": "string", "format": "uri" }
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
           },
           "audios": {
             "type": "array",
-            "items": { "type": "string", "format": "uri" }
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
           },
           "reference_audios": {
             "type": "array",
-            "items": { "type": "string", "format": "uri" }
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
           }
         }
       },
       "TaskResult": {
         "type": "object",
         "properties": {
-          "image_url": { "type": "string" },
-          "video_url": { "type": "string" }
+          "image_url": {
+            "type": "string"
+          },
+          "video_url": {
+            "type": "string"
+          }
         }
       },
       "TaskQueryData": {
         "type": "object",
         "properties": {
-          "task_id": { "type": "string" },
+          "task_id": {
+            "type": "string"
+          },
           "status": {
             "type": "string",
             "description": "queued / processing / completed / failed 等"
           },
-          "progress": { "type": "integer" },
-          "model": { "type": "string" },
-          "created_at": { "type": "integer" },
-          "completed_at": { "type": "integer" },
-          "cost": { "type": "number" },
-          "error_message": { "type": "string" },
-          "result": { "$ref": "#/components/schemas/TaskResult" }
+          "progress": {
+            "type": "integer"
+          },
+          "model": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "completed_at": {
+            "type": "integer"
+          },
+          "cost": {
+            "type": "number"
+          },
+          "error_message": {
+            "type": "string"
+          },
+          "result": {
+            "$ref": "#/components/schemas/TaskResult"
+          }
         }
       },
       "FileUploadResponse": {
         "type": "object",
         "properties": {
-          "code": { "type": "integer", "example": 20000 },
-          "msg": { "type": "string" },
+          "code": {
+            "type": "integer",
+            "example": 20000
+          },
+          "msg": {
+            "type": "string"
+          },
           "data": {
             "type": "object",
             "properties": {
-              "url": { "type": "string", "format": "uri" },
-              "name": { "type": "string" },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "name": {
+                "type": "string"
+              },
               "media_type": {
                 "type": "string",
-                "enum": ["image", "video", "audio"]
+                "enum": [
+                  "image",
+                  "video",
+                  "audio"
+                ]
               },
-              "bytes": { "type": "integer" }
+              "bytes": {
+                "type": "integer"
+              }
             }
           }
         }
@@ -464,35 +578,65 @@
       "TaskQueryResponse": {
         "type": "object",
         "properties": {
-          "code": { "type": "integer", "example": 20000 },
-          "msg": { "type": "string" },
-          "data": { "$ref": "#/components/schemas/TaskQueryData" }
+          "code": {
+            "type": "integer",
+            "example": 20000
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/TaskQueryData"
+          }
         }
       },
       "CatalogItem": {
         "type": "object",
         "properties": {
-          "model_name": { "type": "string" },
-          "display_name": { "type": "string" },
-          "model_type": { "type": "string" },
-          "price_mode": { "type": "string" },
-          "unit_price": { "type": "number" },
-          "official_price": { "type": "number" },
-          "remark": { "type": "string" },
-          "group": { "type": "string" }
+          "model_name": {
+            "type": "string"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "model_type": {
+            "type": "string"
+          },
+          "price_mode": {
+            "type": "string"
+          },
+          "unit_price": {
+            "type": "number"
+          },
+          "official_price": {
+            "type": "number"
+          },
+          "remark": {
+            "type": "string"
+          },
+          "group": {
+            "type": "string"
+          }
         }
       },
       "CatalogResponse": {
         "type": "object",
         "properties": {
-          "code": { "type": "integer", "example": 20000 },
-          "msg": { "type": "string" },
+          "code": {
+            "type": "integer",
+            "example": 20000
+          },
+          "msg": {
+            "type": "string"
+          },
           "data": {
             "type": "object",
             "properties": {
               "list": {
                 "type": "array",
-                "items": { "$ref": "#/components/schemas/CatalogItem" }
+                "items": {
+                  "$ref": "#/components/schemas/CatalogItem"
+                }
               }
             }
           }
@@ -501,14 +645,25 @@
       "UserBalanceResponse": {
         "type": "object",
         "properties": {
-          "code": { "type": "integer", "example": 20000 },
-          "msg": { "type": "string" },
+          "code": {
+            "type": "integer",
+            "example": 20000
+          },
+          "msg": {
+            "type": "string"
+          },
           "data": {
             "type": "object",
             "properties": {
-              "balance": { "type": "number" },
-              "used_coin": { "type": "number" },
-              "available": { "type": "number" }
+              "balance": {
+                "type": "number"
+              },
+              "used_coin": {
+                "type": "number"
+              },
+              "available": {
+                "type": "number"
+              }
             }
           }
         }
@@ -516,16 +671,31 @@
       "KeyBalanceResponse": {
         "type": "object",
         "properties": {
-          "code": { "type": "integer", "example": 20000 },
-          "msg": { "type": "string" },
+          "code": {
+            "type": "integer",
+            "example": 20000
+          },
+          "msg": {
+            "type": "string"
+          },
           "data": {
             "type": "object",
             "properties": {
-              "name": { "type": "string" },
-              "total_quota": { "type": "number" },
-              "used_quota": { "type": "number" },
-              "available_quota": { "type": "number" },
-              "unlimited": { "type": "boolean" }
+              "name": {
+                "type": "string"
+              },
+              "total_quota": {
+                "type": "number"
+              },
+              "used_quota": {
+                "type": "number"
+              },
+              "available_quota": {
+                "type": "number"
+              },
+              "unlimited": {
+                "type": "boolean"
+              }
             }
           }
         }

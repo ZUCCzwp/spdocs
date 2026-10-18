@@ -1,0 +1,99 @@
+---
+title: 'Create Omni 10s video'
+openapi: 'POST /v1/videos'
+---
+
+Create an async **Omni 10s** (`omni-10s`) video task via the unified entry `POST /v1/videos` with `model` set to `omni-10s`. Poll with [Query video task](/en/api-reference/common/query) and read `result.video_url` when completed.
+
+## Model
+
+| `model` | Alias | Billing key | Duration | Resolution |
+| --- | --- | --- | --- | --- |
+| `omni-10s` | `omni-flash-10s` (normalized to `omni-10s`) | `omni-10s` | Fixed **10** seconds | Fixed **720p** |
+
+Billing is `per_task`. Check the [model catalog](/en/api-reference/common/model-catalog) and the create response `cost` for live prices.
+
+## Constraints
+
+- Aspect ratio: `16:9` or `9:16` only; default `16:9`
+- `duration` / `seconds` may be omitted; if set, must be `10`
+- Resolution is fixed at `720p`
+- Reference audio is **not** supported
+- These modes are **mutually exclusive**:
+  - Text-to-video (`prompt` only)
+  - Reference images (max **7**)
+  - Reference videos (max **7**; cannot mix with reference images)
+  - First/last frames (`first_image` required; `last_image` optional; cannot mix with reference images/videos)
+
+Reference media must be public `https://` URLs.
+
+## Request body
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `model` | string | yes | `omni-10s` (or alias `omni-flash-10s`) |
+| `prompt` | string | yes | Generation prompt; cannot be empty |
+| `aspect_ratio` / `ratio` | string | no | `16:9` or `9:16` only; default `16:9` |
+| `duration` / `seconds` | int \| string | no | Fixed **10**; may be omitted |
+| `images` / `reference_images` | string[] | no | Reference images, max **7** |
+| `videos` / `reference_videos` | string[] | no | Reference videos, max **7** |
+| `first_image` | string | conditional | First-frame URL for frame mode; required when using a last frame |
+| `last_image` | string | no | Last-frame URL; use together with `first_image` |
+
+## Examples
+
+### Text-to-video
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "omni-10s",
+    "prompt": "A golden retriever running across a sunny meadow, cinematic tracking shot",
+    "aspect_ratio": "16:9"
+  }'
+```
+
+### First and last frames
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "omni-10s",
+    "prompt": "Smooth push from close-up to wide shot with natural lighting",
+    "aspect_ratio": "9:16",
+    "first_image": "https://example.com/first.jpg",
+    "last_image": "https://example.com/last.jpg"
+  }'
+```
+
+Success response:
+
+```json
+{
+  "code": 20000,
+  "msg": "提交成功",
+  "data": {
+    "task_id": "vid_xxxxxxxx",
+    "status": "queued",
+    "progress": 0,
+    "model": "omni-10s",
+    "cost": 0,
+    "result": {}
+  }
+}
+```
+
+`cost` is the charge for this task in credits; use the live response value.
+
+## Polling
+
+```bash
+curl -X GET 'https://sigrunai.com/v1/videos/vid_xxxxxxxx' \
+  -H 'Authorization: Bearer sk_xxx'
+```
+
+See [Query video task](/en/api-reference/common/query) for status values. When completed, read `data.result.video_url` (kept for about **3** days — download promptly).

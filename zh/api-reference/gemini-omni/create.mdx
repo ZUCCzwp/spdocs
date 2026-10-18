@@ -1,0 +1,99 @@
+---
+title: '创建 Omni 10s 视频'
+openapi: 'POST /v1/videos'
+---
+
+创建 **Omni 10s**（`omni-10s`）异步视频任务。使用统一入口 `POST /v1/videos`，并设置 `model` 为 `omni-10s`。成功后返回 `task_id`，用 [查询视频任务](/zh/api-reference/common/query) 轮询，完成后从 `result.video_url` 取片。
+
+## 模型
+
+| `model` | 别名 | 计费键 | 时长 | 分辨率 |
+| --- | --- | --- | --- | --- |
+| `omni-10s` | `omni-flash-10s`（会规范为 `omni-10s`） | `omni-10s` | 固定 **10** 秒 | 固定 **720p** |
+
+计费方式为 `per_task`（按次）。实际单价以 [模型目录](/zh/api-reference/common/model-catalog) 与创建响应中的 `cost` 为准。
+
+## 约束
+
+- 画幅仅支持 `16:9`、`9:16`；默认 `16:9`
+- `duration` / `seconds` 可省略；若传入必须为 `10`
+- `resolution` 固定为 `720p`（传入其他值无效或被忽略）
+- **不支持**参考音频
+- 以下模式**互斥**，不可混用：
+  - 纯文生视频（仅 `prompt`）
+  - 参考图（最多 **7** 张）
+  - 参考视频（最多 **7** 个；不可与参考图同时使用）
+  - 首尾帧（`first_image` 必填；`last_image` 可选；不可与参考图/参考视频同时使用）
+
+参考素材须为公网 `https://` URL。
+
+## 请求参数
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `model` | string | 是 | `omni-10s`（或别名 `omni-flash-10s`） |
+| `prompt` | string | 是 | 生成描述，不能为空 |
+| `aspect_ratio` / `ratio` | string | 否 | 仅 `16:9`、`9:16`；默认 `16:9` |
+| `duration` / `seconds` | int \| string | 否 | 固定 **10**；省略亦可 |
+| `images` / `reference_images` | string[] | 否 | 参考图，最多 **7** 张 |
+| `videos` / `reference_videos` | string[] | 否 | 参考视频，最多 **7** 个 |
+| `first_image` | string | 条件 | 首尾帧模式的首帧 URL；提供尾帧时必须同时提供首帧 |
+| `last_image` | string | 否 | 尾帧 URL；需与 `first_image` 一起使用 |
+
+## 示例
+
+### 文生视频
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "omni-10s",
+    "prompt": "一只金毛犬在阳光下的草地奔跑，电影感跟拍",
+    "aspect_ratio": "16:9"
+  }'
+```
+
+### 首尾帧
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "omni-10s",
+    "prompt": "镜头从近景平滑推到远景，光影自然过渡",
+    "aspect_ratio": "9:16",
+    "first_image": "https://example.com/first.jpg",
+    "last_image": "https://example.com/last.jpg"
+  }'
+```
+
+成功响应示例：
+
+```json
+{
+  "code": 20000,
+  "msg": "提交成功",
+  "data": {
+    "task_id": "vid_xxxxxxxx",
+    "status": "queued",
+    "progress": 0,
+    "model": "omni-10s",
+    "cost": 0,
+    "result": {}
+  }
+}
+```
+
+`cost` 为本次扣费（积分），以实际响应为准。
+
+## 轮询
+
+```bash
+curl -X GET 'https://sigrunai.com/v1/videos/vid_xxxxxxxx' \
+  -H 'Authorization: Bearer sk_xxx'
+```
+
+状态说明见 [查询视频任务](/zh/api-reference/common/query)。完成后读取 `data.result.video_url`（约保留 **3** 天，请及时转存）。

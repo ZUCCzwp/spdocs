@@ -13,6 +13,7 @@ description: 'AI Platform OpenAPI 接入说明'
 | --- | --- | --- |
 | 图片 | `gpt-image-2` | 异步生图；可用 `quality` 或 `gpt-image-2-low` / `medium` / `high` 计费档 |
 | 图片 | `nano-banana-2` / `nano-banana-2.1` / `nano-banana-pro` | 异步生图；用 `resolution` 选择档位并计费 |
+| 视频 | `omni-10s` | Omni 10s；固定 10 秒、720p |
 | 视频 | `seedance2.0-md` | 5 / 10 / 15 秒 |
 | 视频 | `seedance2.5-30s` | 固定 30 秒 |
 
@@ -37,6 +38,7 @@ https://sigrunai.com
 | 创建图片任务 | `POST /v1/images` |
 | 查询图片任务 | `GET /v1/images/{task_id}` |
 | 创建视频任务 | `POST /v1/videos` |
+| 创建 Omni 10s 视频 | `POST /v1/videos`（`model=omni-10s`） |
 | 查询视频任务 | `GET /v1/videos/{task_id}` |
 | 上传文件 | `POST /v1/files` |
 | 模型目录（无需 Key） | `GET /v1/model/catalog` |
@@ -57,6 +59,13 @@ https://sigrunai.com
     href="/zh/api-reference/images/nano-banana"
   >
     2 / 2.1 / Pro，按 resolution 计费
+  </Card>
+  <Card
+    title="Omni 10s"
+    icon="video"
+    href="/zh/api-reference/gemini-omni/create"
+  >
+    Gemini Omni · 固定 10 秒 720p
   </Card>
   <Card
     title="生成视频"
