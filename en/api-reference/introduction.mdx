@@ -12,6 +12,7 @@ Available models (always check the [model catalog](/en/api-reference/common/mode
 | Type | `model` | Notes |
 | --- | --- | --- |
 | Image | `gpt-image-2` | Async; use `quality` or `gpt-image-2-low` / `medium` / `high` for billing tiers |
+| Image | `nano-banana-2` / `nano-banana-2.1` / `nano-banana-pro` | Async; pick tier via `resolution` for billing |
 | Video | `seedance2.0-md` | 5 / 10 / 15 seconds |
 | Video | `seedance2.5-30s` | Fixed 30 seconds |
 
@@ -44,11 +45,18 @@ API paths start with `/v1`. On your own domain, replace the host with the curren
 
 <CardGroup cols={2}>
   <Card
-    title="Generate images"
+    title="GPT Image 2"
     icon="image"
     href="/en/api-reference/images/create"
   >
-    GPT Image 2 async generation
+    Async images billed by quality
+  </Card>
+  <Card
+    title="Nano Banana"
+    icon="image"
+    href="/en/api-reference/images/nano-banana"
+  >
+    2 / 2.1 / Pro, billed by resolution
   </Card>
   <Card
     title="Generate videos"

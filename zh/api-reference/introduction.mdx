@@ -12,6 +12,7 @@ description: 'AI Platform OpenAPI 接入说明'
 | 类型 | `model` | 说明 |
 | --- | --- | --- |
 | 图片 | `gpt-image-2` | 异步生图；可用 `quality` 或 `gpt-image-2-low` / `medium` / `high` 计费档 |
+| 图片 | `nano-banana-2` / `nano-banana-2.1` / `nano-banana-pro` | 异步生图；用 `resolution` 选择档位并计费 |
 | 视频 | `seedance2.0-md` | 5 / 10 / 15 秒 |
 | 视频 | `seedance2.5-30s` | 固定 30 秒 |
 
@@ -44,11 +45,18 @@ https://sigrunai.com
 
 <CardGroup cols={2}>
   <Card
-    title="生成图片"
+    title="GPT Image 2"
     icon="image"
     href="/zh/api-reference/images/create"
   >
-    GPT Image 2 异步生图
+    异步生图，按 quality 计费
+  </Card>
+  <Card
+    title="Nano Banana"
+    icon="image"
+    href="/zh/api-reference/images/nano-banana"
+  >
+    2 / 2.1 / Pro，按 resolution 计费
   </Card>
   <Card
     title="生成视频"

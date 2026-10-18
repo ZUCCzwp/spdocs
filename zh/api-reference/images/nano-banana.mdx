@@ -1,0 +1,92 @@
+---
+title: '创建 Nano Banana 任务'
+openapi: 'POST /v1/images'
+---
+
+创建 Nano Banana 异步生图任务。成功后返回 `task_id`，请用 [查询图片任务](/zh/api-reference/images/query) 轮询，完成后从 `result.image_url` 取图。
+
+GPT Image 2 见 [创建 GPT Image 2 任务](/zh/api-reference/images/create)。
+
+## 模型
+
+| `model` | 说明 | `resolution` | 计费键示例 |
+| --- | --- | --- | --- |
+| `nano-banana-2` | 均衡档，支持草稿到 4K | `0.5k` / `1k` / `2k` / `4k` | `nanobanana2-1k` |
+| `nano-banana-2.1` | 高效迭代，提升细节与文字表现 | `1k` / `2k` / `4k` | `nanobanana21-2k` |
+| `nano-banana-pro` | 商业级细节与光影 | `1k` / `2k` / `4k` | `nanobananapro-4k` |
+
+按分辨率对应的计费模型扣费（`per_task`，每次 1 张）。实际单价以 [模型目录](/zh/api-reference/common/model-catalog) 与创建响应中的 `cost` 为准。
+
+## 请求参数
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `model` | string | 是 | 见上表 |
+| `prompt` | string | 条件 | 文生图必填；有参考图时可为空。最长 **10000** 字符 |
+| `n` | int | 否 | 固定 **1**（不传或传其他值均按 1 张） |
+| `ratio` | string | 否 | 画面比例；也可用 `size`。常用 `1:1` / `9:16` / `16:9` / `auto` |
+| `size` | string | 否 | `ratio` 别名 |
+| `resolution` | string | 否 | 分辨率档位，默认 `1k`（见上表） |
+| `images` | string[] | 否 | 参考图公网 URL，最多 **5** 张 |
+
+## 示例
+
+### 文生图（Nano Banana 2）
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/images' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "nano-banana-2",
+    "prompt": "电影感日落湖面，金色光线洒在远山",
+    "ratio": "16:9",
+    "resolution": "2k"
+  }'
+```
+
+### 图生图（Nano Banana Pro）
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/images' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "nano-banana-pro",
+    "prompt": "保持产品外观，换成摄影棚柔光背景",
+    "ratio": "1:1",
+    "resolution": "4k",
+    "images": ["https://example.com/product.jpg"]
+  }'
+```
+
+### Nano Banana 2.1
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/images' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "nano-banana-2.1",
+    "prompt": "产品海报，清晰中文标题，干净背景",
+    "ratio": "1:1",
+    "resolution": "1k"
+  }'
+```
+
+成功响应示例：
+
+```json
+{
+  "code": 20000,
+  "msg": "提交成功",
+  "data": {
+    "task_id": "img_xxxxxxxx",
+    "status": "queued",
+    "progress": 0,
+    "model": "nanobanana2-2k",
+    "cost": 0.05,
+    "result": {}
+  }
+}
+```

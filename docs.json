@@ -72,9 +72,15 @@
             "tab": "Image APIs",
             "groups": [
               {
-                "group": "Images",
+                "group": "GPT Image 2",
                 "pages": [
                   "en/api-reference/images/create"
+                ]
+              },
+              {
+                "group": "Nano Banana",
+                "pages": [
+                  "en/api-reference/images/nano-banana"
                 ]
               }
             ]
@@ -157,9 +163,15 @@
             "tab": "图片接口",
             "groups": [
               {
-                "group": "图片",
+                "group": "GPT Image 2",
                 "pages": [
                   "zh/api-reference/images/create"
+                ]
+              },
+              {
+                "group": "Nano Banana",
+                "pages": [
+                  "zh/api-reference/images/nano-banana"
                 ]
               }
             ]
