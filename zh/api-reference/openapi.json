@@ -116,7 +116,7 @@
     "/v1/videos": {
       "post": {
         "summary": "创建视频任务",
-        "description": "统一视频创建入口。当前可用 model：omni-10s、veo3.1-fast、veo3.1-lite、veo3.1-lite-hd、grok-imagine-video-1.5（及 fast/lite）、minimax-h3、minimax-h3-max、seedance2.0-md、sd2-480p-ac、sd2-720p-ac、seedance2.5-30s、sd2.5-720p-ac。Veo 也可用专用入口 POST /v1/veo/frames。",
+        "description": "统一视频创建入口。当前可用 model：omni-10s、veo3.1-fast、veo3.1-lite、veo3.1-lite-hd、grok-imagine-video-1.5（及 fast/lite）、minimax-h3、minimax-h3-max、kling-4.0（720p/1080p）、seedance2.0-md、sd2-480p-ac、sd2-720p-ac、seedance2.5-30s、sd2.5-720p-ac。Veo 也可用专用入口 POST /v1/veo/frames。",
         "operationId": "createVideo",
         "tags": [
           "Videos"
@@ -179,6 +179,16 @@
                     "prompt": "一只猫在草地上奔跑，跟拍镜头",
                     "duration": 8,
                     "aspect_ratio": "9:16"
+                  }
+                },
+                "kling40": {
+                  "summary": "kling-4.0",
+                  "value": {
+                    "model": "kling-4.0",
+                    "prompt": "一只金毛犬在阳光下的草地奔跑，电影感跟拍",
+                    "duration": 8,
+                    "aspect_ratio": "16:9",
+                    "resolution": "720p"
                   }
                 }
               }
@@ -490,7 +500,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "omni-10s、veo3.1-fast、veo3.1-lite、veo3.1-lite-hd、grok-imagine-video-1.5（及 fast/lite）、minimax-h3、minimax-h3-max、seedance2.0-md、sd2-480p-ac、sd2-720p-ac、seedance2.5-30s 或 sd2.5-720p-ac",
+            "description": "omni-10s、veo3.1-fast、veo3.1-lite、veo3.1-lite-hd、grok-imagine-video-1.5（及 fast/lite）、minimax-h3、minimax-h3-max、kling-4.0 / kling-4.0-720p / kling-4.0-1080p、seedance2.0-md、sd2-480p-ac、sd2-720p-ac、seedance2.5-30s 或 sd2.5-720p-ac",
             "example": "omni-10s"
           },
           "prompt": {
@@ -573,6 +583,24 @@
               "type": "string",
               "format": "uri"
             }
+          },
+          "reference_video_durations": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 30
+            },
+            "description": "kling-4.0 传入参考视频时必填，与 videos 等长，单位秒（1～30）。计费秒数 = 输出时长 + 各项之和"
+          },
+          "reference_audio_durations": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 5,
+              "maximum": 30
+            },
+            "description": "kling-4.0 传入参考音频时必填，与 audios 等长，单位秒（5～30）；仅校验，不计入计费秒数"
           },
           "audios": {
             "type": "array",

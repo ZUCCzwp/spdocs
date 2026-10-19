@@ -1,0 +1,93 @@
+---
+title: 'Create Kling 4.0 video'
+openapi: 'POST /v1/videos'
+---
+
+Asynchronously generate **Kling 4.0** videos. Use the shared entry `POST /v1/videos` with `model` set to `kling-4.0` (or a billing key). On success you get a `task_id`; poll [Query video task](/en/api-reference/common/query) and read `result.video_url` when completed.
+
+## Models
+
+| `model` | Notes | Duration | Resolution |
+| --- | --- | --- | --- |
+| `kling-4.0` | Open model name; pair with `resolution` for billing | **5–30** s | `720p` (default) / `1080p` |
+| `kling-4.0-720p` | Billing key: 720p | **5–30** s | `720p` |
+| `kling-4.0-1080p` | Billing key: 1080p | **5–30** s | `1080p` |
+
+Billing is `per_second`. **Billable seconds = output duration + sum of all reference video durations** (ceil to whole seconds via `reference_video_durations`; reference audio duration is **not** billed). See the [model catalog](/en/api-reference/common/model-catalog) and the `cost` field on create for live unit prices.
+
+## Modes
+
+| Mode | Parameters |
+| --- | --- |
+| Text-to-video | Omit `images` / `videos` / `audios`, or pass empty arrays |
+| Reference generation | Pass reference images, videos, and/or audios |
+
+First/last frame fields are **not** supported.
+
+## Reference limits
+
+| Type | Max count | Duration each | Max file size |
+| --- | --- | --- | --- |
+| Image | **10** | — | **10MB** |
+| Video | **5** | **≤ 30** s | **50MB** |
+| Audio | **3** | **5–30** s | **20MB** |
+
+Reference media must be public `https://` URLs. File size is enforced on upload; durations are validated via `reference_*_durations`.
+
+## Request parameters
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `model` | string | yes | `kling-4.0` / `kling-4.0-720p` / `kling-4.0-1080p` |
+| `prompt` | string | yes | Generation prompt, 1–5000 characters |
+| `duration` / `seconds` | int \| string | yes | **5–30**; string values allowed (e.g. `"10"`) |
+| `aspect_ratio` / `ratio` | string | no | `16:9`, `9:16`, `1:1`; default `16:9` |
+| `resolution` | string | no | `720p` (default) or `1080p`; also inferred from billing model names |
+| `images` / `reference_images` | string[] | no | Reference image URLs, max **10** |
+| `videos` / `reference_videos` | string[] | no | Reference video URLs, max **5** |
+| `reference_video_durations` | int[] | conditional | Same length as `videos`, seconds (1–30); **required** when videos are present |
+| `audios` / `reference_audios` | string[] | no | Reference audio URLs, max **3** |
+| `reference_audio_durations` | int[] | conditional | Same length as `audios`, seconds (5–30); **required** when audios are present |
+
+## Examples
+
+### Text-to-video
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "kling-4.0",
+    "prompt": "A night drive through a neon city, cinematic tracking shot",
+    "aspect_ratio": "16:9",
+    "resolution": "720p",
+    "duration": 8
+  }'
+```
+
+### Image + video + audio reference
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "kling-4.0",
+    "prompt": "Image 1 for product look; video 1 for camera motion; audio 1 for pacing",
+    "aspect_ratio": "16:9",
+    "resolution": "720p",
+    "duration": 10,
+    "images": ["https://example.com/ref.png"],
+    "videos": ["https://example.com/ref.mp4"],
+    "reference_video_durations": [5],
+    "audios": ["https://example.com/ref.mp3"],
+    "reference_audio_durations": [8]
+  }'
+```
+
+Billable seconds in this example = `10 + 5 = 15` (audio is not added).
+
+## Response
+
+Create returns the shared task payload (`task_id`, `status`, `cost`, …). `data.model` is the billing key (e.g. `kling-4.0-720p`). Poll the query endpoint for `result.video_url` when completed.

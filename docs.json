@@ -113,6 +113,12 @@
                 ]
               },
               {
+                "group": "Kling 4.0",
+                "pages": [
+                  "en/api-reference/kling40/create"
+                ]
+              },
+              {
                 "group": "Seedance 2.0",
                 "pages": [
                   "en/api-reference/seedance/md/create",
@@ -227,6 +233,12 @@
                 "group": "MiniMax H3",
                 "pages": [
                   "zh/api-reference/minimax-h3/create"
+                ]
+              },
+              {
+                "group": "Kling 4.0",
+                "pages": [
+                  "zh/api-reference/kling40/create"
                 ]
               },
               {
