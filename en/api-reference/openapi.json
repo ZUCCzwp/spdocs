@@ -116,7 +116,7 @@
     "/v1/videos": {
       "post": {
         "summary": "Create video task",
-        "description": "Unified video create entry. Available models: omni-10s, seedance2.0-md, seedance2.5-30s, sd2.5-720p-ac.",
+        "description": "Unified video create entry. Available models: omni-10s, seedance2.0-md, sd2-480p-ac, sd2-720p-ac, seedance2.5-30s, sd2.5-720p-ac.",
         "operationId": "createVideo",
         "tags": [
           "Videos"
@@ -151,6 +151,15 @@
                   "value": {
                     "model": "seedance2.5-30s",
                     "prompt": "一只猫在草地上奔跑，跟拍镜头",
+                    "aspect_ratio": "9:16"
+                  }
+                },
+                "seedance20Ac": {
+                  "summary": "sd2-720p-ac",
+                  "value": {
+                    "model": "sd2-720p-ac",
+                    "prompt": "A cat running on grass, tracking shot",
+                    "duration": 8,
                     "aspect_ratio": "9:16"
                   }
                 },
@@ -405,7 +414,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "omni-10s, seedance2.0-md, seedance2.5-30s, or sd2.5-720p-ac",
+            "description": "omni-10s, seedance2.0-md, sd2-480p-ac, sd2-720p-ac, seedance2.5-30s, or sd2.5-720p-ac",
             "example": "omni-10s"
           },
           "prompt": {
@@ -420,7 +429,7 @@
                 "type": "string"
               }
             ],
-            "description": "omni-10s: fixed 10; seedance2.0-md: 5/10/15; seedance2.5-30s: fixed 30; sd2.5-720p-ac: 4–30"
+            "description": "omni-10s: fixed 10; seedance2.0-md: 5/10/15; sd2-*-ac: 4–15; seedance2.5-30s: fixed 30; sd2.5-720p-ac: 4–30"
           },
           "seconds": {
             "oneOf": [

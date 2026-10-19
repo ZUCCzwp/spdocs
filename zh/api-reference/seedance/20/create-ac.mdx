@@ -1,0 +1,46 @@
+---
+title: 'Seedance 2.0 AC'
+openapi: 'POST /v1/videos'
+---
+
+创建 Seedance **2.0 AC** 视频任务。路径为统一的 `POST /v1/videos`，按分辨率选择 `sd2-480p-ac` 或 `sd2-720p-ac`。完成后从 [查询视频任务](/zh/api-reference/common/query) 的 `result.video_url` 取片。
+
+按次计费（时长只影响成片秒数，不参与乘价）。
+
+## 模型
+
+| `model` | 计费 | 时长 | 分辨率 |
+| --- | --- | --- | --- |
+| `sd2-480p-ac` | `per_task`（按次） | **4–15** 秒 | 固定 **480p** |
+| `sd2-720p-ac` | `per_task`（按次） | **4–15** 秒 | 固定 **720p** |
+
+不支持首尾帧。
+
+## 请求参数
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `model` | string | 是 | `sd2-480p-ac` 或 `sd2-720p-ac` |
+| `prompt` | string | 是 | 最多 **5000** 字符 |
+| `duration` / `seconds` | int | 否 | **4–15**；默认 5 |
+| `aspect_ratio` / `ratio` | string | 否 | 仅 `16:9`、`9:16`；默认 `9:16` |
+| `images` / `reference_images` | string[] | 否 | 参考图，最多 **9** 张 |
+| `videos` / `reference_videos` | string[] | 否 | 参考视频，最多 **3** 个 |
+| `audios` / `reference_audios` | string[] | 否 | 参考音频，最多 **3** 段 |
+
+参考素材须为公网 `https://` URL。
+
+## 示例
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "sd2-720p-ac",
+    "prompt": "一只猫在草地上奔跑，跟拍镜头",
+    "duration": 8,
+    "aspect_ratio": "9:16",
+    "images": ["https://example.com/cat.png"]
+  }'
+```
