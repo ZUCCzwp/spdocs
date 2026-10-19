@@ -13,7 +13,7 @@ openapi: 'POST /v1/videos'
 | `grok-imagine-video-1.5-fast` | 文生；单张首帧（最长 15s）；多图参考（最长 **10** s） | **4～15** 秒（多图参考 ≤10s） | **720p** |
 | `grok-imagine-video-1.5-lite` | 文生；单张首帧；**不支持**多图与尾帧 | **4～15** 秒 | **720p** |
 
-计费方式为 `per_second`（按秒）。实际单价以 [模型目录](/zh/api-reference/common/model-catalog) 与创建响应中的 `cost` 为准。
+计费方式为 `per_task`（按次；时长仅控制成片秒数，不参与乘价）。实际单价以 [模型目录](/zh/api-reference/common/model-catalog) 与创建响应中的 `cost` 为准。
 
 ## 模式判定
 

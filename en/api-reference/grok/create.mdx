@@ -13,7 +13,7 @@ Create async **Grok Imagine Video 1.5** jobs via the shared `POST /v1/videos` en
 | `grok-imagine-video-1.5-fast` | Text-to-video; single first frame (up to 15s); multi-ref (max **10** s) | **4–15** s (multi-ref ≤10s) | **720p** |
 | `grok-imagine-video-1.5-lite` | Text-to-video; single first frame; **no** multi-ref or last frame | **4–15** s | **720p** |
 
-Billing is `per_second`. See the [model catalog](/en/api-reference/common/model-catalog) and the create response `cost` for live prices.
+Billing is `per_task` (flat per job; duration only controls clip length, not the multiplier). See the [model catalog](/en/api-reference/common/model-catalog) and the create response `cost` for live prices.
 
 ## Modes
 
