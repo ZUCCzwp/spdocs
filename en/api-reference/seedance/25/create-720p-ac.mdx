@@ -1,0 +1,45 @@
+---
+title: 'Seedance 2.5 720p AC'
+openapi: 'POST /v1/videos'
+---
+
+Create a Seedance **2.5 720p AC** video via `POST /v1/videos` with `model` set to `sd2.5-720p-ac`. Poll [Query video task](/en/api-reference/common/query) for `result.video_url`.
+
+Fixed 720p. Billed **per task** (`duration` only controls clip length, not the price multiplier).
+
+## Model
+
+| `model` | Billing | Duration | Resolution |
+| --- | --- | --- | --- |
+| `sd2.5-720p-ac` | `per_task` | **4–30** seconds | Fixed **720p** |
+
+First/last frames are not supported. Faces are not blurred.
+
+## Request fields
+
+| Field | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `model` | string | yes | `sd2.5-720p-ac` |
+| `prompt` | string | yes | Max **5000** characters |
+| `duration` / `seconds` | int | no | **4–30** |
+| `aspect_ratio` / `ratio` | string | no | `16:9` or `9:16`; default `9:16` |
+| `images` / `reference_images` | string[] | no | Up to **30** |
+| `videos` / `reference_videos` | string[] | no | Up to **10** |
+| `audios` / `reference_audios` | string[] | no | Up to **10** |
+
+Media URLs must be public `https://` links.
+
+## Example
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "sd2.5-720p-ac",
+    "prompt": "A cat running on grass, tracking shot",
+    "duration": 8,
+    "aspect_ratio": "9:16",
+    "images": ["https://example.com/cat.png"]
+  }'
+```

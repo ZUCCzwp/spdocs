@@ -19,6 +19,7 @@ Auth: Authorization: Bearer <API Key>
 - [Omni 10s](/zh/api-reference/gemini-omni/create.mdx): POST /v1/videos · model omni-10s
 - [Seedance 2.0 MD](/zh/api-reference/seedance/md/create.mdx): POST /v1/videos · model seedance2.0-md
 - [Seedance 2.5 30s](/zh/api-reference/seedance/25/create-30s.mdx): POST /v1/videos · model seedance2.5-30s
+- [Seedance 2.5 720p AC](/zh/api-reference/seedance/25/create-720p-ac.mdx): POST /v1/videos · model sd2.5-720p-ac
 
 ## English
 
@@ -35,3 +36,4 @@ Auth: Authorization: Bearer <API Key>
 - [Omni 10s](/en/api-reference/gemini-omni/create.mdx): POST /v1/videos · model omni-10s
 - [Seedance 2.0 MD](/en/api-reference/seedance/md/create.mdx)
 - [Seedance 2.5 30s](/en/api-reference/seedance/25/create-30s.mdx)
+- [Seedance 2.5 720p AC](/en/api-reference/seedance/25/create-720p-ac.mdx)

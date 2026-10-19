@@ -116,7 +116,7 @@
     "/v1/videos": {
       "post": {
         "summary": "创建视频任务",
-        "description": "统一视频创建入口。当前可用 model：omni-10s、seedance2.0-md、seedance2.5-30s。",
+        "description": "统一视频创建入口。当前可用 model：omni-10s、seedance2.0-md、seedance2.5-30s、sd2.5-720p-ac。",
         "operationId": "createVideo",
         "tags": [
           "Videos"
@@ -151,6 +151,15 @@
                   "value": {
                     "model": "seedance2.5-30s",
                     "prompt": "一只猫在草地上奔跑，跟拍镜头",
+                    "aspect_ratio": "9:16"
+                  }
+                },
+                "seedance720pAc": {
+                  "summary": "sd2.5-720p-ac",
+                  "value": {
+                    "model": "sd2.5-720p-ac",
+                    "prompt": "一只猫在草地上奔跑，跟拍镜头",
+                    "duration": 8,
                     "aspect_ratio": "9:16"
                   }
                 }
@@ -396,7 +405,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "omni-10s、seedance2.0-md 或 seedance2.5-30s",
+            "description": "omni-10s、seedance2.0-md、seedance2.5-30s 或 sd2.5-720p-ac",
             "example": "omni-10s"
           },
           "prompt": {
@@ -411,7 +420,7 @@
                 "type": "string"
               }
             ],
-            "description": "omni-10s：固定 10；seedance2.0-md：5/10/15；seedance2.5-30s：固定 30"
+            "description": "omni-10s：固定 10；seedance2.0-md：5/10/15；seedance2.5-30s：固定 30；sd2.5-720p-ac：4–30"
           },
           "seconds": {
             "oneOf": [
