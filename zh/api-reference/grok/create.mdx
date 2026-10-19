@@ -1,0 +1,122 @@
+---
+title: '创建 Grok Imagine Video 1.5'
+openapi: 'POST /v1/videos'
+---
+
+异步生成 **Grok Imagine Video 1.5** 系列视频。使用统一入口 `POST /v1/videos`，设置 `model` 为下列之一。成功返回 `task_id`，用 [查询视频任务](/zh/api-reference/common/query) 轮询，完成后从 `result.video_url` 取片。
+
+## 模型
+
+| `model` | 能力 | 时长 | 分辨率 |
+| --- | --- | --- | --- |
+| `grok-imagine-video-1.5` | 文生；首帧 / 首尾帧；参考图最多 **7** 张 | **4～15** 秒 | **720p** |
+| `grok-imagine-video-1.5-fast` | 文生；单张首帧（最长 15s）；多图参考（最长 **10** s） | **4～15** 秒（多图参考 ≤10s） | **720p** |
+| `grok-imagine-video-1.5-lite` | 文生；单张首帧；**不支持**多图与尾帧 | **4～15** 秒 | **720p** |
+
+计费方式为 `per_second`（按秒）。实际单价以 [模型目录](/zh/api-reference/common/model-catalog) 与创建响应中的 `cost` 为准。
+
+## 模式判定
+
+| 模式 | 传参 |
+| --- | --- |
+| 文生视频 | 不传图片，或传空数组 |
+| 首帧 / 首尾帧 | 传 `first_image`（及可选 `last_image`），并设 `first_last_frame: true`；也可在 `images` 中按顺序传首帧、尾帧并设 `first_last_frame: true` |
+| 参考模式 | 传 `images` / `reference_images`，且不传 `first_last_frame` 或传 `false` |
+
+首尾帧与参考图**互斥**。Lite 不支持多图参考与尾帧；Fast 不支持尾帧。
+
+## 请求参数
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `model` | string | 是 | 见上方模型表 |
+| `prompt` | string | 是 | 生成描述，1～5000 字 |
+| `duration` / `seconds` | int \| string | 是 | **4～15**；字符串亦可（如 `"9"`） |
+| `aspect_ratio` / `ratio` | string | 否 | `16:9`、`9:16`、`1:1`、`3:2`、`2:3`、`21:9`；默认 `16:9` |
+| `resolution` | string | 否 | 默认 `720p` |
+| `images` / `reference_images` | string[] | 否 | 参考图 URL；标准 / Fast 最多 **7** 张 |
+| `first_image` | string | 条件 | 首帧 URL |
+| `last_image` | string | 否 | 尾帧 URL（仅标准版；需与首帧一起） |
+| `first_last_frame` | boolean | 否 | `true` 表示首帧 / 首尾帧模式 |
+
+参考素材须为公网 `https://` 直链。
+
+## 示例
+
+### 文生视频
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "grok-imagine-video-1.5",
+    "prompt": "一支具有电影质感的未来科技产品广告",
+    "aspect_ratio": "16:9",
+    "resolution": "720p",
+    "duration": 9
+  }'
+```
+
+### 标准版首尾帧
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "grok-imagine-video-1.5",
+    "prompt": "让两个画面之间自然、连贯地过渡",
+    "aspect_ratio": "21:9",
+    "resolution": "720p",
+    "duration": 9,
+    "first_image": "https://example.com/first.webp",
+    "last_image": "https://example.com/last.webp",
+    "first_last_frame": true
+  }'
+```
+
+### Fast 多图参考
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "grok-imagine-video-1.5-fast",
+    "prompt": "综合参考图中的产品和场景生成广告",
+    "aspect_ratio": "16:9",
+    "resolution": "720p",
+    "duration": 10,
+    "images": [
+      "https://example.com/product.png",
+      "https://example.com/scene.png"
+    ]
+  }'
+```
+
+成功响应示例：
+
+```json
+{
+  "code": 20000,
+  "msg": "提交成功",
+  "data": {
+    "task_id": "vid_xxxxxxxx",
+    "status": "queued",
+    "progress": 0,
+    "model": "grok-imagine-video-1.5",
+    "cost": 0,
+    "result": {}
+  }
+}
+```
+
+## 轮询
+
+```bash
+curl -X GET 'https://sigrunai.com/v1/videos/vid_xxxxxxxx' \
+  -H 'Authorization: Bearer sk_xxx'
+```
+
+状态说明见 [查询视频任务](/zh/api-reference/common/query)。完成后读取 `data.result.video_url`（请及时转存）。

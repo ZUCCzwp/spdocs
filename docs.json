@@ -95,6 +95,12 @@
                 ]
               },
               {
+                "group": "Grok Imagine Video",
+                "pages": [
+                  "en/api-reference/grok/create"
+                ]
+              },
+              {
                 "group": "Seedance 2.0",
                 "pages": [
                   "en/api-reference/seedance/md/create",
@@ -191,6 +197,12 @@
                 "group": "Gemini Omni",
                 "pages": [
                   "zh/api-reference/gemini-omni/create"
+                ]
+              },
+              {
+                "group": "Grok Imagine Video",
+                "pages": [
+                  "zh/api-reference/grok/create"
                 ]
               },
               {
