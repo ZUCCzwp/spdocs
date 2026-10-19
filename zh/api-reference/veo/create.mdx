@@ -1,0 +1,133 @@
+---
+title: '创建 Veo 3.1 视频'
+openapi: 'POST /v1/veo/frames'
+---
+
+异步生成 **Veo 3.1** 系列视频。推荐专用入口 `POST /v1/veo/frames`；也可使用统一入口 `POST /v1/videos` 并设置相同的 `model`。成功返回 `task_id`，用 [查询视频任务](/zh/api-reference/common/query) 轮询，完成后从 `result.video_url` 取片。
+
+## 模型
+
+| `model` | 分辨率 | 说明 |
+| --- | --- | --- |
+| `veo3.1-fast` | `720p` / `1080p` | Fast 档；默认模型 |
+| `veo3.1-lite` | `720p`（传 `1080p` 时按 `veo3.1-lite-hd` 计费） | Lite 档 |
+| `veo3.1-lite-hd` | `1080p` | Lite HD 档 |
+
+计费方式为 `per_task`（按次）。实际单价以 [模型目录](/zh/api-reference/common/model-catalog) 与创建响应中的 `cost` 为准。未传 `model` 时默认 `veo3.1-fast`。兼容旧别名如 `veo_3_1_fast`（会规范为连字符形式）。
+
+## 模式判定
+
+以下三种模式**互斥**：
+
+| 模式 | 传参 |
+| --- | --- |
+| 文生视频 | 仅 `prompt`，不传参考图 / 首尾帧 |
+| 参考图 | 传 `images`（或 `image_urls`），最多 **3** 张 |
+| 首尾帧 | 传 `first_frame_url` / `first_image`（必填），可选 `last_frame_url` / `last_image` |
+
+参考图与首尾帧**不可同时使用**。提供尾帧时必须同时提供首帧。参考素材须为公网 `https://` 直链。
+
+## 请求参数
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `model` | string | 否 | 见上方模型表；默认 `veo3.1-fast` |
+| `prompt` | string | 是 | 生成描述，不能为空 |
+| `resolution` | string | 否 | `720p`（默认）或 `1080p`；不支持 `4k` |
+| `orientation` | string | 否 | `landscape`（横屏，对应 16:9）或 `portrait`（竖屏，对应 9:16）；默认 `landscape` |
+| `aspect_ratio` / `ratio` | string | 否 | 可用 `16:9` / `9:16` 代替 `orientation` |
+| `images` / `image_urls` | string[] | 否 | 参考图，最多 **3** 张 |
+| `first_frame_url` / `first_image` | string | 条件 | 首尾帧模式的首帧 URL |
+| `last_frame_url` / `last_image` | string | 否 | 尾帧 URL；需与首帧一起使用 |
+
+## 示例
+
+### 文生视频（Fast）
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/veo/frames' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "veo3.1-fast",
+    "prompt": "一只金毛犬在阳光下的草地奔跑，电影感跟拍",
+    "resolution": "720p",
+    "orientation": "landscape"
+  }'
+```
+
+### 参考图
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/veo/frames' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "veo3.1-fast",
+    "prompt": "保持主体与风格一致，缓慢推近镜头",
+    "resolution": "1080p",
+    "orientation": "portrait",
+    "images": [
+      "https://example.com/ref1.jpg",
+      "https://example.com/ref2.jpg"
+    ]
+  }'
+```
+
+### 首尾帧（Lite）
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/veo/frames' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "veo3.1-lite",
+    "prompt": "镜头从近景平滑推到远景，光影自然过渡",
+    "resolution": "720p",
+    "aspect_ratio": "16:9",
+    "first_frame_url": "https://example.com/first.jpg",
+    "last_frame_url": "https://example.com/last.jpg"
+  }'
+```
+
+### 使用统一入口
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "veo3.1-lite-hd",
+    "prompt": "城市夜景延时，车流光轨",
+    "resolution": "1080p",
+    "aspect_ratio": "16:9"
+  }'
+```
+
+成功响应示例：
+
+```json
+{
+  "code": 20000,
+  "msg": "提交成功",
+  "data": {
+    "task_id": "vid_xxxxxxxx",
+    "status": "queued",
+    "progress": 0,
+    "model": "veo3.1-fast",
+    "cost": 0,
+    "result": {}
+  }
+}
+```
+
+`cost` 为本次扣费（积分），以实际响应为准。`data.model` 为计费键（例如 Lite 传 `1080p` 时可能为 `veo3.1-lite-hd`）。
+
+## 轮询
+
+```bash
+curl -X GET 'https://sigrunai.com/v1/videos/vid_xxxxxxxx' \
+  -H 'Authorization: Bearer sk_xxx'
+```
+
+状态说明见 [查询视频任务](/zh/api-reference/common/query)。完成后读取 `data.result.video_url`（约保留 **3** 天，请及时转存）。

@@ -1,0 +1,133 @@
+---
+title: 'Create Veo 3.1 video'
+openapi: 'POST /v1/veo/frames'
+---
+
+Asynchronously generate **Veo 3.1** videos. Prefer the dedicated endpoint `POST /v1/veo/frames`; you can also use the shared `POST /v1/videos` with the same `model` values. On success you get a `task_id`; poll [Query video task](/en/api-reference/common/query) and read `result.video_url` when completed.
+
+## Models
+
+| `model` | Resolution | Notes |
+| --- | --- | --- |
+| `veo3.1-fast` | `720p` / `1080p` | Fast tier; default model |
+| `veo3.1-lite` | `720p` (passing `1080p` bills as `veo3.1-lite-hd`) | Lite tier |
+| `veo3.1-lite-hd` | `1080p` | Lite HD tier |
+
+Billing is `per_task`. See the [model catalog](/en/api-reference/common/model-catalog) and the `cost` field on create for live unit prices. If `model` is omitted, it defaults to `veo3.1-fast`. Legacy aliases such as `veo_3_1_fast` are normalized to the hyphenated form.
+
+## Modes
+
+These three modes are **mutually exclusive**:
+
+| Mode | How to call |
+| --- | --- |
+| Text-to-video | `prompt` only — no reference images or frames |
+| Reference images | Pass `images` (or `image_urls`), up to **3** |
+| First / last frames | Pass `first_frame_url` / `first_image` (required); optional `last_frame_url` / `last_image` |
+
+Reference images and first/last frames **cannot** be combined. If you send a last frame, you must also send a first frame. References must be public `https://` direct links.
+
+## Request fields
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `model` | string | no | See the table above; default `veo3.1-fast` |
+| `prompt` | string | yes | Generation description |
+| `resolution` | string | no | `720p` (default) or `1080p`; `4k` is not supported |
+| `orientation` | string | no | `landscape` (16:9) or `portrait` (9:16); default `landscape` |
+| `aspect_ratio` / `ratio` | string | no | Use `16:9` / `9:16` instead of `orientation` if preferred |
+| `images` / `image_urls` | string[] | no | Up to **3** reference images |
+| `first_frame_url` / `first_image` | string | conditional | First frame URL |
+| `last_frame_url` / `last_image` | string | no | Last frame URL; requires first frame |
+
+## Examples
+
+### Text-to-video (Fast)
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/veo/frames' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "veo3.1-fast",
+    "prompt": "A golden retriever running across a sunny meadow, cinematic tracking shot",
+    "resolution": "720p",
+    "orientation": "landscape"
+  }'
+```
+
+### Reference images
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/veo/frames' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "veo3.1-fast",
+    "prompt": "Keep subject and style consistent; slow push-in",
+    "resolution": "1080p",
+    "orientation": "portrait",
+    "images": [
+      "https://example.com/ref1.jpg",
+      "https://example.com/ref2.jpg"
+    ]
+  }'
+```
+
+### First / last frames (Lite)
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/veo/frames' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "veo3.1-lite",
+    "prompt": "Smooth push from close-up to wide shot with natural lighting",
+    "resolution": "720p",
+    "aspect_ratio": "16:9",
+    "first_frame_url": "https://example.com/first.jpg",
+    "last_frame_url": "https://example.com/last.jpg"
+  }'
+```
+
+### Shared `/v1/videos` entry
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "veo3.1-lite-hd",
+    "prompt": "City night timelapse with light trails",
+    "resolution": "1080p",
+    "aspect_ratio": "16:9"
+  }'
+```
+
+Example success response:
+
+```json
+{
+  "code": 20000,
+  "msg": "提交成功",
+  "data": {
+    "task_id": "vid_xxxxxxxx",
+    "status": "queued",
+    "progress": 0,
+    "model": "veo3.1-fast",
+    "cost": 0,
+    "result": {}
+  }
+}
+```
+
+`cost` is the points charged for this job. `data.model` is the billing key (e.g. Lite with `1080p` may bill as `veo3.1-lite-hd`).
+
+## Polling
+
+```bash
+curl -X GET 'https://sigrunai.com/v1/videos/vid_xxxxxxxx' \
+  -H 'Authorization: Bearer sk_xxx'
+```
+
+See [Query video task](/en/api-reference/common/query) for status values. When completed, read `data.result.video_url` (kept about **3** days — download promptly).

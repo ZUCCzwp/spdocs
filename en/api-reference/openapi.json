@@ -116,7 +116,7 @@
     "/v1/videos": {
       "post": {
         "summary": "Create video task",
-        "description": "Unified video create entry. Available models: omni-10s, seedance2.0-md, sd2-480p-ac, sd2-720p-ac, seedance2.5-30s, sd2.5-720p-ac.",
+        "description": "Unified video create entry. Available models: omni-10s, veo3.1-fast, veo3.1-lite, veo3.1-lite-hd, grok-imagine-video-1.5 (and fast/lite), minimax-h3, minimax-h3-max, seedance2.0-md, sd2-480p-ac, sd2-720p-ac, seedance2.5-30s, sd2.5-720p-ac. Veo also has POST /v1/veo/frames.",
         "operationId": "createVideo",
         "tags": [
           "Videos"
@@ -135,6 +135,15 @@
                     "model": "omni-10s",
                     "prompt": "A golden retriever running across a sunny meadow, cinematic tracking shot",
                     "aspect_ratio": "16:9"
+                  }
+                },
+                "veo31Fast": {
+                  "summary": "veo3.1-fast",
+                  "value": {
+                    "model": "veo3.1-fast",
+                    "prompt": "A golden retriever running across a sunny meadow, cinematic tracking shot",
+                    "resolution": "720p",
+                    "orientation": "landscape"
                   }
                 },
                 "seedanceMd": {
@@ -192,7 +201,7 @@
     },
     "/v1/videos/{taskId}": {
       "get": {
-        "summary": "查询视频任务",
+        "summary": "Query video task",
         "operationId": "getVideo",
         "tags": [
           "Videos"
@@ -209,7 +218,74 @@
         ],
         "responses": {
           "200": {
-            "description": "任务详情",
+            "description": "Task detail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskQueryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/veo/frames": {
+      "post": {
+        "summary": "Create Veo 3.1 video",
+        "description": "Dedicated Veo 3.1 Fast / Lite endpoint. Models: veo3.1-fast, veo3.1-lite, veo3.1-lite-hd. Supports text-to-video, up to 3 reference images, or first/last frames (mutually exclusive). Poll GET /v1/videos/{task_id}.",
+        "operationId": "createVeoFrames",
+        "tags": [
+          "Videos"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VeoFramesCreateRequest"
+              },
+              "examples": {
+                "textToVideo": {
+                  "summary": "Text-to-video",
+                  "value": {
+                    "model": "veo3.1-fast",
+                    "prompt": "A golden retriever running across a sunny meadow, cinematic tracking shot",
+                    "resolution": "720p",
+                    "orientation": "landscape"
+                  }
+                },
+                "referenceImages": {
+                  "summary": "Reference images",
+                  "value": {
+                    "model": "veo3.1-fast",
+                    "prompt": "Keep subject and style consistent; slow push-in",
+                    "resolution": "1080p",
+                    "orientation": "portrait",
+                    "images": [
+                      "https://example.com/ref1.jpg",
+                      "https://example.com/ref2.jpg"
+                    ]
+                  }
+                },
+                "firstLastFrames": {
+                  "summary": "First / last frames",
+                  "value": {
+                    "model": "veo3.1-lite",
+                    "prompt": "Smooth push from close-up to wide shot",
+                    "resolution": "720p",
+                    "aspect_ratio": "16:9",
+                    "first_frame_url": "https://example.com/first.jpg",
+                    "last_frame_url": "https://example.com/last.jpg"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Submitted",
             "content": {
               "application/json": {
                 "schema": {
@@ -414,7 +490,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "omni-10s, seedance2.0-md, sd2-480p-ac, sd2-720p-ac, seedance2.5-30s, or sd2.5-720p-ac",
+            "description": "omni-10s, veo3.1-fast, veo3.1-lite, veo3.1-lite-hd, grok-imagine-video-1.5 (and fast/lite), minimax-h3, minimax-h3-max, seedance2.0-md, sd2-480p-ac, sd2-720p-ac, seedance2.5-30s, or sd2.5-720p-ac",
             "example": "omni-10s"
           },
           "prompt": {
@@ -511,6 +587,72 @@
               "type": "string",
               "format": "uri"
             }
+          }
+        }
+      },
+      "VeoFramesCreateRequest": {
+        "type": "object",
+        "required": [
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "veo3.1-fast (default), veo3.1-lite, veo3.1-lite-hd",
+            "example": "veo3.1-fast"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "resolution": {
+            "type": "string",
+            "description": "720p or 1080p; 4k is not supported",
+            "example": "720p"
+          },
+          "orientation": {
+            "type": "string",
+            "description": "landscape (16:9) or portrait (9:16)",
+            "example": "landscape"
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "16:9 or 9:16; can replace orientation"
+          },
+          "ratio": {
+            "type": "string"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "maxItems": 3,
+            "description": "Up to 3 reference images; mutually exclusive with first/last frames"
+          },
+          "image_urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "maxItems": 3
+          },
+          "first_frame_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "last_frame_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "first_image": {
+            "type": "string",
+            "format": "uri"
+          },
+          "last_image": {
+            "type": "string",
+            "format": "uri"
           }
         }
       },

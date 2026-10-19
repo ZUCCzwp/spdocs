@@ -95,9 +95,21 @@
                 ]
               },
               {
+                "group": "Veo 3.1",
+                "pages": [
+                  "en/api-reference/veo/create"
+                ]
+              },
+              {
                 "group": "Grok Imagine Video",
                 "pages": [
                   "en/api-reference/grok/create"
+                ]
+              },
+              {
+                "group": "MiniMax H3",
+                "pages": [
+                  "en/api-reference/minimax-h3/create"
                 ]
               },
               {
@@ -200,9 +212,21 @@
                 ]
               },
               {
+                "group": "Veo 3.1",
+                "pages": [
+                  "zh/api-reference/veo/create"
+                ]
+              },
+              {
                 "group": "Grok Imagine Video",
                 "pages": [
                   "zh/api-reference/grok/create"
+                ]
+              },
+              {
+                "group": "MiniMax H3",
+                "pages": [
+                  "zh/api-reference/minimax-h3/create"
                 ]
               },
               {

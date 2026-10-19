@@ -116,7 +116,7 @@
     "/v1/videos": {
       "post": {
         "summary": "创建视频任务",
-        "description": "统一视频创建入口。当前可用 model：omni-10s、seedance2.0-md、sd2-480p-ac、sd2-720p-ac、seedance2.5-30s、sd2.5-720p-ac。",
+        "description": "统一视频创建入口。当前可用 model：omni-10s、veo3.1-fast、veo3.1-lite、veo3.1-lite-hd、grok-imagine-video-1.5（及 fast/lite）、minimax-h3、minimax-h3-max、seedance2.0-md、sd2-480p-ac、sd2-720p-ac、seedance2.5-30s、sd2.5-720p-ac。Veo 也可用专用入口 POST /v1/veo/frames。",
         "operationId": "createVideo",
         "tags": [
           "Videos"
@@ -135,6 +135,15 @@
                     "model": "omni-10s",
                     "prompt": "一只金毛犬在阳光下的草地奔跑，电影感跟拍",
                     "aspect_ratio": "16:9"
+                  }
+                },
+                "veo31Fast": {
+                  "summary": "veo3.1-fast",
+                  "value": {
+                    "model": "veo3.1-fast",
+                    "prompt": "一只金毛犬在阳光下的草地奔跑，电影感跟拍",
+                    "resolution": "720p",
+                    "orientation": "landscape"
                   }
                 },
                 "seedanceMd": {
@@ -210,6 +219,73 @@
         "responses": {
           "200": {
             "description": "任务详情",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskQueryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/veo/frames": {
+      "post": {
+        "summary": "创建 Veo 3.1 视频",
+        "description": "Veo 3.1 Fast / Lite 专用入口。model：veo3.1-fast、veo3.1-lite、veo3.1-lite-hd。支持文生、最多 3 张参考图、首尾帧（互斥）。完成后用 GET /v1/videos/{task_id} 轮询。",
+        "operationId": "createVeoFrames",
+        "tags": [
+          "Videos"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VeoFramesCreateRequest"
+              },
+              "examples": {
+                "textToVideo": {
+                  "summary": "文生视频",
+                  "value": {
+                    "model": "veo3.1-fast",
+                    "prompt": "一只金毛犬在阳光下的草地奔跑，电影感跟拍",
+                    "resolution": "720p",
+                    "orientation": "landscape"
+                  }
+                },
+                "referenceImages": {
+                  "summary": "参考图",
+                  "value": {
+                    "model": "veo3.1-fast",
+                    "prompt": "保持主体与风格一致，缓慢推近镜头",
+                    "resolution": "1080p",
+                    "orientation": "portrait",
+                    "images": [
+                      "https://example.com/ref1.jpg",
+                      "https://example.com/ref2.jpg"
+                    ]
+                  }
+                },
+                "firstLastFrames": {
+                  "summary": "首尾帧",
+                  "value": {
+                    "model": "veo3.1-lite",
+                    "prompt": "镜头从近景平滑推到远景",
+                    "resolution": "720p",
+                    "aspect_ratio": "16:9",
+                    "first_frame_url": "https://example.com/first.jpg",
+                    "last_frame_url": "https://example.com/last.jpg"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "提交成功",
             "content": {
               "application/json": {
                 "schema": {
@@ -414,7 +490,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "omni-10s、seedance2.0-md、sd2-480p-ac、sd2-720p-ac、seedance2.5-30s 或 sd2.5-720p-ac",
+            "description": "omni-10s、veo3.1-fast、veo3.1-lite、veo3.1-lite-hd、grok-imagine-video-1.5（及 fast/lite）、minimax-h3、minimax-h3-max、seedance2.0-md、sd2-480p-ac、sd2-720p-ac、seedance2.5-30s 或 sd2.5-720p-ac",
             "example": "omni-10s"
           },
           "prompt": {
@@ -511,6 +587,72 @@
               "type": "string",
               "format": "uri"
             }
+          }
+        }
+      },
+      "VeoFramesCreateRequest": {
+        "type": "object",
+        "required": [
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "veo3.1-fast（默认）、veo3.1-lite、veo3.1-lite-hd",
+            "example": "veo3.1-fast"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "resolution": {
+            "type": "string",
+            "description": "720p 或 1080p；不支持 4k",
+            "example": "720p"
+          },
+          "orientation": {
+            "type": "string",
+            "description": "landscape（16:9）或 portrait（9:16）",
+            "example": "landscape"
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "16:9 或 9:16；可代替 orientation"
+          },
+          "ratio": {
+            "type": "string"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "maxItems": 3,
+            "description": "参考图，最多 3 张；与首尾帧互斥"
+          },
+          "image_urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "maxItems": 3
+          },
+          "first_frame_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "last_frame_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "first_image": {
+            "type": "string",
+            "format": "uri"
+          },
+          "last_image": {
+            "type": "string",
+            "format": "uri"
           }
         }
       },
