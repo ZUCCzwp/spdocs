@@ -9,8 +9,8 @@ openapi: 'POST /v1/videos'
 
 | `model` | 能力 | 时长 | 分辨率 |
 | --- | --- | --- | --- |
-| `minimax-h3` | 文生；图片 / 视频 / 音频参考（合计最多 **9** 项） | **4～15** 秒 | `720p` / `1080p` |
-| `minimax-h3-max` | 同上，Max 档 | **4～15** 秒 | `720p` / `1080p` |
+| `minimax-h3` | 文生；图片 / 视频 / 音频参考（合计最多 **9** 项） | **4～15** 秒 | `480p` / `768p` |
+| `minimax-h3-max` | 同上，Max 档 | **4～15** 秒 | `480p` / `768p` |
 
 计费方式为 `per_second`（按秒；费用 = 单价 × `duration`/`seconds`）。实际单价以 [模型目录](/zh/api-reference/common/model-catalog) 与创建响应中的 `cost` 为准。
 
@@ -31,7 +31,7 @@ openapi: 'POST /v1/videos'
 | `prompt` | string | 是 | 生成描述，1～5000 字 |
 | `duration` / `seconds` | int \| string | 是 | **4～15**；字符串亦可（如 `"10"`） |
 | `aspect_ratio` / `ratio` | string | 否 | `16:9`、`9:16`、`1:1`、`4:3`、`3:4`、`21:9`；默认 `16:9` |
-| `resolution` | string | 否 | `720p`（默认）或 `1080p` |
+| `resolution` | string | 否 | `480p` 或 `768p`（默认 `768p`） |
 | `images` / `reference_images` | string[] | 否 | 参考图 URL |
 | `videos` / `reference_videos` | string[] | 否 | 参考视频直链 |
 | `audios` / `reference_audios` | string[] | 否 | 参考音频直链 |
@@ -50,7 +50,7 @@ curl -X POST 'https://sigrunai.com/v1/videos' \
     "model": "minimax-h3-max",
     "prompt": "未来城市的夜晚，无人驾驶跑车穿过雨后的霓虹街道，电影质感",
     "aspect_ratio": "16:9",
-    "resolution": "720p",
+    "resolution": "768p",
     "duration": 10
   }'
 ```
@@ -65,7 +65,7 @@ curl -X POST 'https://sigrunai.com/v1/videos' \
     "model": "minimax-h3",
     "prompt": "以图片 1 中的产品为主体，生成一支简洁的旋转展示广告",
     "aspect_ratio": "16:9",
-    "resolution": "720p",
+    "resolution": "768p",
     "duration": 8,
     "images": ["https://example.com/product.png"]
   }'
@@ -81,7 +81,7 @@ curl -X POST 'https://sigrunai.com/v1/videos' \
     "model": "minimax-h3",
     "prompt": "图片 1 提供产品外观，视频 1 提供镜头运动，音频 1 控制剪辑节奏",
     "aspect_ratio": "16:9",
-    "resolution": "720p",
+    "resolution": "768p",
     "duration": 12,
     "images": ["https://example.com/ref.png"],
     "videos": ["https://example.com/ref.mp4"],

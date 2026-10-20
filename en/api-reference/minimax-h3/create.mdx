@@ -9,8 +9,8 @@ Asynchronously generate **MiniMax H3** videos. Use the shared endpoint `POST /v1
 
 | `model` | Capabilities | Duration | Resolution |
 | --- | --- | --- | --- |
-| `minimax-h3` | Text-to-video; image / video / audio refs (max **9** total) | **4–15** s | `720p` / `1080p` |
-| `minimax-h3-max` | Same, Max tier | **4–15** s | `720p` / `1080p` |
+| `minimax-h3` | Text-to-video; image / video / audio refs (max **9** total) | **4–15** s | `480p` / `768p` |
+| `minimax-h3-max` | Same, Max tier | **4–15** s | `480p` / `768p` |
 
 Billing is `per_second` (cost = unit price × `duration`/`seconds`). See the [model catalog](/en/api-reference/common/model-catalog) and the `cost` field on create for live unit prices.
 
@@ -31,7 +31,7 @@ Describe each asset’s role and index in `prompt` (e.g. image 1, video 1, audio
 | `prompt` | string | yes | 1–5000 characters |
 | `duration` / `seconds` | int \| string | yes | **4–15** (string form such as `"10"` is OK) |
 | `aspect_ratio` / `ratio` | string | no | `16:9`, `9:16`, `1:1`, `4:3`, `3:4`, `21:9`; default `16:9` |
-| `resolution` | string | no | `720p` (default) or `1080p` |
+| `resolution` | string | no | `480p` or `768p` (default `768p`) |
 | `images` / `reference_images` | string[] | no | Reference image URLs |
 | `videos` / `reference_videos` | string[] | no | Public video URLs |
 | `audios` / `reference_audios` | string[] | no | Public audio URLs |
@@ -50,7 +50,7 @@ curl -X POST 'https://sigrunai.com/v1/videos' \
     "model": "minimax-h3-max",
     "prompt": "A cinematic night drive through neon rain in a future city",
     "aspect_ratio": "16:9",
-    "resolution": "720p",
+    "resolution": "768p",
     "duration": 10
   }'
 ```
@@ -65,7 +65,7 @@ curl -X POST 'https://sigrunai.com/v1/videos' \
     "model": "minimax-h3",
     "prompt": "Use image 1 as the product hero for a clean spin showcase ad",
     "aspect_ratio": "16:9",
-    "resolution": "720p",
+    "resolution": "768p",
     "duration": 8,
     "images": ["https://example.com/product.png"]
   }'
@@ -81,7 +81,7 @@ curl -X POST 'https://sigrunai.com/v1/videos' \
     "model": "minimax-h3",
     "prompt": "Image 1 for product look, video 1 for camera motion, audio 1 for edit rhythm",
     "aspect_ratio": "16:9",
-    "resolution": "720p",
+    "resolution": "768p",
     "duration": 12,
     "images": ["https://example.com/ref.png"],
     "videos": ["https://example.com/ref.mp4"],
