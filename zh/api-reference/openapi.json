@@ -116,7 +116,7 @@
     "/v1/videos": {
       "post": {
         "summary": "创建视频任务",
-        "description": "统一视频创建入口。当前可用 model：omni-10s、veo3.1-fast、veo3.1-lite、veo3.1-lite-hd、grok-imagine-video-1.5（及 fast/lite）、minimax-h3、minimax-h3-max、kling-4.0（720p/1080p）、seedance2.0-md、sd2-480p-ac、sd2-720p-ac、seedance2.5-30s、sd2.5-720p-ac。Veo 也可用专用入口 POST /v1/veo/frames。",
+        "description": "统一视频创建入口。当前可用 model：omni-10s、veo3.1-fast、veo3.1-lite、veo3.1-lite-hd、grok-imagine-video-1.5（及 fast/lite）、minimax-h3、minimax-h3-max、kling-4.0（720p/1080p）、seedance2.0-md、sd2-480p-ac、sd2-720p-ac、seedance2.5-30s、sd2.5-720p-ac、wan3-480p-20s-ac。Veo 也可用专用入口 POST /v1/veo/frames。",
         "operationId": "createVideo",
         "tags": [
           "Videos"
@@ -189,6 +189,15 @@
                     "duration": 8,
                     "aspect_ratio": "16:9",
                     "resolution": "720p"
+                  }
+                },
+                "wan3Ac": {
+                  "summary": "wan3-480p-20s-ac",
+                  "value": {
+                    "model": "wan3-480p-20s-ac",
+                    "prompt": "一只猫在草地上奔跑，跟拍镜头",
+                    "duration": 8,
+                    "aspect_ratio": "16:9"
                   }
                 }
               }
@@ -500,7 +509,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "omni-10s、veo3.1-fast、veo3.1-lite、veo3.1-lite-hd、grok-imagine-video-1.5（及 fast/lite）、minimax-h3、minimax-h3-max、kling-4.0 / kling-4.0-720p / kling-4.0-1080p、seedance2.0-md、sd2-480p-ac、sd2-720p-ac、seedance2.5-30s 或 sd2.5-720p-ac",
+            "description": "omni-10s、veo3.1-fast、veo3.1-lite、veo3.1-lite-hd、grok-imagine-video-1.5（及 fast/lite）、minimax-h3、minimax-h3-max、kling-4.0 / kling-4.0-720p / kling-4.0-1080p、seedance2.0-md、sd2-480p-ac、sd2-720p-ac、seedance2.5-30s、sd2.5-720p-ac 或 wan3-480p-20s-ac",
             "example": "omni-10s"
           },
           "prompt": {
@@ -515,7 +524,7 @@
                 "type": "string"
               }
             ],
-            "description": "omni-10s：固定 10；seedance2.0-md：5/10/15；sd2-*-ac：4–15；seedance2.5-30s：固定 30；sd2.5-720p-ac：4–30"
+            "description": "omni-10s：固定 10；seedance2.0-md：5/10/15；sd2-*-ac：4–15；seedance2.5-30s：固定 30；sd2.5-720p-ac：4–30；wan3-480p-20s-ac：5–20"
           },
           "seconds": {
             "oneOf": [

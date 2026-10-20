@@ -119,6 +119,12 @@
                 ]
               },
               {
+                "group": "Wan 3",
+                "pages": [
+                  "en/api-reference/wan/create-ac"
+                ]
+              },
+              {
                 "group": "Seedance 2.0",
                 "pages": [
                   "en/api-reference/seedance/md/create",
@@ -239,6 +245,12 @@
                 "group": "Kling 4.0",
                 "pages": [
                   "zh/api-reference/kling40/create"
+                ]
+              },
+              {
+                "group": "Wan 3",
+                "pages": [
+                  "zh/api-reference/wan/create-ac"
                 ]
               },
               {

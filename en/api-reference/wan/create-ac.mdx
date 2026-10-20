@@ -1,0 +1,46 @@
+---
+title: 'Wan 3 AC'
+openapi: 'POST /v1/videos'
+---
+
+Create a Wan **3 AC** video via `POST /v1/videos` with `model` set to `wan3-480p-20s-ac`. Poll [Query video task](/en/api-reference/common/query) for `result.video_url`.
+
+Billed per task (duration only controls clip length, not price).
+
+## Models
+
+| `model` | Billing | Duration | Resolution |
+| --- | --- | --- | --- |
+| `wan3-480p-20s-ac` | `per_task` | **5–20** seconds | Fixed **480p** |
+
+First/last frames are not supported.
+
+## Request fields
+
+| Field | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `model` | string | yes | `wan3-480p-20s-ac` |
+| `prompt` | string | yes | Up to **5000** characters |
+| `duration` / `seconds` | int | no | **5–20**; default 5 |
+| `aspect_ratio` / `ratio` | string | no | `16:9`, `9:16`, `1:1`, `4:3`, `3:4`; default `16:9` |
+| `resolution` | string | no | Fixed `480p` |
+| `images` / `reference_images` | string[] | no | Up to **10** reference images |
+| `videos` / `reference_videos` | string[] | no | Up to **5** reference videos |
+| `audios` / `reference_audios` | string[] | no | Up to **5** reference audios |
+
+Reference media must be public `https://` URLs.
+
+## Example
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "wan3-480p-20s-ac",
+    "prompt": "A cat running on grass, tracking shot",
+    "duration": 8,
+    "aspect_ratio": "16:9",
+    "images": ["https://example.com/cat.png"]
+  }'
+```

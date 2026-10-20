@@ -1,0 +1,46 @@
+---
+title: 'Wan 3 AC'
+openapi: 'POST /v1/videos'
+---
+
+创建 Wan **3 AC** 视频任务。路径为统一的 `POST /v1/videos`，`model` 设为 `wan3-480p-20s-ac`。完成后从 [查询视频任务](/zh/api-reference/common/query) 的 `result.video_url` 取片。
+
+按次计费（时长只影响成片秒数，不参与乘价）。
+
+## 模型
+
+| `model` | 计费 | 时长 | 分辨率 |
+| --- | --- | --- | --- |
+| `wan3-480p-20s-ac` | `per_task`（按次） | **5–20** 秒 | 固定 **480p** |
+
+不支持首尾帧。
+
+## 请求参数
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `model` | string | 是 | `wan3-480p-20s-ac` |
+| `prompt` | string | 是 | 最多 **5000** 字符 |
+| `duration` / `seconds` | int | 否 | **5–20**；默认 5 |
+| `aspect_ratio` / `ratio` | string | 否 | `16:9`、`9:16`、`1:1`、`4:3`、`3:4`；默认 `16:9` |
+| `resolution` | string | 否 | 固定 `480p` |
+| `images` / `reference_images` | string[] | 否 | 参考图，最多 **10** 张 |
+| `videos` / `reference_videos` | string[] | 否 | 参考视频，最多 **5** 个 |
+| `audios` / `reference_audios` | string[] | 否 | 参考音频，最多 **5** 段 |
+
+参考素材须为公网 `https://` URL。
+
+## 示例
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "wan3-480p-20s-ac",
+    "prompt": "一只猫在草地上奔跑，跟拍镜头",
+    "duration": 8,
+    "aspect_ratio": "16:9",
+    "images": ["https://example.com/cat.png"]
+  }'
+```
