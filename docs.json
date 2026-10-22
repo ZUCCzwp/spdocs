@@ -128,7 +128,8 @@
                 "group": "Seedance 2.0",
                 "pages": [
                   "en/api-reference/seedance/md/create",
-                  "en/api-reference/seedance/20/create-ac"
+                  "en/api-reference/seedance/20/create-ac",
+                  "en/api-reference/seedance/20/create-dl"
                 ]
               },
               {
@@ -257,7 +258,8 @@
                 "group": "Seedance 2.0",
                 "pages": [
                   "zh/api-reference/seedance/md/create",
-                  "zh/api-reference/seedance/20/create-ac"
+                  "zh/api-reference/seedance/20/create-ac",
+                  "zh/api-reference/seedance/20/create-dl"
                 ]
               },
               {

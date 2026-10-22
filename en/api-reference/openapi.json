@@ -116,7 +116,7 @@
     "/v1/videos": {
       "post": {
         "summary": "Create video task",
-        "description": "Unified video create entry. Available models: omni-10s, veo3.1-fast, veo3.1-lite, veo3.1-lite-hd, grok-imagine-video-1.5 (and fast/lite), minimax-h3, minimax-h3-max, kling-4.0 (720p/1080p), seedance2.0-md, sd2-480p-ac, sd2-720p-ac, seedance2.5-30s, sd2.5-720p-ac, wan3-480p-20s-ac. Veo also has POST /v1/veo/frames.",
+        "description": "Unified video create entry. Available models: omni-10s, veo3.1-fast, veo3.1-lite, veo3.1-lite-hd, grok-imagine-video-1.5 (and fast/lite), minimax-h3, minimax-h3-max, kling-4.0 (720p/1080p), seedance2.0-md, sd2-480p-ac, sd2-720p-ac, sd2-720p-dl, seedance2.5-30s, sd2.5-720p-ac, wan3-480p-20s-ac. Veo also has POST /v1/veo/frames.",
         "operationId": "createVideo",
         "tags": [
           "Videos"
@@ -170,6 +170,15 @@
                     "prompt": "A cat running on grass, tracking shot",
                     "duration": 8,
                     "aspect_ratio": "9:16"
+                  }
+                },
+                "seedance20Dl": {
+                  "summary": "sd2-720p-dl",
+                  "value": {
+                    "model": "sd2-720p-dl",
+                    "prompt": "A cat running on grass, tracking shot",
+                    "duration": 15,
+                    "aspect_ratio": "16:9"
                   }
                 },
                 "seedance720pAc": {
@@ -509,7 +518,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "omni-10s, veo3.1-fast, veo3.1-lite, veo3.1-lite-hd, grok-imagine-video-1.5 (and fast/lite), minimax-h3, minimax-h3-max, kling-4.0 / kling-4.0-720p / kling-4.0-1080p, seedance2.0-md, sd2-480p-ac, sd2-720p-ac, seedance2.5-30s, sd2.5-720p-ac, or wan3-480p-20s-ac",
+            "description": "omni-10s, veo3.1-fast, veo3.1-lite, veo3.1-lite-hd, grok-imagine-video-1.5 (and fast/lite), minimax-h3, minimax-h3-max, kling-4.0 / kling-4.0-720p / kling-4.0-1080p, seedance2.0-md, sd2-480p-ac, sd2-720p-ac, sd2-720p-dl, seedance2.5-30s, sd2.5-720p-ac, or wan3-480p-20s-ac",
             "example": "omni-10s"
           },
           "prompt": {
@@ -524,7 +533,7 @@
                 "type": "string"
               }
             ],
-            "description": "omni-10s: fixed 10; seedance2.0-md: 5/10/15; sd2-*-ac: 4–15; seedance2.5-30s: fixed 30; sd2.5-720p-ac: 4–30; wan3-480p-20s-ac: 5–20"
+            "description": "omni-10s: fixed 10; seedance2.0-md: 5/10/15; sd2-*-ac: 4–15; sd2-720p-dl: fixed 15; seedance2.5-30s: fixed 30; sd2.5-720p-ac: 4–30; wan3-480p-20s-ac: 5–20"
           },
           "seconds": {
             "oneOf": [
