@@ -7,14 +7,13 @@ openapi: 'GET /v1/videos/{taskId}'
 
 创建与查询返回同一套 `data` 结构；`data.cost` 为本次扣费（积分）。
 
-对 **Kling 4.0** 等按秒计费且含参考视频的任务，查询还会返回时长明细（单位：秒；优先采用上游返回值）：
+对 **Kling 4.0** 等按秒计费且含参考视频的任务，查询还会返回 `data.billing_duration`（单位：秒；优先采用上游返回值）：
 
 | 字段 | 说明 |
 | :--- | :--- |
-| `billable_seconds` | 实际扣费视频时长 |
-| `input_video_seconds` | 输入视频时长 |
-| `output_seconds` | 成片/输出视频时长（结算前为请求 `duration`） |
-| `reference_video_seconds` | 参考视频总时长 |
+| `billing_duration.billable_seconds` | 实际扣费视频时长 |
+| `billing_duration.output_seconds` | 成片/输出视频时长（结算前为请求 `duration`） |
+| `billing_duration.reference_video_seconds` | 参考视频总时长 |
 
 ### 任务状态
 
@@ -37,3 +36,32 @@ graph TD
 curl -X GET 'https://sigrunai.com/v1/videos/vid_xxxxxxxx' \
   -H 'Authorization: Bearer sk_xxx'
 ```
+
+### 响应示例（Kling 4.0 已完成）
+
+```json
+{
+  "code": 20000,
+  "msg": "查询成功",
+  "data": {
+    "task_id": "video_a1b2c3d4e5f6",
+    "status": "completed",
+    "progress": 100,
+    "model": "kling-4.0-720p",
+    "cost": 18,
+    "billing_duration": {
+      "billable_seconds": 18,
+      "output_seconds": 8,
+      "reference_video_seconds": 10
+    },
+    "created_at": 1729600000,
+    "completed_at": 1729600120,
+    "result": {
+      "video_url": "https://sigrunai.com/oss/video/openapi/xxx.mp4"
+    },
+    "error_message": ""
+  }
+}
+```
+
+上例：`billable_seconds`（18）为实际扣费时长；`output_seconds` 为成片时长；`reference_video_seconds` 为参考视频总时长；`cost` 按计费秒与单价结算后的积分。

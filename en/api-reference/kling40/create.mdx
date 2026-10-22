@@ -89,4 +89,4 @@ Create prepays roughly `10 + measured reference seconds`; after completion, if t
 
 ## Response
 
-Create returns the shared task payload (`task_id`, `status`, `cost`, …). `data.model` is the billing key (e.g. `kling-4.0-720p`). Poll the query endpoint for `result.video_url` and the duration fields `billable_seconds` / `input_video_seconds` / `output_seconds` / `reference_video_seconds`.
+Create returns the shared task payload (`task_id`, `status`, `cost`, …). `data.model` is the billing key (e.g. `kling-4.0-720p`). Poll the query endpoint for `result.video_url` and `billing_duration`.

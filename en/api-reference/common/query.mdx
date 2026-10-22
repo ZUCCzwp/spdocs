@@ -7,14 +7,13 @@ openapi: 'GET /v1/videos/{taskId}'
 
 Create and query share the same `data` shape. `data.cost` is the charged amount (credits).
 
-For **Kling 4.0** (and similar per-second models with reference videos), query also returns a duration breakdown (seconds; upstream values preferred when present):
+For **Kling 4.0** (and similar per-second models with reference videos), query also returns `data.billing_duration` (seconds; upstream values preferred when present):
 
 | Field | Description |
 | :--- | :--- |
-| `billable_seconds` | Actual charged video duration |
-| `input_video_seconds` | Input video duration |
-| `output_seconds` | Output / generated video duration (request `duration` until settled) |
-| `reference_video_seconds` | Total reference video duration |
+| `billing_duration.billable_seconds` | Actual charged video duration |
+| `billing_duration.output_seconds` | Output / generated video duration (request `duration` until settled) |
+| `billing_duration.reference_video_seconds` | Total reference video duration |
 
 ### Status values
 
@@ -37,3 +36,32 @@ graph TD
 curl -X GET 'https://sigrunai.com/v1/videos/vid_xxxxxxxx' \
   -H 'Authorization: Bearer sk_xxx'
 ```
+
+### Response example (Kling 4.0 completed)
+
+```json
+{
+  "code": 20000,
+  "msg": "ok",
+  "data": {
+    "task_id": "video_a1b2c3d4e5f6",
+    "status": "completed",
+    "progress": 100,
+    "model": "kling-4.0-720p",
+    "cost": 18,
+    "billing_duration": {
+      "billable_seconds": 18,
+      "output_seconds": 8,
+      "reference_video_seconds": 10
+    },
+    "created_at": 1729600000,
+    "completed_at": 1729600120,
+    "result": {
+      "video_url": "https://sigrunai.com/oss/video/openapi/xxx.mp4"
+    },
+    "error_message": ""
+  }
+}
+```
+
+In this example, `billable_seconds` (18) is the charged duration; `output_seconds` is the generated clip length; `reference_video_seconds` is the reference video total; `cost` is credits after settlement.

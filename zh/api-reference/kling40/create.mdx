@@ -89,4 +89,4 @@ curl -X POST 'https://sigrunai.com/v1/videos' \
 
 ## 响应
 
-创建成功后返回统一任务结构（含 `task_id`、`status`、`cost` 等）。`data.model` 为计费键（如 `kling-4.0-720p`）。任务完成后通过查询接口读取 `result.video_url`，以及 `billable_seconds` / `input_video_seconds` / `output_seconds` / `reference_video_seconds` 时长明细。
+创建成功后返回统一任务结构（含 `task_id`、`status`、`cost` 等）。`data.model` 为计费键（如 `kling-4.0-720p`）。任务完成后通过查询接口读取 `result.video_url`，以及 `billing_duration` 时长明细。
