@@ -7,6 +7,15 @@ openapi: 'GET /v1/videos/{taskId}'
 
 创建与查询返回同一套 `data` 结构；`data.cost` 为本次扣费（积分）。
 
+对 **Kling 4.0** 等按秒计费且含参考视频的任务，查询还会返回时长明细（单位：秒；优先采用上游返回值）：
+
+| 字段 | 说明 |
+| :--- | :--- |
+| `billable_seconds` | 实际扣费视频时长 |
+| `input_video_seconds` | 输入视频时长 |
+| `output_seconds` | 成片/输出视频时长（结算前为请求 `duration`） |
+| `reference_video_seconds` | 参考视频总时长 |
+
 ### 任务状态
 
 | status | 说明 | progress |

@@ -13,7 +13,7 @@ Asynchronously generate **Kling 4.0** videos. Use the shared entry `POST /v1/vid
 | `kling-4.0-720p` | Billing key: 720p | **5–30** s | `720p` |
 | `kling-4.0-1080p` | Billing key: 1080p | **5–30** s | `1080p` |
 
-Billing is `per_second`. **Billable seconds = output duration + sum of all reference video durations** (ceil to whole seconds via `reference_video_durations`; reference audio duration is **not** billed). See the [model catalog](/en/api-reference/common/model-catalog) and the `cost` field on create for live unit prices.
+Billing is `per_second`. **Billable seconds = measured output duration + measured reference video durations** (ceil to whole seconds; server-side probe, not client-supplied; reference audio is **not** billed). Create prepays `duration` + probed reference seconds; on completion the output is re-probed and the charge is settled (refund or top-up). See the [model catalog](/en/api-reference/common/model-catalog) and the `cost` field for live unit prices.
 
 ## Modes
 
@@ -32,7 +32,7 @@ First/last frame fields are **not** supported.
 | Video | **5** | **≤ 30** s | **50MB** |
 | Audio | **3** | **5–30** s | **20MB** |
 
-Reference media must be public `https://` URLs. File size is enforced on upload; durations are validated via `reference_*_durations`.
+Reference media must be public `https://` URLs. File size is enforced on upload; reference video duration is measured server-side; reference audio duration is validated via `reference_audio_durations`.
 
 ## Request parameters
 
@@ -45,7 +45,7 @@ Reference media must be public `https://` URLs. File size is enforced on upload;
 | `resolution` | string | no | `720p` (default) or `1080p`; also inferred from billing model names |
 | `images` / `reference_images` | string[] | no | Reference image URLs, max **10** |
 | `videos` / `reference_videos` | string[] | no | Reference video URLs, max **5** |
-| `reference_video_durations` | int[] | conditional | Same length as `videos`, seconds (1–30); **required** when videos are present |
+| `reference_video_durations` | int[] | no | Ignored for billing; if present must match `videos` length (legacy clients) |
 | `audios` / `reference_audios` | string[] | no | Reference audio URLs, max **3** |
 | `reference_audio_durations` | int[] | conditional | Same length as `audios`, seconds (5–30); **required** when audios are present |
 
@@ -80,14 +80,13 @@ curl -X POST 'https://sigrunai.com/v1/videos' \
     "duration": 10,
     "images": ["https://example.com/ref.png"],
     "videos": ["https://example.com/ref.mp4"],
-    "reference_video_durations": [5],
     "audios": ["https://example.com/ref.mp3"],
     "reference_audio_durations": [8]
   }'
 ```
 
-Billable seconds in this example = `10 + 5 = 15` (audio is not added).
+Create prepays roughly `10 + measured reference seconds`; after completion, if the output probes to 9s, settlement uses `9 + measured reference` (audio is not added).
 
 ## Response
 
-Create returns the shared task payload (`task_id`, `status`, `cost`, …). `data.model` is the billing key (e.g. `kling-4.0-720p`). Poll the query endpoint for `result.video_url` when completed.
+Create returns the shared task payload (`task_id`, `status`, `cost`, …). `data.model` is the billing key (e.g. `kling-4.0-720p`). Poll the query endpoint for `result.video_url` and the duration fields `billable_seconds` / `input_video_seconds` / `output_seconds` / `reference_video_seconds`.

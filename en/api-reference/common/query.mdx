@@ -7,6 +7,15 @@ openapi: 'GET /v1/videos/{taskId}'
 
 Create and query share the same `data` shape. `data.cost` is the charged amount (credits).
 
+For **Kling 4.0** (and similar per-second models with reference videos), query also returns a duration breakdown (seconds; upstream values preferred when present):
+
+| Field | Description |
+| :--- | :--- |
+| `billable_seconds` | Actual charged video duration |
+| `input_video_seconds` | Input video duration |
+| `output_seconds` | Output / generated video duration (request `duration` until settled) |
+| `reference_video_seconds` | Total reference video duration |
+
 ### Status values
 
 | status | Meaning | progress |

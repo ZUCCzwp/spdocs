@@ -13,7 +13,7 @@ openapi: 'POST /v1/videos'
 | `kling-4.0-720p` | 计费键：720p | **5～30** 秒 | `720p` |
 | `kling-4.0-1080p` | 计费键：1080p | **5～30** 秒 | `1080p` |
 
-计费方式为 `per_second`（按秒）。**计费秒数 = 输出时长 + 所有参考视频时长之和**（参考视频时长向上取整到秒，由请求体 `reference_video_durations` 提供；参考音频不计费时长）。实际单价以 [模型目录](/zh/api-reference/common/model-catalog) 与创建响应中的 `cost` 为准。
+计费方式为 `per_second`（按秒）。**计费秒数 = 成片实测输出秒 + 参考视频实测秒之和**（均向上取整；服务端探测，客户端不可伪造；参考音频不计费）。创建时按请求 `duration` + 参考视频实测秒预扣，任务完成后按成片实测输出秒多退少补。实际单价以 [模型目录](/zh/api-reference/common/model-catalog) 与响应中的 `cost` 为准。
 
 ## 模式判定
 
@@ -32,7 +32,7 @@ openapi: 'POST /v1/videos'
 | 视频 | **5** | **≤ 30** 秒 | **50MB** |
 | 音频 | **3** | **5～30** 秒 | **20MB** |
 
-参考素材须为公网 `https://` 直链。体积限制由上传端校验；时长由 `reference_*_durations` 校验。
+参考素材须为公网 `https://` 直链。体积限制由上传端校验；参考视频时长由服务端实测，参考音频时长由 `reference_audio_durations` 校验。
 
 ## 请求参数
 
@@ -45,7 +45,7 @@ openapi: 'POST /v1/videos'
 | `resolution` | string | 否 | `720p`（默认）或 `1080p`；传入计费键时也可从 model 推断 |
 | `images` / `reference_images` | string[] | 否 | 参考图 URL，最多 **10** 张 |
 | `videos` / `reference_videos` | string[] | 否 | 参考视频直链，最多 **5** 个 |
-| `reference_video_durations` | int[] | 条件 | 与 `videos` **等长**，单位秒（1～30）；有参考视频时必填，用于计费累加 |
+| `reference_video_durations` | int[] | 否 | 已忽略计费；若传入须与 `videos` 等长（兼容旧客户端） |
 | `audios` / `reference_audios` | string[] | 否 | 参考音频直链，最多 **3** 个 |
 | `reference_audio_durations` | int[] | 条件 | 与 `audios` **等长**，单位秒（5～30）；有参考音频时必填 |
 
@@ -80,14 +80,13 @@ curl -X POST 'https://sigrunai.com/v1/videos' \
     "duration": 10,
     "images": ["https://example.com/ref.png"],
     "videos": ["https://example.com/ref.mp4"],
-    "reference_video_durations": [5],
     "audios": ["https://example.com/ref.mp3"],
     "reference_audio_durations": [8]
   }'
 ```
 
-上例计费秒数 = `10 + 5 = 15`（输出 10 秒 + 参考视频 5 秒；音频不累加）。
+上例创建预扣秒数 ≈ `10 + 参考视频实测秒`；完成后若成片实测输出为 9 秒，则按 `9 + 参考实测` 结算（音频不累加）。
 
 ## 响应
 
-创建成功后返回统一任务结构（含 `task_id`、`status`、`cost` 等）。`data.model` 为计费键（如 `kling-4.0-720p`）。任务完成后通过查询接口读取 `result.video_url`。
+创建成功后返回统一任务结构（含 `task_id`、`status`、`cost` 等）。`data.model` 为计费键（如 `kling-4.0-720p`）。任务完成后通过查询接口读取 `result.video_url`，以及 `billable_seconds` / `input_video_seconds` / `output_seconds` / `reference_video_seconds` 时长明细。
