@@ -13,7 +13,7 @@ openapi: 'POST /v1/videos'
 | --- | --- | --- | --- |
 | `sd2.0-mini-720p` | `per_task`（按次） | **4–15** 秒 | 固定 **720p** |
 
-不支持首尾帧。
+不支持参考视频、首尾帧。
 
 ## 请求参数
 
@@ -24,7 +24,6 @@ openapi: 'POST /v1/videos'
 | `duration` / `seconds` | int | 否 | **4–15**；默认 5 |
 | `aspect_ratio` / `ratio` | string | 否 | `21:9` / `16:9` / `4:3` / `1:1` / `3:4` / `9:16`；默认 `9:16` |
 | `images` / `reference_images` | string[] | 否 | 参考图，最多 **9** 张 |
-| `videos` / `reference_videos` | string[] | 否 | 参考视频，最多 **3** 个 |
 | `audios` / `reference_audios` | string[] | 否 | 参考音频，最多 **3** 段 |
 
 参考素材须为公网 `https://` URL。
