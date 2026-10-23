@@ -45,7 +45,6 @@ Reference media must be public `https://` URLs. File size is enforced on upload;
 | `resolution` | string | no | `720p` (default) or `1080p`; also inferred from billing model names |
 | `images` / `reference_images` | string[] | no | Reference image URLs, max **10** |
 | `videos` / `reference_videos` | string[] | no | Reference video URLs, max **5** |
-| `reference_video_durations` | int[] | no | Ignored for billing; if present must match `videos` length (legacy clients) |
 | `audios` / `reference_audios` | string[] | no | Reference audio URLs, max **3** |
 | `reference_audio_durations` | int[] | conditional | Same length as `audios`, seconds (5–30); **required** when audios are present |
 

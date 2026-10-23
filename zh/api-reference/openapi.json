@@ -602,15 +602,6 @@
               "format": "uri"
             }
           },
-          "reference_video_durations": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 30
-            },
-            "description": "kling-4.0 传入参考视频时必填，与 videos 等长，单位秒（1～30）。计费秒数 = 输出时长 + 各项之和"
-          },
           "reference_audio_durations": {
             "type": "array",
             "items": {
