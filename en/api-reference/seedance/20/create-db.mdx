@@ -1,0 +1,43 @@
+---
+title: 'Seedance 2.0 DB'
+openapi: 'POST /v1/videos'
+---
+
+Create a Seedance **2.0 DB** video via `POST /v1/videos` with `model` set to `sd2-720p-db`. Poll [Query video task](/en/api-reference/common/query) for `result.video_url`.
+
+Billed per task (duration is 5 / 10 / 15 seconds and does not multiply price).
+
+## Models
+
+| `model` | Billing | Duration | Resolution |
+| --- | --- | --- | --- |
+| `sd2-720p-db` | `per_task` | **5** / **10** / **15** seconds | Fixed **720p** |
+
+First/last frames, reference videos, and reference audios are not supported.
+
+## Request parameters
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `model` | string | yes | `sd2-720p-db` |
+| `prompt` | string | yes | Up to **5000** characters |
+| `duration` / `seconds` | int | no | **5** / **10** / **15**; defaults to 5 |
+| `aspect_ratio` / `ratio` | string | no | `21:9` / `16:9` / `4:3` / `1:1` / `3:4` / `9:16`; default `16:9` |
+| `images` / `reference_images` | string[] | no | Reference images, up to **10** |
+
+Reference assets must be public `https://` URLs.
+
+## Example
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "sd2-720p-db",
+    "prompt": "A cat running on grass, tracking shot",
+    "duration": 10,
+    "aspect_ratio": "16:9",
+    "images": ["https://example.com/cat.png"]
+  }'
+```

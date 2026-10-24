@@ -130,6 +130,7 @@
                   "en/api-reference/seedance/md/create",
                   "en/api-reference/seedance/20/create-ac",
                   "en/api-reference/seedance/20/create-dl",
+                  "en/api-reference/seedance/20/create-db",
                   "en/api-reference/seedance/20/create-mini-720p"
                 ]
               },
@@ -261,6 +262,7 @@
                   "zh/api-reference/seedance/md/create",
                   "zh/api-reference/seedance/20/create-ac",
                   "zh/api-reference/seedance/20/create-dl",
+                  "zh/api-reference/seedance/20/create-db",
                   "zh/api-reference/seedance/20/create-mini-720p"
                 ]
               },
