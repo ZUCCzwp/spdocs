@@ -38,6 +38,7 @@ Frames and reference images are **mutually exclusive**. Lite has no multi-ref or
 | `first_image` | string | conditional | First-frame URL |
 | `last_image` | string | no | Last-frame URL (Standard only; requires first frame) |
 | `first_last_frame` | boolean | no | `true` for first / first-last frame mode |
+| `smart_queue` | bool | no | Default `false`. When `true`, a very low recent success rate keeps the task `queued` until recovery (up to about 2 hours). See [Smart queue](/en/api-reference/common/smart-queue) |
 
 Media URLs must be public `https://` direct links.
 

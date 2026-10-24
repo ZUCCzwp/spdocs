@@ -1,0 +1,41 @@
+---
+title: '智能排队'
+description: '创建任务时用 smart_queue 在成功率过低时先排队'
+---
+
+`POST /v1/images` 与 `POST /v1/videos`（含 `POST /v1/veo/frames`）支持可选字段 `smart_queue`。
+
+默认不传或传 `false`：创建后立刻进入调度，行为与原来一致。
+
+传 `true`：若该模型近期成功率过低，任务会先保持 `queued`（积分已扣），等成功率回升后再提交。请继续用原来的 `task_id` 轮询。
+
+## 请求字段
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `smart_queue` | bool | 否 | 默认 `false`。为 `true` 时启用智能排队 |
+
+## 行为
+
+- 未开启：创建当下提交。
+- 已开启且近期成功率正常或样本不足：创建当下提交。
+- 已开启且近期成功率过低：先返回 `queued`，恢复后再提交。
+- 排队期间积分已扣除。若约 **2 小时**内仍未提交，任务变为 `failed` 并退款。
+- 查询方式不变：`GET /v1/images/{task_id}` 或 `GET /v1/videos/{task_id}`。
+
+在线制作与画布里的 **智能排队** 开关会在请求里带上同一字段。
+
+## 示例
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "seedance2.0-md",
+    "prompt": "一只猫在草地上奔跑，跟拍镜头",
+    "duration": 5,
+    "aspect_ratio": "16:9",
+    "smart_queue": true
+  }'
+```

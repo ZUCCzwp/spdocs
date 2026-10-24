@@ -524,6 +524,11 @@
             },
             "maxItems": 15,
             "description": "参考图 URL。GPT Image 2 最多 15；Nano Banana 最多 5"
+          },
+          "smart_queue": {
+            "type": "boolean",
+            "default": false,
+            "description": "为 true 时，近期成功率过低会先保持 queued，恢复后再提交（最长约 2 小时）"
           }
         }
       },
@@ -642,6 +647,11 @@
               "type": "string",
               "format": "uri"
             }
+          },
+          "smart_queue": {
+            "type": "boolean",
+            "default": false,
+            "description": "为 true 时，近期成功率过低会先保持 queued，恢复后再提交（最长约 2 小时）"
           }
         }
       },
@@ -708,6 +718,11 @@
           "last_image": {
             "type": "string",
             "format": "uri"
+          },
+          "smart_queue": {
+            "type": "boolean",
+            "default": false,
+            "description": "为 true 时，近期成功率过低会先保持 queued，恢复后再提交（最长约 2 小时）"
           }
         }
       },

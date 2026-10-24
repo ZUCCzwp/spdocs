@@ -38,6 +38,7 @@ openapi: 'POST /v1/videos'
 | `first_image` | string | 条件 | 首帧 URL |
 | `last_image` | string | 否 | 尾帧 URL（仅标准版；需与首帧一起） |
 | `first_last_frame` | boolean | 否 | `true` 表示首帧 / 首尾帧模式 |
+| `smart_queue` | bool | 否 | 默认 `false`。为 `true` 时，近期成功率过低会先保持 `queued`，恢复后再提交（最长约 2 小时）。详见 [智能排队](/zh/api-reference/common/smart-queue) |
 
 参考素材须为公网 `https://` 直链。
 

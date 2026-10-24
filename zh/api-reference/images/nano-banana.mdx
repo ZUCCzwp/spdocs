@@ -28,6 +28,7 @@ GPT Image 2 见 [创建 GPT Image 2 任务](/zh/api-reference/images/create)。
 | `size` | string | 否 | `ratio` 别名 |
 | `resolution` | string | 否 | 分辨率档位，默认 `1k`（见上表） |
 | `images` | string[] | 否 | 参考图公网 URL，最多 **5** 张 |
+| `smart_queue` | bool | 否 | 默认 `false`。为 `true` 时，近期成功率过低会先保持 `queued`，恢复后再提交（最长约 2 小时）。详见 [智能排队](/zh/api-reference/common/smart-queue) |
 
 ## 示例
 

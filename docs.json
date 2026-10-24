@@ -55,7 +55,8 @@
                   "en/api-reference/common/model-catalog",
                   "en/api-reference/common/files-upload",
                   "en/api-reference/common/query",
-                  "en/api-reference/images/query"
+                  "en/api-reference/images/query",
+                  "en/api-reference/common/smart-queue"
                 ]
               },
               {
@@ -187,7 +188,8 @@
                   "zh/api-reference/common/model-catalog",
                   "zh/api-reference/common/files-upload",
                   "zh/api-reference/common/query",
-                  "zh/api-reference/images/query"
+                  "zh/api-reference/images/query",
+                  "zh/api-reference/common/smart-queue"
                 ]
               },
               {

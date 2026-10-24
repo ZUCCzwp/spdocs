@@ -29,6 +29,9 @@ icon: 'circle-question'
   <Accordion title="为什么任务失败？" icon="circle-exclamation">
     常见原因：参数不符合该模型约束、余额不足、或服务短暂不可用。请查看查询响应中的 `error_message`。
   </Accordion>
+  <Accordion title="什么是智能排队？" icon="clock">
+    创建图片或视频任务时可传 `smart_queue: true`。默认关闭，创建后立刻提交。开启后，若该模型近期成功率过低，任务会先保持 `queued`，恢复后再提交（最长约 2 小时，超时退款）。详见 [智能排队](/zh/api-reference/common/smart-queue)。
+  </Accordion>
   <Accordion title="如何拿到生成结果？" icon="magnifying-glass">
     创建后轮询 `GET /v1/images/{task_id}` 或 `GET /v1/videos/{task_id}`。`status` 为 `completed` 时读取 `result.image_url` 或 `result.video_url`。结果链接约保留 3 天。
   </Accordion>

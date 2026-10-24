@@ -24,6 +24,7 @@ First/last frames, reference videos, and reference audios are not supported.
 | `duration` / `seconds` | int | no | Fixed **15**; defaults to 15 |
 | `aspect_ratio` / `ratio` | string | no | `21:9` / `16:9` / `4:3` / `1:1` / `3:4` / `9:16`; default `16:9` |
 | `images` / `reference_images` | string[] | no | Reference images, up to **10** |
+| `smart_queue` | bool | no | Default `false`. When `true`, a very low recent success rate keeps the task `queued` until recovery (up to about 2 hours). See [Smart queue](/en/api-reference/common/smart-queue) |
 
 Reference assets must be public `https://` URLs.
 

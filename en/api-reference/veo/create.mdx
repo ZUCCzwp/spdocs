@@ -39,6 +39,7 @@ Reference images and first/last frames **cannot** be combined. If you send a las
 | `images` / `image_urls` | string[] | no | Up to **3** reference images |
 | `first_frame_url` / `first_image` | string | conditional | First frame URL |
 | `last_frame_url` / `last_image` | string | no | Last frame URL; requires first frame |
+| `smart_queue` | bool | no | Default `false`. When `true`, a very low recent success rate keeps the task `queued` until recovery (up to about 2 hours). See [Smart queue](/en/api-reference/common/smart-queue) |
 
 ## Examples
 

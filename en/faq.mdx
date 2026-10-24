@@ -29,6 +29,9 @@ icon: 'circle-question'
   <Accordion title="Why did my task fail?" icon="circle-exclamation">
     Typical causes: invalid parameters for that model, insufficient balance, or a temporary outage. Check `error_message` on the query response.
   </Accordion>
+  <Accordion title="What is smart queue?" icon="clock">
+    On image or video create you can send `smart_queue: true`. It is off by default, so create dispatches immediately. When on, a very low recent success rate keeps the task `queued` until recovery (up to about 2 hours, then refund). See [Smart queue](/en/api-reference/common/smart-queue).
+  </Accordion>
   <Accordion title="How do I get the result?" icon="magnifying-glass">
     Poll `GET /v1/images/{task_id}` or `GET /v1/videos/{task_id}`. When `status` is `completed`, read `result.image_url` or `result.video_url`. Links are kept about 3 days.
   </Accordion>

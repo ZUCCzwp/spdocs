@@ -19,7 +19,7 @@ For **Kling 4.0** (and similar per-second models with reference videos), query a
 
 | status | Meaning | progress |
 | :--- | :--- | :--- |
-| `queued` / `pending` / `submitted` | Submitted, waiting | `0` |
+| `queued` / `pending` / `submitted` | Submitted, waiting. If you pass `smart_queue: true` and recent success rate is very low, the task stays queued until recovery (up to about 2 hours). See [Smart queue](/en/api-reference/common/smart-queue) | `0` |
 | `processing` / `in_progress` / `running` | Generating | `1–99` |
 | `completed` / `success` / `succeeded` | Done — read `result.video_url` | `100` |
 | `failed` | Failed — see `error_message` | `0` |

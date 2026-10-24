@@ -25,6 +25,7 @@ openapi: 'POST /v1/videos'
 | `aspect_ratio` / `ratio` | string | 否 | `21:9` / `16:9` / `4:3` / `1:1` / `3:4` / `9:16`；默认 `9:16` |
 | `images` / `reference_images` | string[] | 否 | 参考图，最多 **9** 张 |
 | `audios` / `reference_audios` | string[] | 否 | 参考音频，最多 **3** 段 |
+| `smart_queue` | bool | 否 | 默认 `false`。为 `true` 时，近期成功率过低会先保持 `queued`，恢复后再提交（最长约 2 小时）。详见 [智能排队](/zh/api-reference/common/smart-queue) |
 
 参考素材须为公网 `https://` URL。
 

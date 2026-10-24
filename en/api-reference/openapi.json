@@ -524,6 +524,11 @@
             },
             "maxItems": 15,
             "description": "Reference image URLs. GPT Image 2 max 15; Nano Banana max 5"
+          },
+          "smart_queue": {
+            "type": "boolean",
+            "default": false,
+            "description": "When true, a very low recent success rate keeps the task queued until recovery (up to about 2 hours)"
           }
         }
       },
@@ -642,6 +647,11 @@
               "type": "string",
               "format": "uri"
             }
+          },
+          "smart_queue": {
+            "type": "boolean",
+            "default": false,
+            "description": "When true, a very low recent success rate keeps the task queued until recovery (up to about 2 hours)"
           }
         }
       },
@@ -708,6 +718,11 @@
           "last_image": {
             "type": "string",
             "format": "uri"
+          },
+          "smart_queue": {
+            "type": "boolean",
+            "default": false,
+            "description": "When true, a very low recent success rate keeps the task queued until recovery (up to about 2 hours)"
           }
         }
       },
