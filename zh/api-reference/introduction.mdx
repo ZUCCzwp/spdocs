@@ -16,6 +16,9 @@ description: 'AI Platform OpenAPI 接入说明'
 | 视频 | `omni-10s` | Omni 10s；固定 10 秒、720p |
 | 视频 | `seedance2.0-md` | 5 / 10 / 15 秒 |
 | 视频 | `sd2-480p-ac` / `sd2-720p-ac` | 4–15 秒；按次两档 |
+| 视频 | `sd2-720p-dl` | 固定 15 秒；按次 |
+| 视频 | `sd2-720p-db` | 5 / 10 / 15 秒；按次 |
+| 视频 | `sd2.0-mini-720p` | 4–15 秒；固定 720p；按次 |
 | 视频 | `seedance2.5-30s` | 固定 30 秒 |
 | 视频 | `sd2.5-720p-ac` | 4–30 秒；固定 720p；按次 |
 | 视频 | `sd2.5-720p-933-ac` | 4–30 秒；固定 720p；按次；图 9 / 视频 3 / 音频 3 |
@@ -44,6 +47,7 @@ https://sigrunai.com
 | 创建视频任务 | `POST /v1/videos` |
 | 创建 Omni 10s 视频 | `POST /v1/videos`（`model=omni-10s`） |
 | 查询视频任务 | `GET /v1/videos/{task_id}` |
+| 智能排队 | 创建时可选 `smart_queue`，见 [智能排队](/zh/api-reference/common/smart-queue) |
 | 上传文件 | `POST /v1/files` |
 | 模型目录（无需 Key） | `GET /v1/model/catalog` |
 | 查询用户余额 | `GET /v1/user/balance` |

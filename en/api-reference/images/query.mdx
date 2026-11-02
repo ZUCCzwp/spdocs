@@ -11,7 +11,7 @@ Create and query share the same `data` shape. `data.cost` is the charged amount 
 
 | status | Meaning |
 | :--- | :--- |
-| `queued` / `pending` / `submitted` | Submitted, waiting |
+| `queued` / `pending` / `submitted` | Submitted, waiting. If you pass `smart_queue: true` and recent success rate is very low, the task stays queued until recovery (up to about 2 hours). See [Smart queue](/en/api-reference/common/smart-queue) |
 | `processing` / `in_progress` / `running` | Generating |
 | `completed` / `success` / `succeeded` | Done — read `result.image_url` |
 | `failed` | Failed — see `error_message` |

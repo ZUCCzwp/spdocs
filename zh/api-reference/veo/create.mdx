@@ -39,6 +39,7 @@ openapi: 'POST /v1/veo/frames'
 | `images` / `image_urls` | string[] | 否 | 参考图，最多 **3** 张 |
 | `first_frame_url` / `first_image` | string | 条件 | 首尾帧模式的首帧 URL |
 | `last_frame_url` / `last_image` | string | 否 | 尾帧 URL；需与首帧一起使用 |
+| `smart_queue` | bool | 否 | 默认 `false`。为 `true` 时，近期成功率过低会先保持 `queued`，恢复后再提交（最长约 2 小时）。详见 [智能排队](/zh/api-reference/common/smart-queue) |
 
 ## 示例
 

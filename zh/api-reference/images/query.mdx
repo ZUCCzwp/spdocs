@@ -11,7 +11,7 @@ openapi: 'GET /v1/images/{taskId}'
 
 | status | 说明 |
 | :--- | :--- |
-| `queued` / `pending` / `submitted` | 已提交，等待调度 |
+| `queued` / `pending` / `submitted` | 已提交，等待调度。创建时传 `smart_queue: true` 且近期成功率过低时，会继续停在 queued，恢复后再提交（最长约 2 小时）。详见 [智能排队](/zh/api-reference/common/smart-queue) |
 | `processing` / `in_progress` / `running` | 生成中 |
 | `completed` / `success` / `succeeded` | 成功，可读 `result.image_url` |
 | `failed` | 失败，见 `error_message` |

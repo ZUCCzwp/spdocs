@@ -35,6 +35,7 @@ Describe each asset’s role and index in `prompt` (e.g. image 1, video 1, audio
 | `images` / `reference_images` | string[] | no | Reference image URLs |
 | `videos` / `reference_videos` | string[] | no | Public video URLs |
 | `audios` / `reference_audios` | string[] | no | Public audio URLs |
+| `smart_queue` | bool | no | Default `false`. When `true`, a very low recent success rate keeps the task `queued` until recovery (up to about 2 hours). See [Smart queue](/en/api-reference/common/smart-queue) |
 
 Images, videos, and audios combined may total at most **9**. References must be public `https://` direct links.
 

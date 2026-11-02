@@ -35,6 +35,7 @@ openapi: 'POST /v1/videos'
 | `images` / `reference_images` | string[] | 否 | 参考图 URL |
 | `videos` / `reference_videos` | string[] | 否 | 参考视频直链 |
 | `audios` / `reference_audios` | string[] | 否 | 参考音频直链 |
+| `smart_queue` | bool | 否 | 默认 `false`。为 `true` 时，近期成功率过低会先保持 `queued`，恢复后再提交（最长约 2 小时）。详见 [智能排队](/zh/api-reference/common/smart-queue) |
 
 图片、视频、音频合计最多 **9** 项。参考素材须为公网 `https://` 直链。
 

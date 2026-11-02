@@ -23,6 +23,7 @@ If you send `duration`, it must be `30`; otherwise it defaults to 30. First/last
 | `images` / `reference_images` | string[] | no | Up to **30** images |
 | `videos` / `reference_videos` | string[] | no | Up to **10** videos |
 | `audios` / `reference_audios` | string[] | no | Up to **10** audios |
+| `smart_queue` | bool | no | Default `false`. When `true`, a very low recent success rate keeps the task `queued` until recovery (up to about 2 hours). See [Smart queue](/en/api-reference/common/smart-queue) |
 
 Use public `https://` URLs only.
 

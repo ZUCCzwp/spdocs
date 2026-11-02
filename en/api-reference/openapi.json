@@ -116,7 +116,7 @@
     "/v1/videos": {
       "post": {
         "summary": "Create video task",
-        "description": "Unified video create entry. Available models: omni-10s, veo3.1-fast, veo3.1-lite, veo3.1-lite-hd, grok-imagine-video-1.5 (and fast/lite), minimax-h3, minimax-h3-max, kling-4.0 (720p/1080p), seedance2.0-md, sd2-480p-ac, sd2-720p-ac, seedance2.5-30s, sd2.5-720p-ac, wan3-480p-20s-ac. Veo also has POST /v1/veo/frames.",
+        "description": "Unified video create entry. Available models: omni-10s, veo3.1-fast, veo3.1-lite, veo3.1-lite-hd, grok-imagine-video-1.5 (and fast/lite), minimax-h3, minimax-h3-max, kling-4.0 (720p/1080p), seedance2.0-md, sd2-480p-ac, sd2-720p-ac, sd2-720p-dl, sd2-720p-db, sd2.0-mini-720p, seedance2.5-30s, sd2.5-720p-ac, sd2.5-720p-933-ac, wan3-480p-20s-ac. Veo also has POST /v1/veo/frames.",
         "operationId": "createVideo",
         "tags": [
           "Videos"
@@ -172,6 +172,33 @@
                     "aspect_ratio": "9:16"
                   }
                 },
+                "seedance20Dl": {
+                  "summary": "sd2-720p-dl",
+                  "value": {
+                    "model": "sd2-720p-dl",
+                    "prompt": "A cat running on grass, tracking shot",
+                    "duration": 15,
+                    "aspect_ratio": "16:9"
+                  }
+                },
+                "seedance20Db": {
+                  "summary": "sd2-720p-db",
+                  "value": {
+                    "model": "sd2-720p-db",
+                    "prompt": "A cat running on grass, tracking shot",
+                    "duration": 10,
+                    "aspect_ratio": "16:9"
+                  }
+                },
+                "seedance20Mini720p": {
+                  "summary": "sd2.0-mini-720p",
+                  "value": {
+                    "model": "sd2.0-mini-720p",
+                    "prompt": "A cat running on grass, tracking shot",
+                    "duration": 8,
+                    "aspect_ratio": "16:9"
+                  }
+                },
                 "seedance720pAc": {
                   "summary": "sd2.5-720p-ac",
                   "value": {
@@ -179,6 +206,16 @@
                     "prompt": "A cat running on grass, tracking shot",
                     "duration": 8,
                     "aspect_ratio": "9:16"
+                  }
+                },
+                "seedance720p933Ac": {
+                  "summary": "sd2.5-720p-933-ac",
+                  "value": {
+                    "model": "sd2.5-720p-933-ac",
+                    "prompt": "The subject turns and smiles, cloth moving in the wind",
+                    "duration": 8,
+                    "aspect_ratio": "9:16",
+                    "images": ["https://example.com/character.png"]
                   }
                 },
                 "kling40": {
@@ -497,6 +534,11 @@
             },
             "maxItems": 15,
             "description": "Reference image URLs. GPT Image 2 max 15; Nano Banana max 5"
+          },
+          "smart_queue": {
+            "type": "boolean",
+            "default": false,
+            "description": "When true, a very low recent success rate keeps the task queued until recovery (up to about 2 hours)"
           }
         }
       },
@@ -509,7 +551,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "omni-10s, veo3.1-fast, veo3.1-lite, veo3.1-lite-hd, grok-imagine-video-1.5 (and fast/lite), minimax-h3, minimax-h3-max, kling-4.0 / kling-4.0-720p / kling-4.0-1080p, seedance2.0-md, sd2-480p-ac, sd2-720p-ac, seedance2.5-30s, sd2.5-720p-ac, or wan3-480p-20s-ac",
+            "description": "omni-10s, veo3.1-fast, veo3.1-lite, veo3.1-lite-hd, grok-imagine-video-1.5 (and fast/lite), minimax-h3, minimax-h3-max, kling-4.0 / kling-4.0-720p / kling-4.0-1080p, seedance2.0-md, sd2-480p-ac, sd2-720p-ac, sd2-720p-dl, sd2-720p-db, sd2.0-mini-720p, seedance2.5-30s, sd2.5-720p-ac, sd2.5-720p-933-ac, or wan3-480p-20s-ac",
             "example": "omni-10s"
           },
           "prompt": {
@@ -524,7 +566,7 @@
                 "type": "string"
               }
             ],
-            "description": "omni-10s: fixed 10; seedance2.0-md: 5/10/15; sd2-*-ac: 4–15; seedance2.5-30s: fixed 30; sd2.5-720p-ac: 4–30; wan3-480p-20s-ac: 5–20"
+            "description": "omni-10s: fixed 10; seedance2.0-md: 5/10/15; sd2-*-ac: 4–15; sd2-720p-dl: fixed 15; sd2-720p-db: 5/10/15; sd2.0-mini-720p: 4–15; seedance2.5-30s: fixed 30; sd2.5-720p-ac and sd2.5-720p-933-ac: 4–30; wan3-480p-20s-ac: 5–20"
           },
           "seconds": {
             "oneOf": [
@@ -624,6 +666,11 @@
               "type": "string",
               "format": "uri"
             }
+          },
+          "smart_queue": {
+            "type": "boolean",
+            "default": false,
+            "description": "When true, a very low recent success rate keeps the task queued until recovery (up to about 2 hours)"
           }
         }
       },
@@ -690,6 +737,11 @@
           "last_image": {
             "type": "string",
             "format": "uri"
+          },
+          "smart_queue": {
+            "type": "boolean",
+            "default": false,
+            "description": "When true, a very low recent success rate keeps the task queued until recovery (up to about 2 hours)"
           }
         }
       },

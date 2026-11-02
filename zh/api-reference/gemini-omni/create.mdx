@@ -39,6 +39,7 @@ openapi: 'POST /v1/videos'
 | `videos` / `reference_videos` | string[] | 否 | 参考视频，最多 **7** 个 |
 | `first_image` | string | 条件 | 首尾帧模式的首帧 URL；提供尾帧时必须同时提供首帧 |
 | `last_image` | string | 否 | 尾帧 URL；需与 `first_image` 一起使用 |
+| `smart_queue` | bool | 否 | 默认 `false`。为 `true` 时，近期成功率过低会先保持 `queued`，恢复后再提交（最长约 2 小时）。详见 [智能排队](/zh/api-reference/common/smart-queue) |
 
 ## 示例
 

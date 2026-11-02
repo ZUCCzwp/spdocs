@@ -1,0 +1,41 @@
+---
+title: 'Smart queue'
+description: 'Use smart_queue on create to wait when success rate is very low'
+---
+
+`POST /v1/images` and `POST /v1/videos` (including `POST /v1/veo/frames`) accept an optional `smart_queue` field.
+
+Omit it or set `false` (default): the task is dispatched immediately, same as before.
+
+Set `true`: if that model’s recent success rate is very low, the task stays `queued` (points already deducted) until the rate recovers, then it is submitted. Keep polling the same `task_id`.
+
+## Request field
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `smart_queue` | bool | no | Default `false`. Set `true` to enable smart queue |
+
+## Behavior
+
+- Off: submitted as soon as you create the task.
+- On, and recent success rate is healthy or there are too few samples: submitted immediately.
+- On, and recent success rate is very low: response stays `queued` until recovery.
+- Points are deducted at create time. If the task is still waiting after about **2 hours**, it becomes `failed` and is refunded.
+- Polling is unchanged: `GET /v1/images/{task_id}` or `GET /v1/videos/{task_id}`.
+
+The **Smart queue** toggle in Online Studio and Canvas sends the same field.
+
+## Example
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "seedance2.0-md",
+    "prompt": "A cat running on grass, tracking shot",
+    "duration": 5,
+    "aspect_ratio": "16:9",
+    "smart_queue": true
+  }'
+```

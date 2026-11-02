@@ -116,7 +116,7 @@
     "/v1/videos": {
       "post": {
         "summary": "创建视频任务",
-        "description": "统一视频创建入口。当前可用 model：omni-10s、veo3.1-fast、veo3.1-lite、veo3.1-lite-hd、grok-imagine-video-1.5（及 fast/lite）、minimax-h3、minimax-h3-max、kling-4.0（720p/1080p）、seedance2.0-md、sd2-480p-ac、sd2-720p-ac、seedance2.5-30s、sd2.5-720p-ac、wan3-480p-20s-ac。Veo 也可用专用入口 POST /v1/veo/frames。",
+        "description": "统一视频创建入口。当前可用 model：omni-10s、veo3.1-fast、veo3.1-lite、veo3.1-lite-hd、grok-imagine-video-1.5（及 fast/lite）、minimax-h3、minimax-h3-max、kling-4.0（720p/1080p）、seedance2.0-md、sd2-480p-ac、sd2-720p-ac、sd2-720p-dl、sd2-720p-db、sd2.0-mini-720p、seedance2.5-30s、sd2.5-720p-ac、sd2.5-720p-933-ac、wan3-480p-20s-ac。Veo 也可用专用入口 POST /v1/veo/frames。",
         "operationId": "createVideo",
         "tags": [
           "Videos"
@@ -172,6 +172,33 @@
                     "aspect_ratio": "9:16"
                   }
                 },
+                "seedance20Dl": {
+                  "summary": "sd2-720p-dl",
+                  "value": {
+                    "model": "sd2-720p-dl",
+                    "prompt": "一只猫在草地上奔跑，跟拍镜头",
+                    "duration": 15,
+                    "aspect_ratio": "16:9"
+                  }
+                },
+                "seedance20Db": {
+                  "summary": "sd2-720p-db",
+                  "value": {
+                    "model": "sd2-720p-db",
+                    "prompt": "一只猫在草地上奔跑，跟拍镜头",
+                    "duration": 10,
+                    "aspect_ratio": "16:9"
+                  }
+                },
+                "seedance20Mini720p": {
+                  "summary": "sd2.0-mini-720p",
+                  "value": {
+                    "model": "sd2.0-mini-720p",
+                    "prompt": "一只猫在草地上奔跑，跟拍镜头",
+                    "duration": 8,
+                    "aspect_ratio": "16:9"
+                  }
+                },
                 "seedance720pAc": {
                   "summary": "sd2.5-720p-ac",
                   "value": {
@@ -179,6 +206,16 @@
                     "prompt": "一只猫在草地上奔跑，跟拍镜头",
                     "duration": 8,
                     "aspect_ratio": "9:16"
+                  }
+                },
+                "seedance720p933Ac": {
+                  "summary": "sd2.5-720p-933-ac",
+                  "value": {
+                    "model": "sd2.5-720p-933-ac",
+                    "prompt": "人物自然转身微笑，衣摆随风轻扬",
+                    "duration": 8,
+                    "aspect_ratio": "9:16",
+                    "images": ["https://example.com/character.png"]
                   }
                 },
                 "kling40": {
@@ -497,6 +534,11 @@
             },
             "maxItems": 15,
             "description": "参考图 URL。GPT Image 2 最多 15；Nano Banana 最多 5"
+          },
+          "smart_queue": {
+            "type": "boolean",
+            "default": false,
+            "description": "为 true 时，近期成功率过低会先保持 queued，恢复后再提交（最长约 2 小时）"
           }
         }
       },
@@ -509,7 +551,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "omni-10s、veo3.1-fast、veo3.1-lite、veo3.1-lite-hd、grok-imagine-video-1.5（及 fast/lite）、minimax-h3、minimax-h3-max、kling-4.0 / kling-4.0-720p / kling-4.0-1080p、seedance2.0-md、sd2-480p-ac、sd2-720p-ac、seedance2.5-30s、sd2.5-720p-ac 或 wan3-480p-20s-ac",
+            "description": "omni-10s、veo3.1-fast、veo3.1-lite、veo3.1-lite-hd、grok-imagine-video-1.5（及 fast/lite）、minimax-h3、minimax-h3-max、kling-4.0 / kling-4.0-720p / kling-4.0-1080p、seedance2.0-md、sd2-480p-ac、sd2-720p-ac、sd2-720p-dl、sd2-720p-db、sd2.0-mini-720p、seedance2.5-30s、sd2.5-720p-ac、sd2.5-720p-933-ac 或 wan3-480p-20s-ac",
             "example": "omni-10s"
           },
           "prompt": {
@@ -524,7 +566,7 @@
                 "type": "string"
               }
             ],
-            "description": "omni-10s：固定 10；seedance2.0-md：5/10/15；sd2-*-ac：4–15；seedance2.5-30s：固定 30；sd2.5-720p-ac：4–30；wan3-480p-20s-ac：5–20"
+            "description": "omni-10s：固定 10；seedance2.0-md：5/10/15；sd2-*-ac：4–15；sd2-720p-dl：固定 15；sd2-720p-db：5/10/15；sd2.0-mini-720p：4–15；seedance2.5-30s：固定 30；sd2.5-720p-ac、sd2.5-720p-933-ac：4–30；wan3-480p-20s-ac：5–20"
           },
           "seconds": {
             "oneOf": [
@@ -624,6 +666,11 @@
               "type": "string",
               "format": "uri"
             }
+          },
+          "smart_queue": {
+            "type": "boolean",
+            "default": false,
+            "description": "为 true 时，近期成功率过低会先保持 queued，恢复后再提交（最长约 2 小时）"
           }
         }
       },
@@ -690,6 +737,11 @@
           "last_image": {
             "type": "string",
             "format": "uri"
+          },
+          "smart_queue": {
+            "type": "boolean",
+            "default": false,
+            "description": "为 true 时，近期成功率过低会先保持 queued，恢复后再提交（最长约 2 小时）"
           }
         }
       },

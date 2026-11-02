@@ -24,6 +24,7 @@ Output is fixed **720p**. `resolution` is ignored. First/last frame is not suppo
 | `images` / `reference_images` | string[] | no | Up to **9** images |
 | `videos` / `reference_videos` | string[] | no | Up to **3** videos |
 | `audios` / `reference_audios` | string[] | no | Up to **3** audios |
+| `smart_queue` | bool | no | Default `false`. When `true`, a very low recent success rate keeps the task `queued` until recovery (up to about 2 hours). See [Smart queue](/en/api-reference/common/smart-queue) |
 
 Use public `https://` URLs only (no base64). GIF images are not supported.
 
