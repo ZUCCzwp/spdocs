@@ -1,0 +1,47 @@
+---
+title: 'Seedance 2.5 720p 933 AC'
+openapi: 'POST /v1/videos'
+---
+
+Create a Seedance **2.5 720p 933 AC** video via `POST /v1/videos` with `model` set to `sd2.5-720p-933-ac`. Poll [Query video task](/en/api-reference/common/query) for `result.video_url`.
+
+Fixed 720p. Billed **per task** (`duration` only controls clip length, not the price multiplier). `933` means up to 9 reference images, 3 reference videos, and 3 reference audios.
+
+## Model
+
+| `model` | Billing | Duration | Resolution |
+| --- | --- | --- | --- |
+| `sd2.5-720p-933-ac` | `per_task` | **4–30** seconds | Fixed **720p** |
+
+First/last frames are not supported. Reference audio must be paired with at least one image or one video.
+
+## Request fields
+
+| Field | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `model` | string | yes | `sd2.5-720p-933-ac` |
+| `prompt` | string | yes | Max **5000** characters |
+| `duration` / `seconds` | int | no | **4–30**; default 4 |
+| `aspect_ratio` / `ratio` | string | no | `16:9`, `9:16`, `4:3`, `3:4`, or `1:1`; default `9:16` |
+| `images` / `reference_images` | string[] | no | Up to **9** |
+| `videos` / `reference_videos` | string[] | no | Up to **3** |
+| `audios` / `reference_audios` | string[] | no | Up to **3** |
+
+Media URLs must be public `https://` links.
+
+## Example
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "sd2.5-720p-933-ac",
+    "prompt": "The subject turns and smiles, cloth moving in the wind",
+    "duration": 8,
+    "aspect_ratio": "9:16",
+    "images": ["https://example.com/character.png"],
+    "videos": ["https://example.com/motion.mp4"],
+    "audios": ["https://example.com/voice.mp3"]
+  }'
+```
