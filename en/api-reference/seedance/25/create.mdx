@@ -1,0 +1,84 @@
+---
+title: 'Create a Seedance 2.5 video'
+openapi: 'POST /v1/videos'
+---
+
+Create a **Seedance 2.5** video asynchronously. Use `POST /v1/videos` with a billing key: `sd2.5-480p`, `sd2.5-720p`, or `sd2.5-1080p`. On success you get a `task_id`. Poll [Query video task](/en/api-reference/common/query) and read `result.video_url` when the task completes.
+
+## Models
+
+| `model` | Notes | Duration | Resolution |
+| --- | --- | --- | --- |
+| `sd2.5-480p` | Billing key: 480p | **5–30** seconds | `480p` |
+| `sd2.5-720p` | Billing key: 720p | **5–30** seconds | `720p` |
+| `sd2.5-1080p` | Billing key: 1080p | **5–30** seconds | `1080p` |
+
+Billing mode is `per_second`. Cost = the resolution unit price × requested seconds. Live prices come from the [model catalog](/en/api-reference/common/model-catalog) and the `cost` field on the response.
+
+## Modes
+
+| Mode | How to call |
+| --- | --- |
+| Text to video | Omit `images` / `videos` / `audios`, or send empty arrays |
+| Reference generation | Pass reference images, videos, and/or audio |
+
+First and last frames are not supported.
+
+## Reference limits
+
+| Type | Max count |
+| --- | --- |
+| Images | **9** |
+| Videos | **3** |
+| Audio | **1** |
+
+Reference files must be publicly readable URLs.
+
+## Request fields
+
+| Field | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `model` | string | yes | `sd2.5-480p` / `sd2.5-720p` / `sd2.5-1080p` |
+| `prompt` | string | yes | 1–5000 characters |
+| `duration` / `seconds` | int \| string | no | **5–30**. Defaults to **5**. Numeric strings such as `"10"` are accepted |
+| `aspect_ratio` / `ratio` | string | no | `16:9`, `9:16`, `1:1`, `4:3`, `3:4`. Default `9:16` |
+| `images` / `reference_images` | string[] | no | Up to **9** image URLs |
+| `videos` / `reference_videos` | string[] | no | Up to **3** video URLs |
+| `audios` / `reference_audios` | string[] | no | Up to **1** audio URL |
+| `smart_queue` | bool | no | Default `false`. When `true`, a very low recent success rate keeps the task `queued` until recovery (up to about 2 hours). See [Smart queue](/en/api-reference/common/smart-queue) |
+
+## Examples
+
+### Text to video
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "sd2.5-720p",
+    "prompt": "A cat walking through a garden, cinematic",
+    "aspect_ratio": "16:9",
+    "duration": 8
+  }'
+```
+
+### Reference image and video
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "sd2.5-1080p",
+    "prompt": "Use the person in the image and the motion in the video for a new garden shot",
+    "aspect_ratio": "9:16",
+    "duration": 5,
+    "images": ["https://example.com/person.jpg"],
+    "videos": ["https://example.com/motion.mp4"]
+  }'
+```
+
+## Response
+
+Create returns the shared task payload (`task_id`, `status`, `cost`, …). `data.model` is the billing key (for example `sd2.5-720p`). Poll the query endpoint for `result.video_url`.
