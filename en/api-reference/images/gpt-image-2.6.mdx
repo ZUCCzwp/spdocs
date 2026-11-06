@@ -1,0 +1,87 @@
+---
+title: 'Create GPT Image 2.6 task'
+openapi: 'POST /v1/images'
+---
+
+Create an async GPT Image 2.6 task. Poll with [Query image task](/en/api-reference/images/query) and read `result.image_url` when completed.
+
+For GPT Image 2, see [Create GPT Image 2 task](/en/api-reference/images/create). For Nano Banana, see [Create Nano Banana task](/en/api-reference/images/nano-banana).
+
+## Models
+
+| `model` | Notes | Billing |
+| --- | --- | --- |
+| `gpt-image-2.6-flare` | Faster | `per_task` |
+| `gpt-image-2.6-sunburst` | Finer detail | `per_task` |
+
+Each model has its own per-task price. `quality` changes the render, not the price. Check the [model catalog](/en/api-reference/common/model-catalog) and `cost` on the create response for the current unit price.
+
+You can also put quality in the model id, for example `gpt-image-2.6-sunburst-max`. That only sets `quality`. Billing still uses `gpt-image-2.6-sunburst`.
+
+## Request body
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `model` | string | yes | See the table above |
+| `prompt` | string | yes | 1–32000 characters |
+| `quality` | string | no | `auto` (default), `low`, `medium`, `high`, `xhigh`, `max` |
+| `n` | int | no | Only **1**. Omitted requests bill one image |
+| `ratio` | string | no | `auto`, `1:1`, `3:2`, `2:3`, `4:3`, `3:4`, `5:4`, `4:5`, `16:9`, `9:16`, `21:9` |
+| `size` | string | no | Alias of `ratio`. Pixel sizes such as `1024x1024` are rejected |
+| `resolution` | string | no | Omit it, or send `1k` |
+| `output_format` | string | no | `png`, `jpeg`, `webp`, `svg`, `gif`. `jpg` is treated as `jpeg` |
+| `images` | string[] | no | Public reference image URLs, max **16** |
+| `smart_queue` | bool | no | Default `false`. When `true`, a very low recent success rate keeps the task `queued` until recovery (up to about 2 hours). See [Smart queue](/en/api-reference/common/smart-queue) |
+
+`svg` and `gif` cannot include reference images. For `gif`, omit `size` / `ratio` or send `auto`.
+
+## Example
+
+### Text to image
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/images' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "gpt-image-2.6-flare",
+    "prompt": "Minimal product still life, white background, soft light",
+    "quality": "medium",
+    "n": 1,
+    "ratio": "1:1",
+    "resolution": "1k",
+    "output_format": "png"
+  }'
+```
+
+### Edit with a reference image
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/images' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "gpt-image-2.6-sunburst",
+    "prompt": "Keep the product, switch to a soft studio background",
+    "quality": "high",
+    "size": "16:9",
+    "images": ["https://example.com/product.jpg"]
+  }'
+```
+
+Success response:
+
+```json
+{
+  "code": 20000,
+  "msg": "提交成功",
+  "data": {
+    "task_id": "img_xxxxxxxx",
+    "status": "queued",
+    "progress": 0,
+    "model": "gpt-image-2.6-flare",
+    "cost": 0.4,
+    "result": {}
+  }
+}
+```

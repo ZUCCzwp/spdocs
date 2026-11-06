@@ -12,6 +12,7 @@ description: 'AI Platform OpenAPI 接入说明'
 | 类型 | `model` | 说明 |
 | --- | --- | --- |
 | 图片 | `gpt-image-2` | 异步生图；可用 `quality` 或 `gpt-image-2-low` / `medium` / `high` 计费档 |
+| 图片 | `gpt-image-2.6-flare` / `gpt-image-2.6-sunburst` | 异步生图；只支持 `1k`；按模型计费，`quality` 不改变单价 |
 | 图片 | `nano-banana-2` / `nano-banana-2.1` / `nano-banana-pro` | 异步生图；用 `resolution` 选择档位并计费 |
 | 视频 | `omni-10s` | Omni 10s；固定 10 秒、720p |
 | 视频 | `seedance2.0-md` | 5 / 10 / 15 秒 |
@@ -61,6 +62,13 @@ https://sigrunai.com
     href="/zh/api-reference/images/create"
   >
     异步生图，按 quality 计费
+  </Card>
+  <Card
+    title="GPT Image 2.6"
+    icon="image"
+    href="/zh/api-reference/images/gpt-image-2.6"
+  >
+    Flare / Sunburst，按模型计费
   </Card>
   <Card
     title="Nano Banana"

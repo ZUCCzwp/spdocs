@@ -79,6 +79,12 @@
                 ]
               },
               {
+                "group": "GPT Image 2.6",
+                "pages": [
+                  "en/api-reference/images/gpt-image-2.6"
+                ]
+              },
+              {
                 "group": "Nano Banana",
                 "pages": [
                   "en/api-reference/images/nano-banana"
@@ -211,6 +217,12 @@
                 "group": "GPT Image 2",
                 "pages": [
                   "zh/api-reference/images/create"
+                ]
+              },
+              {
+                "group": "GPT Image 2.6",
+                "pages": [
+                  "zh/api-reference/images/gpt-image-2.6"
                 ]
               },
               {

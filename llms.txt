@@ -14,6 +14,7 @@ Auth: Authorization: Bearer <API Key>
 - [Key balance](/zh/api-reference/common/key-balance.mdx): GET /v1/key/balance
 - [Balance webhook](/zh/api-reference/common/balance-webhook.mdx)
 - [Create image](/zh/api-reference/images/create.mdx): POST /v1/images (gpt-image-2)
+- [GPT Image 2.6](/zh/api-reference/images/gpt-image-2.6.mdx): POST /v1/images · model gpt-image-2.6-flare / gpt-image-2.6-sunburst
 - [Query image](/zh/api-reference/images/query.mdx): GET /v1/images/{task_id}
 - [Query video](/zh/api-reference/common/query.mdx): GET /v1/videos/{task_id}
 - [Omni 10s](/zh/api-reference/gemini-omni/create.mdx): POST /v1/videos · model omni-10s
@@ -37,6 +38,7 @@ Auth: Authorization: Bearer <API Key>
 - [Key balance](/en/api-reference/common/key-balance.mdx): GET /v1/key/balance
 - [Balance webhook](/en/api-reference/common/balance-webhook.mdx)
 - [Create image](/en/api-reference/images/create.mdx)
+- [GPT Image 2.6](/en/api-reference/images/gpt-image-2.6.mdx): POST /v1/images · model gpt-image-2.6-flare / gpt-image-2.6-sunburst
 - [Query image](/en/api-reference/images/query.mdx)
 - [Query video](/en/api-reference/common/query.mdx)
 - [Omni 10s](/en/api-reference/gemini-omni/create.mdx): POST /v1/videos · model omni-10s
