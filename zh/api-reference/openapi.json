@@ -128,7 +128,7 @@
     "/v1/videos": {
       "post": {
         "summary": "创建视频任务",
-        "description": "统一视频创建入口。当前可用 model：omni-10s、veo3.1-fast、veo3.1-lite、veo3.1-lite-hd、grok-imagine-video-1.5（及 fast/lite）、minimax-h3、minimax-h3-max、kling-4.0（720p/1080p）、sd2.5-480p / sd2.5-720p / sd2.5-1080p（按秒）、seedance2.0-md、sd2-480p-ac、sd2-720p-ac、sd2-720p-dl、sd2-720p-db、sd2.0-mini-720p、seedance2.5-30s、sd2.5-720p-ac、sd2.5-720p-933-ac、wan3-720p / wan3-1080p（按秒）、wan3-480p-20s-ac。Veo 也可用专用入口 POST /v1/veo/frames。",
+        "description": "统一视频创建入口。当前可用 model：omni-10s、veo3.1-fast、veo3.1-lite、veo3.1-lite-hd、grok-imagine-video-1.5（及 fast/lite）、minimax-h3、minimax-h3-max、kling-4.0（720p/1080p）、sd2.5-480p / sd2.5-720p / sd2.5-1080p（按秒）、seedance2.0-md、sd2-480p-ac、sd2-720p-ac、sd2-720p-dl、sd2-720p-db、sd2.0-mini-720p、seedance2.5-30s、sd2.5-720p-ac、sd2.5-720p-933-ac、wan3-720p / wan3-1080p（按秒）、wan3-480p-20s-ac、muse-video / muse-video-20s / muse-video-30s / muse-video-40s / muse-video-50s / muse-video-60s（1–60 秒，按时长分档，原生 720p，按次）。Veo 也可用专用入口 POST /v1/veo/frames。",
         "operationId": "createVideo",
         "tags": [
           "Videos"
@@ -275,6 +275,25 @@
                     "prompt": "一只猫在草地上奔跑，跟拍镜头",
                     "duration": 8,
                     "aspect_ratio": "16:9"
+                  }
+                },
+                "museVideo": {
+                  "summary": "muse-video",
+                  "value": {
+                    "model": "muse-video",
+                    "prompt": "热气球从山谷的晨雾中缓缓升起",
+                    "duration": 8,
+                    "aspect_ratio": "16:9",
+                    "camera_movement": "zoom_in"
+                  }
+                },
+                "museVideo30s": {
+                  "summary": "muse-video-30s",
+                  "value": {
+                    "model": "muse-video",
+                    "prompt": "一个人沿海岸走完整个黄昏，海风吹动衣角",
+                    "duration": 25,
+                    "aspect_ratio": "9:16"
                   }
                 }
               }
@@ -606,7 +625,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "omni-10s、veo3.1-fast、veo3.1-lite、veo3.1-lite-hd、grok-imagine-video-1.5（及 fast/lite）、minimax-h3、minimax-h3-max、kling-4.0 / kling-4.0-720p / kling-4.0-1080p、sd2.5-480p / sd2.5-720p / sd2.5-1080p、seedance2.0-md、sd2-480p-ac、sd2-720p-ac、sd2-720p-dl、sd2-720p-db、sd2.0-mini-720p、seedance2.5-30s、sd2.5-720p-ac、sd2.5-720p-933-ac、wan3-720p / wan3-1080p 或 wan3-480p-20s-ac",
+            "description": "omni-10s、veo3.1-fast、veo3.1-lite、veo3.1-lite-hd、grok-imagine-video-1.5（及 fast/lite）、minimax-h3、minimax-h3-max、kling-4.0 / kling-4.0-720p / kling-4.0-1080p、sd2.5-480p / sd2.5-720p / sd2.5-1080p、seedance2.0-md、sd2-480p-ac、sd2-720p-ac、sd2-720p-dl、sd2-720p-db、sd2.0-mini-720p、seedance2.5-30s、sd2.5-720p-ac、sd2.5-720p-933-ac、wan3-720p / wan3-1080p、wan3-480p-20s-ac，或 muse-video / muse-video-20s / muse-video-30s / muse-video-40s / muse-video-50s / muse-video-60s",
             "example": "omni-10s"
           },
           "prompt": {
@@ -621,7 +640,7 @@
                 "type": "string"
               }
             ],
-            "description": "omni-10s：固定 10；seedance2.0-md：5/10/15；sd2-*-ac：4–15；sd2-720p-dl：固定 15；sd2-720p-db：5/10/15；sd2.0-mini-720p：4–15；sd2.5-480p / sd2.5-720p / sd2.5-1080p：5–30；seedance2.5-30s：固定 30；sd2.5-720p-ac、sd2.5-720p-933-ac：4–30；wan3-720p / wan3-1080p：10–30；wan3-480p-20s-ac：5–20"
+            "description": "omni-10s：固定 10；seedance2.0-md：5/10/15；sd2-*-ac：4–15；sd2-720p-dl：固定 15；sd2-720p-db：5/10/15；sd2.0-mini-720p：4–15；sd2.5-480p / sd2.5-720p / sd2.5-1080p：5–30；seedance2.5-30s：固定 30；sd2.5-720p-ac、sd2.5-720p-933-ac：4–30；wan3-720p / wan3-1080p：10–30；wan3-480p-20s-ac：5–20；Muse Video：1–60，按时长落到 muse-video（1–10，省略时 5 秒）或 muse-video-20s … muse-video-60s"
           },
           "seconds": {
             "oneOf": [
@@ -650,17 +669,17 @@
           },
           "resolution": {
             "type": "string",
-            "description": "omni-10s 固定 720p"
+            "description": "omni-10s 固定 720p。Muse Video 仅支持 720p"
           },
           "first_image": {
             "type": "string",
             "format": "uri",
-            "description": "omni-10s 首尾帧模式的首帧 URL"
+            "description": "首帧 URL。omni-10s 与 Muse Video 可用"
           },
           "last_image": {
             "type": "string",
             "format": "uri",
-            "description": "omni-10s 尾帧 URL；需与 first_image 一起使用"
+            "description": "尾帧 URL；需与 first_image 一起使用。Muse Video 同样要求同时有首帧"
           },
           "images": {
             "type": "array",
@@ -721,6 +740,44 @@
               "type": "string",
               "format": "uri"
             }
+          },
+          "first_image_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "first_image 别名。Muse Video 可用"
+          },
+          "last_image_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "last_image 别名。Muse Video 可用，且必须同时有首帧"
+          },
+          "image_urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "参考图 URL。Muse Video：与首尾帧合计，10 秒档最多 10 张，20–60 秒档最多 9 张"
+          },
+          "reference_image_urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "images 别名"
+          },
+          "camera_movement": {
+            "type": "string",
+            "description": "Muse Video 运镜，自由文本，最长 1000 字"
+          },
+          "style": {
+            "type": "string",
+            "description": "Muse Video 风格，自由文本，最长 1000 字"
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "Muse Video 负向提示，与 prompt 分开，最长 1000 字"
           },
           "smart_queue": {
             "type": "boolean",

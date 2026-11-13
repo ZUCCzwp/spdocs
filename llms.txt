@@ -27,6 +27,7 @@ Auth: Authorization: Bearer <API Key>
 - [Seedance 2.5 30s](/zh/api-reference/seedance/25/create-30s.mdx): POST /v1/videos · model seedance2.5-30s
 - [Seedance 2.5 720p AC](/zh/api-reference/seedance/25/create-720p-ac.mdx): POST /v1/videos · model sd2.5-720p-ac
 - [Seedance 2.5 720p 933 AC](/zh/api-reference/seedance/25/create-720p-933-ac.mdx): POST /v1/videos · model sd2.5-720p-933-ac
+- [Muse Video](/zh/api-reference/muse/create.mdx): POST /v1/videos · model muse-video / muse-video-20s / muse-video-30s / muse-video-40s / muse-video-50s / muse-video-60s
 
 ## English
 
@@ -51,3 +52,4 @@ Auth: Authorization: Bearer <API Key>
 - [Seedance 2.5 30s](/en/api-reference/seedance/25/create-30s.mdx)
 - [Seedance 2.5 720p AC](/en/api-reference/seedance/25/create-720p-ac.mdx)
 - [Seedance 2.5 720p 933 AC](/en/api-reference/seedance/25/create-720p-933-ac.mdx)
+- [Muse Video](/en/api-reference/muse/create.mdx): POST /v1/videos · model muse-video / muse-video-20s / muse-video-30s / muse-video-40s / muse-video-50s / muse-video-60s

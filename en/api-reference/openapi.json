@@ -128,7 +128,7 @@
     "/v1/videos": {
       "post": {
         "summary": "Create video task",
-        "description": "Unified video create entry. Available models: omni-10s, veo3.1-fast, veo3.1-lite, veo3.1-lite-hd, grok-imagine-video-1.5 (and fast/lite), minimax-h3, minimax-h3-max, kling-4.0 (720p/1080p), sd2.5-480p / sd2.5-720p / sd2.5-1080p (per second), seedance2.0-md, sd2-480p-ac, sd2-720p-ac, sd2-720p-dl, sd2-720p-db, sd2.0-mini-720p, seedance2.5-30s, sd2.5-720p-ac, sd2.5-720p-933-ac, wan3-720p / wan3-1080p (per second), wan3-480p-20s-ac. Veo also has POST /v1/veo/frames.",
+        "description": "Unified video create entry. Available models: omni-10s, veo3.1-fast, veo3.1-lite, veo3.1-lite-hd, grok-imagine-video-1.5 (and fast/lite), minimax-h3, minimax-h3-max, kling-4.0 (720p/1080p), sd2.5-480p / sd2.5-720p / sd2.5-1080p (per second), seedance2.0-md, sd2-480p-ac, sd2-720p-ac, sd2-720p-dl, sd2-720p-db, sd2.0-mini-720p, seedance2.5-30s, sd2.5-720p-ac, sd2.5-720p-933-ac, wan3-720p / wan3-1080p (per second), wan3-480p-20s-ac, muse-video / muse-video-20s / muse-video-30s / muse-video-40s / muse-video-50s / muse-video-60s (1–60s; tier follows duration; native 720p; per task). Veo also has POST /v1/veo/frames.",
         "operationId": "createVideo",
         "tags": [
           "Videos"
@@ -275,6 +275,25 @@
                     "prompt": "A cat running on grass, tracking shot",
                     "duration": 8,
                     "aspect_ratio": "16:9"
+                  }
+                },
+                "museVideo": {
+                  "summary": "muse-video",
+                  "value": {
+                    "model": "muse-video",
+                    "prompt": "A hot-air balloon rising out of morning fog in a valley",
+                    "duration": 8,
+                    "aspect_ratio": "16:9",
+                    "camera_movement": "zoom_in"
+                  }
+                },
+                "museVideo30s": {
+                  "summary": "muse-video-30s",
+                  "value": {
+                    "model": "muse-video",
+                    "prompt": "A person walking the whole coastline at dusk, coat moving in the wind",
+                    "duration": 25,
+                    "aspect_ratio": "9:16"
                   }
                 }
               }
@@ -606,7 +625,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "omni-10s, veo3.1-fast, veo3.1-lite, veo3.1-lite-hd, grok-imagine-video-1.5 (and fast/lite), minimax-h3, minimax-h3-max, kling-4.0 / kling-4.0-720p / kling-4.0-1080p,  sd2.5-480p / sd2.5-720p / sd2.5-1080p, seedance2.0-md, sd2-480p-ac, sd2-720p-ac, sd2-720p-dl, sd2-720p-db, sd2.0-mini-720p, seedance2.5-30s, sd2.5-720p-ac, sd2.5-720p-933-ac, wan3-720p / wan3-1080p, or wan3-480p-20s-ac",
+            "description": "omni-10s, veo3.1-fast, veo3.1-lite, veo3.1-lite-hd, grok-imagine-video-1.5 (and fast/lite), minimax-h3, minimax-h3-max, kling-4.0 / kling-4.0-720p / kling-4.0-1080p,  sd2.5-480p / sd2.5-720p / sd2.5-1080p, seedance2.0-md, sd2-480p-ac, sd2-720p-ac, sd2-720p-dl, sd2-720p-db, sd2.0-mini-720p, seedance2.5-30s, sd2.5-720p-ac, sd2.5-720p-933-ac, wan3-720p / wan3-1080p, wan3-480p-20s-ac, or muse-video / muse-video-20s / muse-video-30s / muse-video-40s / muse-video-50s / muse-video-60s",
             "example": "omni-10s"
           },
           "prompt": {
@@ -621,7 +640,7 @@
                 "type": "string"
               }
             ],
-            "description": "omni-10s: fixed 10; seedance2.0-md: 5/10/15; sd2-*-ac: 4–15; sd2-720p-dl: fixed 15; sd2-720p-db: 5/10/15; sd2.0-mini-720p: 4–15; sd2.5-480p / sd2.5-720p / sd2.5-1080p: 5–30; seedance2.5-30s: fixed 30; sd2.5-720p-ac and sd2.5-720p-933-ac: 4–30; wan3-720p / wan3-1080p: 10–30; wan3-480p-20s-ac: 5–20"
+            "description": "omni-10s: fixed 10; seedance2.0-md: 5/10/15; sd2-*-ac: 4–15; sd2-720p-dl: fixed 15; sd2-720p-db: 5/10/15; sd2.0-mini-720p: 4–15; sd2.5-480p / sd2.5-720p / sd2.5-1080p: 5–30; seedance2.5-30s: fixed 30; sd2.5-720p-ac and sd2.5-720p-933-ac: 4–30; wan3-720p / wan3-1080p: 10–30; wan3-480p-20s-ac: 5–20; Muse Video: 1–60, billed as muse-video (1–10, default 5s when omitted) or muse-video-20s through muse-video-60s"
           },
           "seconds": {
             "oneOf": [
@@ -650,17 +669,17 @@
           },
           "resolution": {
             "type": "string",
-            "description": "omni-10s is fixed at 720p"
+            "description": "omni-10s is fixed at 720p. Muse Video supports 720p only"
           },
           "first_image": {
             "type": "string",
             "format": "uri",
-            "description": "First-frame URL for omni-10s frame mode"
+            "description": "First-frame URL. Used by omni-10s and Muse Video"
           },
           "last_image": {
             "type": "string",
             "format": "uri",
-            "description": "Last-frame URL for omni-10s; use with first_image"
+            "description": "Last-frame URL; use with first_image. Muse Video also requires a first frame"
           },
           "images": {
             "type": "array",
@@ -721,6 +740,44 @@
               "type": "string",
               "format": "uri"
             }
+          },
+          "first_image_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Alias of first_image. Accepted by Muse Video"
+          },
+          "last_image_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Alias of last_image. Muse Video requires a first frame as well"
+          },
+          "image_urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Reference image URLs. Muse Video: frames plus references, up to 10 on the 10s tier and 9 on the 20–60s tiers"
+          },
+          "reference_image_urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Alias of images"
+          },
+          "camera_movement": {
+            "type": "string",
+            "description": "Muse Video camera move, free text, up to 1000 characters"
+          },
+          "style": {
+            "type": "string",
+            "description": "Muse Video style, free text, up to 1000 characters"
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "Muse Video negative prompt, separate from prompt, up to 1000 characters"
           },
           "smart_queue": {
             "type": "boolean",

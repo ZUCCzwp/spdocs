@@ -1,0 +1,133 @@
+---
+title: '创建 Muse Video'
+openapi: 'POST /v1/videos'
+---
+
+异步生成 **Muse Video**。使用统一入口 `POST /v1/videos`。成功返回 `task_id`，用 [查询视频任务](/zh/api-reference/common/query) 轮询，完成后从 `result.video_url` 取片。
+
+成片为原生 **720p**。计费方式为 `per_task`（按次）。时长不乘价，但决定落到哪一档计费模型。实际单价以 [模型目录](/zh/api-reference/common/model-catalog) 与创建响应中的 `cost` 为准。
+
+## 按时长选择模型
+
+传入 `duration` 或 `seconds`（1～60）。系统按秒数选择计费模型，并在创建响应的 `model` 中返回该档。请求里写了别的档，仍以秒数为准。
+
+| 时长 | 计费 `model` | 不传时长时 |
+| --- | --- | --- |
+| **1～10** 秒 | `muse-video` | 请求模型为 `muse-video` 时默认 **5** 秒 |
+| **11～20** 秒 | `muse-video-20s` | 默认 **20** 秒 |
+| **21～30** 秒 | `muse-video-30s` | 默认 **30** 秒 |
+| **31～40** 秒 | `muse-video-40s` | 默认 **40** 秒 |
+| **41～50** 秒 | `muse-video-50s` | 默认 **50** 秒 |
+| **51～60** 秒 | `muse-video-60s` | 默认 **60** 秒 |
+
+超过 60 秒会被拒绝。例如请求 `muse-video` 且 `duration` 为 25，计费模型是 `muse-video-30s`；请求 `muse-video-60s` 且 `duration` 为 8，计费模型是 `muse-video`。
+
+## 模式
+
+| 模式 | 传参 |
+| --- | --- |
+| 文生视频 | 不传图片 |
+| 首帧 / 首尾帧 | 传 `first_image`（及可选 `last_image`）。也可设 `first_last_frame: true`，并在 `images` 里按顺序放首帧、尾帧 |
+| 参考图 | 传 `images` / `reference_images` / `image_urls` / `reference_image_urls` |
+
+首尾帧可以和参考图一起用。尾帧必须同时有首帧。首尾帧与参考图**合计**张数：落到 `muse-video` 时最多 **10** 张，落到 20～60 秒档时最多 **9** 张。不支持参考视频和参考音频。
+
+## 请求参数
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `model` | string | 是 | 上表任一档。下划线写法如 `muse_video_20s` 也可 |
+| `prompt` | string | 是 | 整段视频的主体、动作和氛围，1～4000 字 |
+| `duration` / `seconds` | int \| string | 否 | **1～60**。不传时按上表默认。字符串亦可（如 `"25"`） |
+| `aspect_ratio` / `ratio` | string | 否 | `16:9`、`9:16`、`1:1`、`4:3`、`3:4`；默认 `16:9` |
+| `orientation` | string | 否 | `portrait` / `vertical` 为 `9:16`，`landscape` / `horizontal` 为 `16:9` |
+| `size` | string | 否 | 比例，或 `1280x720` / `1920x1080` / `720x1280` / `1080x1920` |
+| `resolution` | string | 否 | 仅 `720p`；省略即可 |
+| `first_image` / `first_image_url` | string | 否 | 首帧 URL |
+| `last_image` / `last_image_url` | string | 否 | 尾帧 URL；必须同时有首帧 |
+| `images` / `reference_images` / `image_urls` / `reference_image_urls` | string[] | 否 | 参考图 URL。多个字段同时出现时，按 `reference_images`、`image_urls`、`images`、`reference_image_urls` 取第一组非空列表 |
+| `camera_movement` | string | 否 | 运镜，自由文本，最长 1000 字。例如 `zoom_in`、`pan_left`、`static` |
+| `style` | string | 否 | 风格，自由文本，最长 1000 字。例如 `cinematic`、`anime` |
+| `negative_prompt` | string | 否 | 不要出现的内容，与 `prompt` 分开，最长 1000 字 |
+| `first_last_frame` | boolean | 否 | `true` 时把 `images` 的前两张当作首帧、尾帧 |
+| `smart_queue` | bool | 否 | 默认 `false`。为 `true` 时，近期成功率过低会先保持 `queued`，恢复后再提交（最长约 2 小时）。详见 [智能排队](/zh/api-reference/common/smart-queue) |
+
+参考素材须为公网 `https://` 直链，或 data URL。
+
+## 示例
+
+### 文生视频（8 秒，计费 `muse-video`）
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "muse-video",
+    "prompt": "热气球从山谷的晨雾中缓缓升起",
+    "duration": 8,
+    "aspect_ratio": "16:9",
+    "camera_movement": "zoom_in"
+  }'
+```
+
+### 25 秒（计费 `muse-video-30s`）
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "muse-video",
+    "prompt": "一个人沿海岸走完整个黄昏，海风吹动衣角",
+    "duration": 25,
+    "aspect_ratio": "9:16",
+    "style": "cinematic"
+  }'
+```
+
+### 首尾帧与参考图
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "muse-video-20s",
+    "prompt": "让画面中的人物转身微笑",
+    "first_image": "https://example.com/first.png",
+    "last_image": "https://example.com/last.png",
+    "images": ["https://example.com/ref.png"],
+    "negative_prompt": "blurry, watermark, text"
+  }'
+```
+
+未传 `duration` 时，`muse-video-20s` 按 20 秒计费。
+
+成功响应示例：
+
+```json
+{
+  "code": 20000,
+  "msg": "提交成功",
+  "data": {
+    "task_id": "vid_xxxxxxxx",
+    "status": "queued",
+    "progress": 0,
+    "model": "muse-video",
+    "cost": 0,
+    "result": {}
+  }
+}
+```
+
+`data.model` 是按时长落到的计费档。
+
+## 轮询
+
+```bash
+curl -X GET 'https://sigrunai.com/v1/videos/vid_xxxxxxxx' \
+  -H 'Authorization: Bearer sk_xxx'
+```
+
+状态说明见 [查询视频任务](/zh/api-reference/common/query)。完成后读取 `data.result.video_url`（请及时转存）。

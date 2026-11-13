@@ -114,6 +114,12 @@
                 ]
               },
               {
+                "group": "Muse Video",
+                "pages": [
+                  "en/api-reference/muse/create"
+                ]
+              },
+              {
                 "group": "MiniMax H3",
                 "pages": [
                   "en/api-reference/minimax-h3/create"
@@ -253,6 +259,12 @@
                 "group": "Grok Imagine Video",
                 "pages": [
                   "zh/api-reference/grok/create"
+                ]
+              },
+              {
+                "group": "Muse Video",
+                "pages": [
+                  "zh/api-reference/muse/create"
                 ]
               },
               {

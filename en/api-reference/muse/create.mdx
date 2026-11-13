@@ -1,0 +1,133 @@
+---
+title: 'Create Muse Video'
+openapi: 'POST /v1/videos'
+---
+
+Create async **Muse Video** jobs via the shared `POST /v1/videos` endpoint. On success you get a `task_id`; poll with [Query video task](/en/api-reference/common/query) and read `result.video_url` when completed.
+
+Output is native **720p**. Billing is `per_task` (flat per job). Duration does not multiply the price, but it selects the billing model. See the [model catalog](/en/api-reference/common/model-catalog) and the create response `cost` for live prices.
+
+## Model by duration
+
+Send `duration` or `seconds` from 1 to 60. The second count selects the billing model, which is returned as `model` on the create response. A different model name in the request does not override that.
+
+| Duration | Billing `model` | When duration is omitted |
+| --- | --- | --- |
+| **1–10** s | `muse-video` | **5** s if the requested model is `muse-video` |
+| **11–20** s | `muse-video-20s` | **20** s |
+| **21–30** s | `muse-video-30s` | **30** s |
+| **31–40** s | `muse-video-40s` | **40** s |
+| **41–50** s | `muse-video-50s` | **50** s |
+| **51–60** s | `muse-video-60s` | **60** s |
+
+Durations above 60 seconds are rejected. Requesting `muse-video` with `duration` 25 bills `muse-video-30s`. Requesting `muse-video-60s` with `duration` 8 bills `muse-video`.
+
+## Modes
+
+| Mode | How to send |
+| --- | --- |
+| Text-to-video | Omit images |
+| First / first-last frames | Send `first_image` and optional `last_image`. Or set `first_last_frame: true` and put first/last URLs in `images` |
+| Reference images | Send `images` / `reference_images` / `image_urls` / `reference_image_urls` |
+
+Frames and reference images can be used together. A last frame requires a first frame. Combined count: up to **10** when the job bills as `muse-video`, and up to **9** on the 20–60 second tiers. Reference videos and reference audios are not supported.
+
+## Request fields
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `model` | string | yes | Any tier in the table. Underscore forms such as `muse_video_20s` are accepted |
+| `prompt` | string | yes | Subject, action, and mood for the whole clip, 1–4000 characters |
+| `duration` / `seconds` | int \| string | no | **1–60**. Defaults are in the table. String form is allowed (for example `"25"`) |
+| `aspect_ratio` / `ratio` | string | no | `16:9`, `9:16`, `1:1`, `4:3`, `3:4`; default `16:9` |
+| `orientation` | string | no | `portrait` / `vertical` → `9:16`; `landscape` / `horizontal` → `16:9` |
+| `size` | string | no | A ratio, or `1280x720` / `1920x1080` / `720x1280` / `1080x1920` |
+| `resolution` | string | no | `720p` only; omit it to use the default |
+| `first_image` / `first_image_url` | string | no | First-frame URL |
+| `last_image` / `last_image_url` | string | no | Last-frame URL; requires a first frame |
+| `images` / `reference_images` / `image_urls` / `reference_image_urls` | string[] | no | Reference image URLs. If more than one field is set, the first non-empty list is used, in this order: `reference_images`, `image_urls`, `images`, `reference_image_urls` |
+| `camera_movement` | string | no | Free-text camera move, up to 1000 characters. For example `zoom_in`, `pan_left`, `static` |
+| `style` | string | no | Free-text style, up to 1000 characters. For example `cinematic`, `anime` |
+| `negative_prompt` | string | no | Elements to avoid, separate from `prompt`, up to 1000 characters |
+| `first_last_frame` | boolean | no | When `true`, the first two `images` are the first and last frames |
+| `smart_queue` | bool | no | Default `false`. When `true`, a very low recent success rate keeps the task `queued` until recovery (up to about 2 hours). See [Smart queue](/en/api-reference/common/smart-queue) |
+
+Media URLs must be public `https://` links, or data URLs.
+
+## Examples
+
+### Text-to-video (8 seconds, billed as `muse-video`)
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "muse-video",
+    "prompt": "A hot-air balloon rising out of morning fog in a valley",
+    "duration": 8,
+    "aspect_ratio": "16:9",
+    "camera_movement": "zoom_in"
+  }'
+```
+
+### 25 seconds (billed as `muse-video-30s`)
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "muse-video",
+    "prompt": "A person walking the whole coastline at dusk, coat moving in the wind",
+    "duration": 25,
+    "aspect_ratio": "9:16",
+    "style": "cinematic"
+  }'
+```
+
+### Frames and a reference image
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "muse-video-20s",
+    "prompt": "The person in frame turns and smiles",
+    "first_image": "https://example.com/first.png",
+    "last_image": "https://example.com/last.png",
+    "images": ["https://example.com/ref.png"],
+    "negative_prompt": "blurry, watermark, text"
+  }'
+```
+
+Omitting `duration` on `muse-video-20s` bills a 20-second job.
+
+Example success body:
+
+```json
+{
+  "code": 20000,
+  "msg": "提交成功",
+  "data": {
+    "task_id": "vid_xxxxxxxx",
+    "status": "queued",
+    "progress": 0,
+    "model": "muse-video",
+    "cost": 0,
+    "result": {}
+  }
+}
+```
+
+`data.model` is the billing tier selected from the duration.
+
+## Polling
+
+```bash
+curl -X GET 'https://sigrunai.com/v1/videos/vid_xxxxxxxx' \
+  -H 'Authorization: Bearer sk_xxx'
+```
+
+Status values are documented in [Query video task](/en/api-reference/common/query). When completed, read `data.result.video_url` and store the file promptly.
