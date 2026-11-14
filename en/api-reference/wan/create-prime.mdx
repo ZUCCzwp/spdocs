@@ -20,17 +20,17 @@ Billing is `per_second`. Cost = unit price for that resolution × requested dura
 
 | Mode | How to call |
 | --- | --- |
-| Text-to-video | Omit `images` / `audios`, or pass empty arrays |
-| Reference generation | Pass reference images and/or audios |
+| Text-to-video | Omit `images` / `videos` / `audios`, or pass empty arrays |
+| Reference generation | Pass reference images, videos, and/or audios |
 
-This API does **not** support reference videos or first/last-frame fields.
+This API does **not** support first/last-frame fields.
 
 ## Reference limits
 
 | Type | Max |
 | --- | --- |
 | Images | **10** |
-| Videos | **not supported** |
+| Videos | **5** |
 | Audios | **5** |
 
 Reference media must be publicly reachable URLs.
@@ -45,6 +45,7 @@ Reference media must be publicly reachable URLs.
 | `aspect_ratio` / `ratio` | string | no | `16:9`, `9:16`, `1:1`; default `16:9` |
 | `resolution` | string | no | `720p` or `1080p`. Must match a resolution-locked billing key when that key is used |
 | `images` / `reference_images` | string[] | no | Up to **10** image URLs |
+| `videos` / `reference_videos` | string[] | no | Up to **5** video URLs |
 | `audios` / `reference_audios` | string[] | no | Up to **5** audio URLs |
 | `smart_queue` | bool | no | Default `false`. When `true`, low recent success rates keep the task `queued` until recovery (up to ~2 hours). See [Smart queue](/en/api-reference/common/smart-queue) |
 
