@@ -75,6 +75,15 @@
                       "https://example.com/product.jpg"
                     ]
                   }
+                },
+                "seedream55": {
+                  "summary": "seedream-5.5",
+                  "value": {
+                    "model": "seedream-5.5",
+                    "prompt": "一只蓝色杯子放在木桌上，柔和的自然光",
+                    "ratio": "1:1",
+                    "resolution": "1K"
+                  }
                 }
               }
             }
@@ -549,14 +558,14 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "gpt-image-2（及 low/medium/high）、gpt-image-2.6-flare / gpt-image-2.6-sunburst，或 nano-banana-2 / nano-banana-2.1 / nano-banana-pro",
+            "description": "gpt-image-2（及 low/medium/high）、gpt-image-2.6-flare / gpt-image-2.6-sunburst、nano-banana-2 / nano-banana-2.1 / nano-banana-pro，或 seedream-5.5",
             "example": "nano-banana-2"
           },
           "prompt": {
             "type": "string",
             "minLength": 1,
             "maxLength": 32000,
-            "description": "GPT Image 2 最长 4000；GPT Image 2.6 最长 32000；Nano Banana 最长 10000。Nano Banana 有参考图时可为空"
+            "description": "GPT Image 2 / Seedream 5.5 最长 4000；GPT Image 2.6 最长 32000；Nano Banana 最长 10000。Nano Banana / Seedream 有参考图时可为空"
           },
           "quality": {
             "type": "string",

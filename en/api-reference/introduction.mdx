@@ -14,6 +14,7 @@ Available models (always check the [model catalog](/en/api-reference/common/mode
 | Image | `gpt-image-2` | Async; use `quality` or `gpt-image-2-low` / `medium` / `high` for billing tiers |
 | Image | `gpt-image-2.6-flare` / `gpt-image-2.6-sunburst` | Async; `1k` only; billed by model, `quality` does not change the price |
 | Image | `nano-banana-2` / `nano-banana-2.1` / `nano-banana-pro` | Async; pick tier via `resolution` for billing |
+| Image | `seedream-5.5` | Async; pick tier via `resolution` (`1K` / `2K`); up to 8 reference images |
 | Video | `omni-10s` | Omni 10s; fixed 10s, 720p |
 | Video | `seedance2.0-md` | 5 / 10 / 15 seconds |
 | Video | `sd2-480p-ac` / `sd2-720p-ac` | 4–15s; per-task tiers |
@@ -78,6 +79,13 @@ API paths start with `/v1`. On your own domain, replace the host with the curren
     href="/en/api-reference/images/nano-banana"
   >
     2 / 2.1 / Pro, billed by resolution
+  </Card>
+  <Card
+    title="Seedream 5.5"
+    icon="image"
+    href="/en/api-reference/images/seedream-5.5"
+  >
+    1K / 2K, billed by resolution
   </Card>
   <Card
     title="Omni 10s"

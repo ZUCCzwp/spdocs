@@ -75,6 +75,15 @@
                       "https://example.com/product.jpg"
                     ]
                   }
+                },
+                "seedream55": {
+                  "summary": "seedream-5.5",
+                  "value": {
+                    "model": "seedream-5.5",
+                    "prompt": "A blue cup on a wooden table, soft natural light",
+                    "ratio": "1:1",
+                    "resolution": "1K"
+                  }
                 }
               }
             }
@@ -549,14 +558,14 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "gpt-image-2 (plus low/medium/high), gpt-image-2.6-flare / gpt-image-2.6-sunburst, or nano-banana-2 / nano-banana-2.1 / nano-banana-pro",
+            "description": "gpt-image-2 (plus low/medium/high), gpt-image-2.6-flare / gpt-image-2.6-sunburst, nano-banana-2 / nano-banana-2.1 / nano-banana-pro, or seedream-5.5",
             "example": "nano-banana-2"
           },
           "prompt": {
             "type": "string",
             "minLength": 1,
             "maxLength": 32000,
-            "description": "GPT Image 2 max 4000; GPT Image 2.6 max 32000; Nano Banana max 10000. Nano Banana prompt is optional when images are provided"
+            "description": "GPT Image 2 / Seedream 5.5 max 4000; GPT Image 2.6 max 32000; Nano Banana max 10000. Nano Banana / Seedream prompt is optional when images are provided"
           },
           "quality": {
             "type": "string",

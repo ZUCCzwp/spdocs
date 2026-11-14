@@ -89,6 +89,12 @@
                 "pages": [
                   "en/api-reference/images/nano-banana"
                 ]
+              },
+              {
+                "group": "Seedream 5.5",
+                "pages": [
+                  "en/api-reference/images/seedream-5.5"
+                ]
               }
             ]
           },
@@ -236,6 +242,12 @@
                 "group": "Nano Banana",
                 "pages": [
                   "zh/api-reference/images/nano-banana"
+                ]
+              },
+              {
+                "group": "Seedream 5.5",
+                "pages": [
+                  "zh/api-reference/images/seedream-5.5"
                 ]
               }
             ]

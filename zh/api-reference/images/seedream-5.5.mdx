@@ -1,0 +1,77 @@
+---
+title: '创建 Seedream 5.5 任务'
+openapi: 'POST /v1/images'
+---
+
+创建 Seedream 5.5 异步生图任务。成功后返回 `task_id`，请用 [查询图片任务](/zh/api-reference/images/query) 轮询，完成后从 `result.image_url` 取图。
+
+GPT Image 2 见 [创建 GPT Image 2 任务](/zh/api-reference/images/create)。GPT Image 2.6 见 [创建 GPT Image 2.6 任务](/zh/api-reference/images/gpt-image-2.6)。Nano Banana 系列见 [创建 Nano Banana 任务](/zh/api-reference/images/nano-banana)。
+
+## 模型
+
+| `model` | 说明 | `resolution` | 计费键 |
+| --- | --- | --- | --- |
+| `seedream-5.5` | 文生 / 参考图；每次 1 张 | `1K` / `2K`（也可用 `1k` / `2k`） | `seedream-5.5-1k` / `seedream-5.5-2k` |
+
+按分辨率对应的计费模型扣费（`per_task`，每次 1 张）。实际单价以 [模型目录](/zh/api-reference/common/model-catalog) 与创建响应中的 `cost` 为准。也可直接传计费键作为 `model`。
+
+## 请求参数
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `model` | string | 是 | `seedream-5.5`，或 `seedream-5.5-1k` / `seedream-5.5-2k` |
+| `prompt` | string | 条件 | 文生图必填；有参考图时可为空。最长 **4000** 字符 |
+| `n` | int | 否 | 固定 **1** |
+| `ratio` | string | 否 | 画面比例；也可用 `size`。可选：`1:1` / `16:9` / `9:16` / `4:3` / `3:4` / `3:2` / `2:3` / `21:9` / `5:4` / `4:5` |
+| `size` | string | 否 | `ratio` 别名 |
+| `resolution` | string | 否 | 分辨率档位，默认 `1K` |
+| `images` | string[] | 否 | 参考图公网 URL，最多 **8** 张 |
+| `smart_queue` | bool | 否 | 默认 `false`。为 `true` 时，近期成功率过低会先保持 `queued`，恢复后再提交（最长约 2 小时）。详见 [智能排队](/zh/api-reference/common/smart-queue) |
+
+## 示例
+
+### 文生图（1K）
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/images' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "seedream-5.5",
+    "prompt": "一只蓝色杯子放在木桌上，柔和的自然光",
+    "ratio": "1:1",
+    "resolution": "1K"
+  }'
+```
+
+### 参考图（2K）
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/images' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "seedream-5.5",
+    "prompt": "保持产品外观，换成摄影棚柔光背景",
+    "ratio": "16:9",
+    "resolution": "2K",
+    "images": ["https://example.com/reference.jpg"]
+  }'
+```
+
+成功响应示例：
+
+```json
+{
+  "code": 20000,
+  "msg": "提交成功",
+  "data": {
+    "task_id": "img_xxxxxxxx",
+    "status": "queued",
+    "progress": 0,
+    "model": "seedream-5.5-1k",
+    "cost": 0.05,
+    "result": {}
+  }
+}
+```

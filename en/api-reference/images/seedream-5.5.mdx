@@ -1,0 +1,77 @@
+---
+title: 'Create Seedream 5.5 task'
+openapi: 'POST /v1/images'
+---
+
+Create an async Seedream 5.5 image task. Poll with [Query image task](/en/api-reference/images/query) and read `result.image_url` when completed.
+
+For GPT Image 2, see [Create GPT Image 2 task](/en/api-reference/images/create). For GPT Image 2.6, see [Create GPT Image 2.6 task](/en/api-reference/images/gpt-image-2.6). For Nano Banana, see [Create Nano Banana task](/en/api-reference/images/nano-banana).
+
+## Models
+
+| `model` | Notes | `resolution` | Billing keys |
+| --- | --- | --- | --- |
+| `seedream-5.5` | Text-to-image / reference images; 1 image per request | `1K` / `2K` (also `1k` / `2k`) | `seedream-5.5-1k` / `seedream-5.5-2k` |
+
+Billing is by resolution (`per_task`, 1 image per request). Check [Model catalog](/en/api-reference/common/model-catalog) and the create response `cost` for live prices. You may also pass a billing key as `model`.
+
+## Request body
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `model` | string | yes | `seedream-5.5`, or `seedream-5.5-1k` / `seedream-5.5-2k` |
+| `prompt` | string | conditional | Required for text-to-image; optional when `images` is set. Up to **4000** characters |
+| `n` | int | no | Always **1** |
+| `ratio` | string | no | Aspect ratio; `size` is an alias. Options: `1:1` / `16:9` / `9:16` / `4:3` / `3:4` / `3:2` / `2:3` / `21:9` / `5:4` / `4:5` |
+| `size` | string | no | Alias of `ratio` |
+| `resolution` | string | no | Resolution tier, default `1K` |
+| `images` | string[] | no | Public reference image URLs, max **8** |
+| `smart_queue` | bool | no | Default `false`. When `true`, a very low recent success rate keeps the task `queued` until recovery (up to about 2 hours). See [Smart queue](/en/api-reference/common/smart-queue) |
+
+## Examples
+
+### Text-to-image (1K)
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/images' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "seedream-5.5",
+    "prompt": "A blue cup on a wooden table, soft natural light",
+    "ratio": "1:1",
+    "resolution": "1K"
+  }'
+```
+
+### Reference image (2K)
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/images' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "seedream-5.5",
+    "prompt": "Keep the product look, soft studio lighting background",
+    "ratio": "16:9",
+    "resolution": "2K",
+    "images": ["https://example.com/reference.jpg"]
+  }'
+```
+
+Success response example:
+
+```json
+{
+  "code": 20000,
+  "msg": "提交成功",
+  "data": {
+    "task_id": "img_xxxxxxxx",
+    "status": "queued",
+    "progress": 0,
+    "model": "seedream-5.5-1k",
+    "cost": 0.05,
+    "result": {}
+  }
+}
+```
