@@ -1,0 +1,84 @@
+---
+title: 'Create Wan 3.0 Prime video'
+openapi: 'POST /v1/videos'
+---
+
+Create a **Wan 3.0 Prime** (special-price) video asynchronously. Use `POST /v1/videos` with a billing key: `wan3.0-prime-720p` or `wan3.0-prime-1080p`. On success you get a `task_id`. Poll [Query video task](/en/api-reference/common/query) and read `result.video_url` when the task completes.
+
+## Models
+
+| `model` | Notes | Duration | Resolution |
+| --- | --- | --- | --- |
+| `wan3.0-prime-720p` | Billing key: 720p | **10–30** seconds | `720p` |
+| `wan3.0-prime-1080p` | Billing key: 1080p | **8–30** seconds | `1080p` |
+
+Billing is `per_second`. Cost = unit price for that resolution × requested duration. Live unit prices come from the [model catalog](/en/api-reference/common/model-catalog) and the `cost` field in responses.
+
+`model: "wan3.0-prime"` is also accepted. Set `resolution` to pick the tier (default `1080p`). The task `model` is stored as the billing key.
+
+## Modes
+
+| Mode | How to call |
+| --- | --- |
+| Text-to-video | Omit `images` / `audios`, or pass empty arrays |
+| Reference generation | Pass reference images and/or audios |
+
+This API does **not** support reference videos or first/last-frame fields.
+
+## Reference limits
+
+| Type | Max |
+| --- | --- |
+| Images | **10** |
+| Videos | **not supported** |
+| Audios | **5** |
+
+Reference media must be publicly reachable URLs.
+
+## Request fields
+
+| Field | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `model` | string | yes | `wan3.0-prime-720p` / `wan3.0-prime-1080p`. `wan3.0-prime` plus `resolution` also works |
+| `prompt` | string | yes | Generation description, 1–5000 characters |
+| `duration` / `seconds` | int \| string | no | 720p: **10–30**; 1080p: **8–30**. Defaults to the tier minimum. Strings like `"15"` are accepted |
+| `aspect_ratio` / `ratio` | string | no | `16:9`, `9:16`, `1:1`; default `16:9` |
+| `resolution` | string | no | `720p` or `1080p`. Must match a resolution-locked billing key when that key is used |
+| `images` / `reference_images` | string[] | no | Up to **10** image URLs |
+| `audios` / `reference_audios` | string[] | no | Up to **5** audio URLs |
+| `smart_queue` | bool | no | Default `false`. When `true`, low recent success rates keep the task `queued` until recovery (up to ~2 hours). See [Smart queue](/en/api-reference/common/smart-queue) |
+
+## Examples
+
+### Text-to-video
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "wan3.0-prime-720p",
+    "prompt": "Neon street after rain, slow camera push-in",
+    "aspect_ratio": "16:9",
+    "duration": 10
+  }'
+```
+
+### 1080p with a reference image
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "wan3.0-prime-1080p",
+    "prompt": "The person from the reference walks through a rainy street",
+    "aspect_ratio": "9:16",
+    "duration": 12,
+    "images": ["https://example.com/person.jpg"]
+  }'
+```
+
+## Response
+
+Create returns the shared task payload (`task_id`, `status`, `cost`, …). `data.model` is the billing key (for example `wan3.0-prime-720p`). Poll the query endpoint for `result.video_url`.
