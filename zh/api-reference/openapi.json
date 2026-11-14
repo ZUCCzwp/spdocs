@@ -20,7 +20,7 @@
     "/v1/images": {
       "post": {
         "summary": "创建图片任务",
-        "description": "创建 GPT Image 2、GPT Image 2.6 或 Nano Banana 异步生图任务。",
+        "description": "创建 GPT Image 2、GPT Image 2.6、Nano Banana、Seedream 5.5 或 Muse Image 生图任务。",
         "operationId": "createImage",
         "tags": [
           "Images"
@@ -83,6 +83,16 @@
                     "prompt": "一只蓝色杯子放在木桌上，柔和的自然光",
                     "ratio": "1:1",
                     "resolution": "1K"
+                  }
+                },
+                "museImage": {
+                  "summary": "muse-image",
+                  "value": {
+                    "model": "muse-image",
+                    "prompt": "清晨的森林，阳光穿过薄雾，写实摄影",
+                    "ratio": "16:9",
+                    "style": "photorealistic",
+                    "negative_prompt": "watermark, text"
                   }
                 }
               }
@@ -558,14 +568,14 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "gpt-image-2（及 low/medium/high）、gpt-image-2.6-flare / gpt-image-2.6-sunburst、nano-banana-2 / nano-banana-2.1 / nano-banana-pro，或 seedream-5.5",
+            "description": "gpt-image-2（及 low/medium/high）、gpt-image-2.6-flare / gpt-image-2.6-sunburst、nano-banana-2 / nano-banana-2.1 / nano-banana-pro、seedream-5.5，或 muse-image",
             "example": "nano-banana-2"
           },
           "prompt": {
             "type": "string",
             "minLength": 1,
             "maxLength": 32000,
-            "description": "GPT Image 2 / Seedream 5.5 最长 4000；GPT Image 2.6 最长 32000；Nano Banana 最长 10000。Nano Banana / Seedream 有参考图时可为空"
+            "description": "GPT Image 2 / Seedream 5.5 / Muse Image 最长 4000；GPT Image 2.6 最长 32000；Nano Banana 最长 10000。Nano Banana / Seedream 有参考图时可为空。Muse Image 的 prompt 必填"
           },
           "quality": {
             "type": "string",
@@ -585,14 +595,14 @@
             "minimum": 1,
             "maximum": 4,
             "default": 1,
-            "description": "GPT Image 2 为 1–4。GPT Image 2.6 与 Nano Banana 只支持 1"
+            "description": "GPT Image 2 为 1–4。GPT Image 2.6、Nano Banana、Seedream 5.5 与 Muse Image 只支持 1"
           },
           "ratio": {
             "type": "string"
           },
           "size": {
             "type": "string",
-            "description": "ratio 别名。GPT Image 2.6 只接受 auto 或画面比例，不接受像素尺寸"
+            "description": "ratio 别名。GPT Image 2.6 只接受 auto 或画面比例，不接受像素尺寸。Muse Image 会把 1024x1024 这类像素尺寸折成比例"
           },
           "resolution": {
             "type": "string",
@@ -605,7 +615,7 @@
               "format": "uri"
             },
             "maxItems": 16,
-            "description": "参考图 URL。GPT Image 2 最多 15；GPT Image 2.6 最多 16；Nano Banana 最多 5。GPT Image 2.6 的 svg / gif 不能带参考图"
+            "description": "参考图 URL。GPT Image 2 最多 15；GPT Image 2.6 最多 16；Nano Banana 最多 5；Seedream 5.5 最多 8；Muse Image 最多 10。GPT Image 2.6 的 svg / gif 不能带参考图"
           },
           "output_format": {
             "type": "string",
@@ -617,6 +627,16 @@
               "gif"
             ],
             "description": "仅 GPT Image 2.6。jpg 按 jpeg 处理。gif 的 size 只能省略或传 auto"
+          },
+          "style": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "仅 Muse Image。自由文本风格，例如 photorealistic、anime、cinematic"
+          },
+          "negative_prompt": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "仅 Muse Image。不希望出现的内容，与 prompt 分开"
           },
           "smart_queue": {
             "type": "boolean",

@@ -1,0 +1,81 @@
+---
+title: '创建 Muse Image 任务'
+openapi: 'POST /v1/images'
+---
+
+创建 Muse Image 生图任务。成功后返回 `task_id`，请用 [查询图片任务](/zh/api-reference/images/query) 轮询，完成后从 `result.image_url` 取图。生成通常较快，创建响应里也可能已经是 `completed`。
+
+GPT Image 2 见 [创建 GPT Image 2 任务](/zh/api-reference/images/create)。Seedream 5.5 见 [创建 Seedream 5.5 任务](/zh/api-reference/images/seedream-5.5)。
+
+## 模型
+
+| `model` | 说明 | 计费 |
+| --- | --- | --- |
+| `muse-image` | 文生 / 参考图；每次 1 张；原生尺寸 | `muse-image`（按次） |
+
+按次扣费，每次 1 张。实际单价以 [模型目录](/zh/api-reference/common/model-catalog) 与创建响应中的 `cost` 为准。下划线写法 `muse_image` 也可。
+
+不传比例时由模型决定尺寸。`1:1` 大约 1600×1600，`16:9` 大约 2048×1152，图片不会再放大。
+
+## 请求参数
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `model` | string | 是 | `muse-image` |
+| `prompt` | string | 是 | 画面内容。有参考图时写明保留什么、改什么。最长 **4000** 字符 |
+| `n` | int | 否 | 固定 **1** |
+| `ratio` | string | 否 | 画面比例。可选：`1:1` / `16:9` / `9:16` / `4:3` / `3:4` / `3:2` / `2:3` |
+| `size` | string | 否 | `ratio` 别名。像素尺寸如 `1024x1024`、`2048x1152` 会折成对应比例 |
+| `images` | string[] | 否 | 参考图公网 URL，最多 **10** 张 |
+| `style` | string | 否 | 风格，例如 `photorealistic`、`anime`、`cinematic`。最长 **1000** 字符 |
+| `negative_prompt` | string | 否 | 不希望出现的内容，例如 `watermark, text`。最长 **1000** 字符 |
+| `smart_queue` | bool | 否 | 默认 `false`。为 `true` 时，近期成功率过低会先保持 `queued`，恢复后再提交（最长约 2 小时）。详见 [智能排队](/zh/api-reference/common/smart-queue) |
+
+`ratio` 与 `size` 同时传入时必须表示同一比例。
+
+## 示例
+
+### 文生图
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/images' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "muse-image",
+    "prompt": "清晨的森林，阳光穿过薄雾，写实摄影",
+    "ratio": "16:9",
+    "style": "photorealistic",
+    "negative_prompt": "watermark, text"
+  }'
+```
+
+### 参考图
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/images' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "muse-image",
+    "prompt": "把背景换成海边日落，人物保持不变",
+    "images": ["https://example.com/photo.png"]
+  }'
+```
+
+成功响应示例：
+
+```json
+{
+  "code": 20000,
+  "msg": "提交成功",
+  "data": {
+    "task_id": "img_xxxxxxxx",
+    "status": "queued",
+    "progress": 0,
+    "model": "muse-image",
+    "cost": 0.05,
+    "result": {}
+  }
+}
+```

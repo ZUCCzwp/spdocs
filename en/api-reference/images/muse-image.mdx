@@ -1,0 +1,81 @@
+---
+title: 'Create Muse Image task'
+openapi: 'POST /v1/images'
+---
+
+Create a Muse Image task. Poll with [Query image task](/en/api-reference/images/query) and read `result.image_url` when completed. Generation is usually fast, so the create response may already be `completed`.
+
+For GPT Image 2, see [Create GPT Image 2 task](/en/api-reference/images/create). For Seedream 5.5, see [Create Seedream 5.5 task](/en/api-reference/images/seedream-5.5).
+
+## Models
+
+| `model` | Notes | Billing |
+| --- | --- | --- |
+| `muse-image` | Text-to-image / reference images; 1 image per request; native size | `muse-image` (per task) |
+
+Billed once per request, one image. The live price is the [model catalog](/en/api-reference/common/model-catalog) value and the `cost` on the create response. Underscore form `muse_image` is accepted.
+
+Omit the ratio to let the model choose the size. `1:1` is about 1600×1600 and `16:9` about 2048×1152. Images are not upscaled.
+
+## Request fields
+
+| Field | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `model` | string | yes | `muse-image` |
+| `prompt` | string | yes | What to draw. With reference images, say what to keep and what to change. Max **4000** characters |
+| `n` | int | no | Fixed at **1** |
+| `ratio` | string | no | `1:1` / `16:9` / `9:16` / `4:3` / `3:4` / `3:2` / `2:3` |
+| `size` | string | no | Alias of `ratio`. A pixel size such as `1024x1024` or `2048x1152` is reduced to its ratio |
+| `images` | string[] | no | Public reference image URLs, up to **10** |
+| `style` | string | no | Free-text style, for example `photorealistic`, `anime`, `cinematic`. Max **1000** characters |
+| `negative_prompt` | string | no | What should not appear, for example `watermark, text`. Max **1000** characters |
+| `smart_queue` | bool | no | Default `false`. When `true`, a very low recent success rate keeps the task `queued` until recovery (up to about 2 hours). See [Smart queue](/en/api-reference/common/smart-queue) |
+
+If both `ratio` and `size` are set, they must describe the same ratio.
+
+## Examples
+
+### Text to image
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/images' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "muse-image",
+    "prompt": "A misty forest at dawn, photorealistic",
+    "ratio": "16:9",
+    "style": "photorealistic",
+    "negative_prompt": "watermark, text"
+  }'
+```
+
+### Reference image
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/images' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "muse-image",
+    "prompt": "Replace the background with a seaside sunset and keep the person",
+    "images": ["https://example.com/photo.png"]
+  }'
+```
+
+Example success response:
+
+```json
+{
+  "code": 20000,
+  "msg": "提交成功",
+  "data": {
+    "task_id": "img_xxxxxxxx",
+    "status": "queued",
+    "progress": 0,
+    "model": "muse-image",
+    "cost": 0.05,
+    "result": {}
+  }
+}
+```

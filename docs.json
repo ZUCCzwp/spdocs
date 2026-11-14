@@ -95,6 +95,12 @@
                 "pages": [
                   "en/api-reference/images/seedream-5.5"
                 ]
+              },
+              {
+                "group": "Muse Image",
+                "pages": [
+                  "en/api-reference/images/muse-image"
+                ]
               }
             ]
           },
@@ -248,6 +254,12 @@
                 "group": "Seedream 5.5",
                 "pages": [
                   "zh/api-reference/images/seedream-5.5"
+                ]
+              },
+              {
+                "group": "Muse Image",
+                "pages": [
+                  "zh/api-reference/images/muse-image"
                 ]
               }
             ]
