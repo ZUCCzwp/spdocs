@@ -1,0 +1,45 @@
+---
+title: 'Seedance 2.5 Flash AC'
+openapi: 'POST /v1/videos'
+---
+
+创建 Seedance **2.5 Flash AC** 视频任务。路径为统一的 `POST /v1/videos`，`model` 设为 `sd2.5-flash-ac`。完成后从 [查询视频任务](/zh/api-reference/common/query) 的 `result.video_url` 取片。
+
+固定 720p，按次计费（时长只影响成片秒数，不参与乘价）。必须上传至少一张参考图，不支持纯文生，也不支持参考视频。
+
+## 模型
+
+| `model` | 计费 | 时长 | 分辨率 |
+| --- | --- | --- | --- |
+| `sd2.5-flash-ac` | `per_task`（按次） | **4–30** 秒 | 固定 **720p** |
+
+不支持首尾帧。`resolution` 可省略；传入时只能是 `720p`。
+
+## 请求参数
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `model` | string | 是 | `sd2.5-flash-ac` |
+| `prompt` | string | 是 | 最多 **5000** 字符 |
+| `duration` / `seconds` | int | 否 | **4–30**，默认 4 |
+| `aspect_ratio` / `ratio` | string | 否 | `16:9`、`9:16`、`1:1`、`4:3`、`3:4`、`21:9`；默认 `9:16` |
+| `images` / `reference_images` | string[] | 是 | 参考图 **1–10** 张 |
+| `audios` / `reference_audios` | string[] | 否 | 参考音频，最多 **5** 段 |
+| `smart_queue` | bool | 否 | 默认 `false`。为 `true` 时，近期成功率过低会先保持 `queued`，恢复后再提交（最长约 2 小时）。详见 [智能排队](/zh/api-reference/common/smart-queue) |
+
+参考素材须为公网 `https://` URL。不要传 `videos` / `reference_videos`。
+
+## 示例
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "sd2.5-flash-ac",
+    "prompt": "一只猫在草地上奔跑，跟拍镜头",
+    "duration": 8,
+    "aspect_ratio": "9:16",
+    "images": ["https://example.com/cat.png"]
+  }'
+```

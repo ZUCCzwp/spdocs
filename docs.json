@@ -167,6 +167,7 @@
                   "en/api-reference/seedance/25/create",
                   "en/api-reference/seedance/25/create-30s",
                   "en/api-reference/seedance/25/create-720p-ac",
+                  "en/api-reference/seedance/25/create-flash-ac",
                   "en/api-reference/seedance/25/create-720p-933-ac"
                 ]
               }
@@ -328,6 +329,7 @@
                   "zh/api-reference/seedance/25/create",
                   "zh/api-reference/seedance/25/create-30s",
                   "zh/api-reference/seedance/25/create-720p-ac",
+                  "zh/api-reference/seedance/25/create-flash-ac",
                   "zh/api-reference/seedance/25/create-720p-933-ac"
                 ]
               }

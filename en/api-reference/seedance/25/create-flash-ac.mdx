@@ -1,0 +1,45 @@
+---
+title: 'Seedance 2.5 Flash AC'
+openapi: 'POST /v1/videos'
+---
+
+Create a Seedance **2.5 Flash AC** video via `POST /v1/videos` with `model` set to `sd2.5-flash-ac`. Poll [Query video task](/en/api-reference/common/query) for `result.video_url`.
+
+Fixed 720p, billed per task (duration only sets the clip length). At least one reference image is required. Text-to-video and reference videos are not supported.
+
+## Model
+
+| `model` | Billing | Duration | Resolution |
+| --- | --- | --- | --- |
+| `sd2.5-flash-ac` | `per_task` | **4–30** seconds | Fixed **720p** |
+
+First and last frames are not supported. `resolution` may be omitted; if sent, it must be `720p`.
+
+## Request
+
+| Field | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `model` | string | yes | `sd2.5-flash-ac` |
+| `prompt` | string | yes | Up to **5000** characters |
+| `duration` / `seconds` | int | no | **4–30**, default 4 |
+| `aspect_ratio` / `ratio` | string | no | `16:9`, `9:16`, `1:1`, `4:3`, `3:4`, `21:9`; default `9:16` |
+| `images` / `reference_images` | string[] | yes | **1–10** reference images |
+| `audios` / `reference_audios` | string[] | no | Up to **5** reference audios |
+| `smart_queue` | bool | no | Default `false`. When `true`, a very low recent success rate keeps the task `queued` until recovery (up to about 2 hours). See [Smart queue](/en/api-reference/common/smart-queue) |
+
+Reference files must be public `https://` URLs. Do not send `videos` / `reference_videos`.
+
+## Example
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "sd2.5-flash-ac",
+    "prompt": "A cat running on grass, tracking shot",
+    "duration": 8,
+    "aspect_ratio": "9:16",
+    "images": ["https://example.com/cat.png"]
+  }'
+```
