@@ -13,6 +13,8 @@ Prices here are platform defaults. If your account has a custom price, reconcile
 
 No API key required.
 
+OpenAI-compatible gateways such as New API fetch models with `GET /v1/models`, which requires an API key. The body is `{ "object": "list", "data": [{ "id": "wan3-720p", "object": "model", "owned_by": "sigrunai" }] }`. `id` matches `model_name` from this catalog.
+
 ### Query parameters
 
 | Param | Type | Required | Description |

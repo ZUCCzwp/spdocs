@@ -144,6 +144,49 @@
         }
       }
     },
+    "/v1/models": {
+      "get": {
+        "summary": "OpenAI model list",
+        "description": "Lists enabled models in the OpenAI GET /v1/models shape. data[].id is the catalog model_name. Requires an API key. New API's Fetch models button calls this URL.",
+        "operationId": "listModels",
+        "tags": ["Models"],
+        "responses": {
+          "200": {
+            "description": "Model list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["object", "data"],
+                  "properties": {
+                    "object": {"type": "string", "example": "list"},
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["id"],
+                        "properties": {
+                          "id": {"type": "string"},
+                          "object": {"type": "string", "example": "model"},
+                          "created": {"type": "integer"},
+                          "owned_by": {"type": "string", "example": "sigrunai"}
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "object": "list",
+                  "data": [
+                    {"id": "wan3-720p", "object": "model", "created": 0, "owned_by": "sigrunai"}
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/videos": {
       "post": {
         "summary": "Create video task",
@@ -977,6 +1020,7 @@
       },
       "TaskQueryResponse": {
         "type": "object",
+        "description": "Images and videos both return code, msg, and data. Video create and query also include top-level OpenAI video fields for New API.",
         "properties": {
           "code": {
             "type": "integer",
@@ -987,6 +1031,44 @@
           },
           "data": {
             "$ref": "#/components/schemas/TaskQueryData"
+          },
+          "id": {
+            "type": "string",
+            "description": "Video tasks. Same as data.task_id."
+          },
+          "object": {
+            "type": "string",
+            "description": "video for video tasks."
+          },
+          "task_id": {
+            "type": "string",
+            "description": "Video tasks. Same as id."
+          },
+          "status": {
+            "type": "string",
+            "description": "OpenAI status for video tasks: queued, in_progress, completed, failed. data.status stays the platform status."
+          },
+          "progress": {
+            "type": "integer"
+          },
+          "url": {
+            "type": "string",
+            "description": "Completed video URL. Same as data.result.video_url."
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Contains url once the video is ready.",
+            "properties": {
+              "url": {"type": "string"}
+            }
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {"type": "string"},
+              "type": {"type": "string"},
+              "code": {"type": "string"}
+            }
           }
         }
       },

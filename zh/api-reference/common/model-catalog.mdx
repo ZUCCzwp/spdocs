@@ -13,6 +13,8 @@ openapi: 'GET /v1/model/catalog'
 
 无需 API Key。
 
+New API 等 OpenAI 兼容网关拉模型列表时，用需要 API Key 的 `GET /v1/models`。返回 `{ "object": "list", "data": [{ "id": "wan3-720p", "object": "model", "owned_by": "sigrunai" }] }`。`id` 与本接口的 `model_name` 相同。
+
 ### 查询参数
 
 | 参数 | 类型 | 必填 | 说明 |

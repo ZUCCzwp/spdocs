@@ -144,6 +144,49 @@
         }
       }
     },
+    "/v1/models": {
+      "get": {
+        "summary": "OpenAI 模型列表",
+        "description": "返回当前启用的模型，格式与 OpenAI GET /v1/models 相同。data[].id 等于模型目录中的 model_name。需要 API Key。New API 渠道「获取模型列表」请求的就是这个地址。",
+        "operationId": "listModels",
+        "tags": ["Models"],
+        "responses": {
+          "200": {
+            "description": "模型列表",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["object", "data"],
+                  "properties": {
+                    "object": {"type": "string", "example": "list"},
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["id"],
+                        "properties": {
+                          "id": {"type": "string"},
+                          "object": {"type": "string", "example": "model"},
+                          "created": {"type": "integer"},
+                          "owned_by": {"type": "string", "example": "sigrunai"}
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "object": "list",
+                  "data": [
+                    {"id": "wan3-720p", "object": "model", "created": 0, "owned_by": "sigrunai"}
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/videos": {
       "post": {
         "summary": "创建视频任务",
@@ -977,6 +1020,7 @@
       },
       "TaskQueryResponse": {
         "type": "object",
+        "description": "图片与视频都返回 code、msg、data。视频创建和查询还会在顶层附带 OpenAI 视频对象字段，供 New API 解析。",
         "properties": {
           "code": {
             "type": "integer",
@@ -987,6 +1031,44 @@
           },
           "data": {
             "$ref": "#/components/schemas/TaskQueryData"
+          },
+          "id": {
+            "type": "string",
+            "description": "视频任务。与 data.task_id 相同。"
+          },
+          "object": {
+            "type": "string",
+            "description": "视频任务为 video。"
+          },
+          "task_id": {
+            "type": "string",
+            "description": "视频任务。与 id 相同。"
+          },
+          "status": {
+            "type": "string",
+            "description": "视频任务的 OpenAI 状态：queued、in_progress、completed、failed。data.status 仍是平台原状态。"
+          },
+          "progress": {
+            "type": "integer"
+          },
+          "url": {
+            "type": "string",
+            "description": "视频完成后的地址，与 data.result.video_url 相同。"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "视频完成后含 url。",
+            "properties": {
+              "url": {"type": "string"}
+            }
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {"type": "string"},
+              "type": {"type": "string"},
+              "code": {"type": "string"}
+            }
           }
         }
       },
