@@ -13,6 +13,7 @@ description: 'AI Platform OpenAPI 接入说明'
 | --- | --- | --- |
 | 图片 | `gpt-image-2` | 异步生图；可用 `quality` 或 `gpt-image-2-low` / `medium` / `high` 计费档 |
 | 图片 | `gpt-image-2.6-flare` / `gpt-image-2.6-sunburst` | 异步生图；只支持 `1k`；按模型计费，`quality` 不改变单价 |
+| 图片 | `gpt-image-2.5` | 文生图；`resolution` 为 `1k` / `4k` 并按档计费；不支持参考图 |
 | 图片 | `nano-banana-2` / `nano-banana-2.1` / `nano-banana-pro` | 异步生图；用 `resolution` 选择档位并计费 |
 | 图片 | `seedream-5.5` | 异步生图；用 `resolution`（`1K` / `2K`）选择档位并计费；参考图最多 8 张 |
 | 图片 | `muse-image` | 按次；每次 1 张；参考图最多 10 张；比例可省略 |
@@ -74,6 +75,13 @@ https://sigrunai.com
     href="/zh/api-reference/images/gpt-image-2.6"
   >
     Flare / Sunburst，按模型计费
+  </Card>
+  <Card
+    title="GPT Image 2.5"
+    icon="image"
+    href="/zh/api-reference/images/gpt-image-2.5"
+  >
+    1K / 4K，按 resolution 计费
   </Card>
   <Card
     title="Nano Banana"

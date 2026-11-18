@@ -13,6 +13,7 @@ Available models (always check the [model catalog](/en/api-reference/common/mode
 | --- | --- | --- |
 | Image | `gpt-image-2` | Async; use `quality` or `gpt-image-2-low` / `medium` / `high` for billing tiers |
 | Image | `gpt-image-2.6-flare` / `gpt-image-2.6-sunburst` | Async; `1k` only; billed by model, `quality` does not change the price |
+| Image | `gpt-image-2.5` | Text-to-image; `resolution` `1k` / `4k` sets the billing tier; no reference images |
 | Image | `nano-banana-2` / `nano-banana-2.1` / `nano-banana-pro` | Async; pick tier via `resolution` for billing |
 | Image | `seedream-5.5` | Async; pick tier via `resolution` (`1K` / `2K`); up to 8 reference images |
 | Image | `muse-image` | Per task; 1 image; up to 10 reference images; ratio optional |
@@ -74,6 +75,13 @@ API paths start with `/v1`. On your own domain, replace the host with the curren
     href="/en/api-reference/images/gpt-image-2.6"
   >
     Flare / Sunburst, billed by model
+  </Card>
+  <Card
+    title="GPT Image 2.5"
+    icon="image"
+    href="/en/api-reference/images/gpt-image-2.5"
+  >
+    1K / 4K, billed by resolution
   </Card>
   <Card
     title="Nano Banana"

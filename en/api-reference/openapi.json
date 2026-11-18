@@ -20,7 +20,7 @@
     "/v1/images": {
       "post": {
         "summary": "Create image task",
-        "description": "Create an async GPT Image 2, GPT Image 2.6, Nano Banana, Seedream 5.5, or Muse Image task.",
+        "description": "Create an async GPT Image 2, GPT Image 2.5, GPT Image 2.6, Nano Banana, Seedream 5.5, or Muse Image task.",
         "operationId": "createImage",
         "tags": [
           "Images"
@@ -41,6 +41,17 @@
                     "quality": "medium",
                     "n": 1,
                     "ratio": "1:1"
+                  }
+                },
+                "gptImage25": {
+                  "summary": "gpt-image-2.5",
+                  "value": {
+                    "model": "gpt-image-2.5",
+                    "prompt": "a blue cup on a wooden table, soft daylight",
+                    "quality": "medium",
+                    "n": 1,
+                    "ratio": "1:1",
+                    "resolution": "1k"
                   }
                 },
                 "gptImage26": {
@@ -621,14 +632,14 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "gpt-image-2 (plus low/medium/high), gpt-image-2.6-flare / gpt-image-2.6-sunburst, nano-banana-2 / nano-banana-2.1 / nano-banana-pro, seedream-5.5, or muse-image",
+            "description": "gpt-image-2 (plus low/medium/high), gpt-image-2.5, gpt-image-2.6-flare / gpt-image-2.6-sunburst, nano-banana-2 / nano-banana-2.1 / nano-banana-pro, seedream-5.5, or muse-image",
             "example": "nano-banana-2"
           },
           "prompt": {
             "type": "string",
             "minLength": 1,
             "maxLength": 32000,
-            "description": "GPT Image 2 / Seedream 5.5 / Muse Image max 4000; GPT Image 2.6 max 32000; Nano Banana max 10000. Nano Banana / Seedream prompt is optional when images are provided. Muse Image prompt is always required"
+            "description": "GPT Image 2 / Seedream 5.5 / Muse Image max 4000; GPT Image 2.5 and GPT Image 2.6 max 32000; Nano Banana max 10000. Nano Banana / Seedream prompt is optional when images are provided. Muse Image and GPT Image 2.5 prompts are required"
           },
           "quality": {
             "type": "string",
@@ -641,25 +652,25 @@
               "max"
             ],
             "default": "auto",
-            "description": "GPT Image 2: auto / low / medium / high, billed by tier. GPT Image 2.6 also accepts xhigh / max without changing the price"
+            "description": "GPT Image 2: auto / low / medium / high, billed by tier. GPT Image 2.5 accepts auto / low / medium / high without changing the price. GPT Image 2.6 also accepts xhigh / max without changing the price"
           },
           "n": {
             "type": "integer",
             "minimum": 1,
             "maximum": 4,
             "default": 1,
-            "description": "GPT Image 2 accepts 1–4. GPT Image 2.6, Nano Banana, Seedream 5.5, and Muse Image accept 1 only"
+            "description": "GPT Image 2 accepts 1–4. GPT Image 2.5, GPT Image 2.6, Nano Banana, Seedream 5.5, and Muse Image accept 1 only"
           },
           "ratio": {
             "type": "string"
           },
           "size": {
             "type": "string",
-            "description": "Alias of ratio. GPT Image 2.6 accepts auto or an aspect ratio, not a pixel size. Muse Image reduces a pixel size such as 1024x1024 to its ratio"
+            "description": "Alias of ratio. GPT Image 2.5 accepts an aspect ratio or a pixel size such as 1024x1024. GPT Image 2.6 accepts auto or an aspect ratio, not a pixel size. Muse Image reduces a pixel size to its ratio"
           },
           "resolution": {
             "type": "string",
-            "description": "GPT Image 2.6 accepts 1k only. Nano Banana: 0.5k/1k/2k/4k depending on the model"
+            "description": "GPT Image 2.5: 1k / 4k, default 1k. GPT Image 2.6 accepts 1k only. Nano Banana: 0.5k/1k/2k/4k depending on the model"
           },
           "images": {
             "type": "array",
@@ -668,7 +679,7 @@
               "format": "uri"
             },
             "maxItems": 16,
-            "description": "Reference image URLs. GPT Image 2 max 15; GPT Image 2.6 max 16; Nano Banana max 5; Seedream 5.5 max 8; Muse Image max 10. GPT Image 2.6 svg and gif cannot include reference images"
+            "description": "Reference image URLs. GPT Image 2.5 does not accept reference images. GPT Image 2 max 15; GPT Image 2.6 max 16; Nano Banana max 5; Seedream 5.5 max 8; Muse Image max 10. GPT Image 2.6 svg and gif cannot include reference images"
           },
           "output_format": {
             "type": "string",

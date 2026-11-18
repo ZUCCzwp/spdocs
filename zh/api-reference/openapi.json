@@ -20,7 +20,7 @@
     "/v1/images": {
       "post": {
         "summary": "创建图片任务",
-        "description": "创建 GPT Image 2、GPT Image 2.6、Nano Banana、Seedream 5.5 或 Muse Image 生图任务。",
+        "description": "创建 GPT Image 2、GPT Image 2.5、GPT Image 2.6、Nano Banana、Seedream 5.5 或 Muse Image 生图任务。",
         "operationId": "createImage",
         "tags": [
           "Images"
@@ -41,6 +41,17 @@
                     "quality": "medium",
                     "n": 1,
                     "ratio": "1:1"
+                  }
+                },
+                "gptImage25": {
+                  "summary": "gpt-image-2.5",
+                  "value": {
+                    "model": "gpt-image-2.5",
+                    "prompt": "一只蓝色杯子放在木桌上，柔和的自然光",
+                    "quality": "medium",
+                    "n": 1,
+                    "ratio": "1:1",
+                    "resolution": "1k"
                   }
                 },
                 "gptImage26": {
@@ -621,14 +632,14 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "gpt-image-2（及 low/medium/high）、gpt-image-2.6-flare / gpt-image-2.6-sunburst、nano-banana-2 / nano-banana-2.1 / nano-banana-pro、seedream-5.5，或 muse-image",
+            "description": "gpt-image-2（及 low/medium/high）、gpt-image-2.5、gpt-image-2.6-flare / gpt-image-2.6-sunburst、nano-banana-2 / nano-banana-2.1 / nano-banana-pro、seedream-5.5，或 muse-image",
             "example": "nano-banana-2"
           },
           "prompt": {
             "type": "string",
             "minLength": 1,
             "maxLength": 32000,
-            "description": "GPT Image 2 / Seedream 5.5 / Muse Image 最长 4000；GPT Image 2.6 最长 32000；Nano Banana 最长 10000。Nano Banana / Seedream 有参考图时可为空。Muse Image 的 prompt 必填"
+            "description": "GPT Image 2 / Seedream 5.5 / Muse Image 最长 4000；GPT Image 2.5 与 GPT Image 2.6 最长 32000；Nano Banana 最长 10000。Nano Banana / Seedream 有参考图时可为空。Muse Image 与 GPT Image 2.5 的 prompt 必填"
           },
           "quality": {
             "type": "string",
@@ -641,25 +652,25 @@
               "max"
             ],
             "default": "auto",
-            "description": "GPT Image 2：auto / low / medium / high，并按档计费。GPT Image 2.6 另支持 xhigh / max，不改变单价"
+            "description": "GPT Image 2：auto / low / medium / high，并按档计费。GPT Image 2.5 支持 auto / low / medium / high，不改变单价。GPT Image 2.6 另支持 xhigh / max，不改变单价"
           },
           "n": {
             "type": "integer",
             "minimum": 1,
             "maximum": 4,
             "default": 1,
-            "description": "GPT Image 2 为 1–4。GPT Image 2.6、Nano Banana、Seedream 5.5 与 Muse Image 只支持 1"
+            "description": "GPT Image 2 为 1–4。GPT Image 2.5、GPT Image 2.6、Nano Banana、Seedream 5.5 与 Muse Image 只支持 1"
           },
           "ratio": {
             "type": "string"
           },
           "size": {
             "type": "string",
-            "description": "ratio 别名。GPT Image 2.6 只接受 auto 或画面比例，不接受像素尺寸。Muse Image 会把 1024x1024 这类像素尺寸折成比例"
+            "description": "ratio 别名。GPT Image 2.5 接受画面比例，或 1024x1024 这类像素尺寸。GPT Image 2.6 只接受 auto 或画面比例，不接受像素尺寸。Muse Image 会把像素尺寸折成比例"
           },
           "resolution": {
             "type": "string",
-            "description": "GPT Image 2.6 只支持 1k。Nano Banana：0.5k/1k/2k/4k（视模型而定）"
+            "description": "GPT Image 2.5：1k / 4k，默认 1k。GPT Image 2.6 只支持 1k。Nano Banana：0.5k/1k/2k/4k（视模型而定）"
           },
           "images": {
             "type": "array",
@@ -668,7 +679,7 @@
               "format": "uri"
             },
             "maxItems": 16,
-            "description": "参考图 URL。GPT Image 2 最多 15；GPT Image 2.6 最多 16；Nano Banana 最多 5；Seedream 5.5 最多 8；Muse Image 最多 10。GPT Image 2.6 的 svg / gif 不能带参考图"
+            "description": "参考图 URL。GPT Image 2.5 不支持参考图。GPT Image 2 最多 15；GPT Image 2.6 最多 16；Nano Banana 最多 5；Seedream 5.5 最多 8；Muse Image 最多 10。GPT Image 2.6 的 svg / gif 不能带参考图"
           },
           "output_format": {
             "type": "string",

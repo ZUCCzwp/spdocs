@@ -1,0 +1,79 @@
+---
+title: '创建 GPT Image 2.5 任务'
+openapi: 'POST /v1/images'
+---
+
+创建 GPT Image 2.5 生图任务。成功后返回 `task_id`，请用 [查询图片任务](/zh/api-reference/images/query) 轮询，完成后从 `result.image_url` 取图。
+
+GPT Image 2 见 [创建 GPT Image 2 任务](/zh/api-reference/images/create)。GPT Image 2.6 见 [创建 GPT Image 2.6 任务](/zh/api-reference/images/gpt-image-2.6)。
+
+## 模型
+
+| `model` | 说明 | `resolution` | 计费键 |
+| --- | --- | --- | --- |
+| `gpt-image-2.5` | 文生图；每次 1 张 | `1k` / `4k`（也可用 `1K` / `4K`） | `gpt-image-2.5-1k` / `gpt-image-2.5-4k` |
+
+按分辨率对应的计费模型扣费（`per_task`，每次 1 张）。`quality` 只影响生成效果，不改变单价。省略 `resolution` 时按 `1k` 计费。也可以直接把计费键当作 `model`。实际单价以 [模型目录](/zh/api-reference/common/model-catalog) 和创建响应里的 `cost` 为准。
+
+不支持参考图。
+
+## 请求参数
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `model` | string | 是 | `gpt-image-2.5`，或 `gpt-image-2.5-1k` / `gpt-image-2.5-4k` |
+| `prompt` | string | 是 | 提示词，1–32000 字符 |
+| `resolution` | string | 否 | `1k`（默认）或 `4k` |
+| `quality` | string | 否 | `auto`（默认）、`low`、`medium`、`high`。不改变单价 |
+| `n` | int | 否 | 只支持 **1** |
+| `ratio` | string | 否 | `1:1`、`16:9`、`9:16`、`4:3`、`3:4`、`3:2`、`2:3`、`21:9`、`5:4`、`4:5`。方图按 `1024x1024`，横图按 `1536x1024`，竖图按 `1024x1536`。省略则不传尺寸 |
+| `size` | string | 否 | `ratio` 别名。也可直接传像素尺寸，例如 `1024x1024`。不要和 `ratio` 传成不同的值 |
+| `smart_queue` | bool | 否 | 默认 `false`。为 `true` 时，近期成功率过低会先保持 `queued`，恢复后再提交（最长约 2 小时）。详见 [智能排队](/zh/api-reference/common/smart-queue) |
+
+## 示例
+
+### 文生图（1K）
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/images' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "gpt-image-2.5",
+    "prompt": "一只蓝色杯子放在木桌上，柔和的自然光",
+    "ratio": "1:1",
+    "resolution": "1k",
+    "quality": "medium"
+  }'
+```
+
+### 文生图（4K）
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/images' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "gpt-image-2.5",
+    "prompt": "极简产品静物，白色背景，柔光",
+    "ratio": "16:9",
+    "resolution": "4k"
+  }'
+```
+
+成功响应示例：
+
+```json
+{
+  "code": 20000,
+  "msg": "提交成功",
+  "data": {
+    "task_id": "img_xxxxxxxx",
+    "status": "queued",
+    "progress": 0,
+    "model": "gpt-image-2.5-1k",
+    "cost": 0.1,
+    "result": {}
+  }
+}
+```

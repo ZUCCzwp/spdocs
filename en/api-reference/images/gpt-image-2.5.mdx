@@ -1,0 +1,79 @@
+---
+title: 'Create GPT Image 2.5 task'
+openapi: 'POST /v1/images'
+---
+
+Create a GPT Image 2.5 task. Poll with [Query image task](/en/api-reference/images/query) and read `result.image_url` when completed.
+
+For GPT Image 2, see [Create GPT Image 2 task](/en/api-reference/images/create). For GPT Image 2.6, see [Create GPT Image 2.6 task](/en/api-reference/images/gpt-image-2.6).
+
+## Models
+
+| `model` | Notes | `resolution` | Billing key |
+| --- | --- | --- | --- |
+| `gpt-image-2.5` | Text-to-image; 1 image per task | `1k` / `4k` (also `1K` / `4K`) | `gpt-image-2.5-1k` / `gpt-image-2.5-4k` |
+
+Billing uses the resolution key (`per_task`, 1 image). `quality` changes the look only, not the price. Omitting `resolution` bills `1k`. You can also pass a billing key as `model`. Prices come from the [model catalog](/en/api-reference/common/model-catalog) and the `cost` on the create response.
+
+Reference images are not supported.
+
+## Request
+
+| Field | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `model` | string | yes | `gpt-image-2.5`, or `gpt-image-2.5-1k` / `gpt-image-2.5-4k` |
+| `prompt` | string | yes | 1–32000 characters |
+| `resolution` | string | no | `1k` (default) or `4k` |
+| `quality` | string | no | `auto` (default), `low`, `medium`, `high`. Does not change the price |
+| `n` | int | no | **1** only |
+| `ratio` | string | no | `1:1`, `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3`, `21:9`, `5:4`, `4:5`. Square becomes `1024x1024`, landscape `1536x1024`, portrait `1024x1536`. Omit to leave size unset |
+| `size` | string | no | Alias of `ratio`. A pixel size such as `1024x1024` is also accepted. Do not send a different `ratio` at the same time |
+| `smart_queue` | bool | no | Default `false`. When `true`, a model with a low recent success rate stays `queued` until it recovers (about 2 hours max). See [Smart queue](/en/api-reference/common/smart-queue) |
+
+## Examples
+
+### Text to image (1K)
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/images' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "gpt-image-2.5",
+    "prompt": "a blue cup on a wooden table, soft daylight",
+    "ratio": "1:1",
+    "resolution": "1k",
+    "quality": "medium"
+  }'
+```
+
+### Text to image (4K)
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/images' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "gpt-image-2.5",
+    "prompt": "minimal product still life, white background, soft light",
+    "ratio": "16:9",
+    "resolution": "4k"
+  }'
+```
+
+Success response:
+
+```json
+{
+  "code": 20000,
+  "msg": "提交成功",
+  "data": {
+    "task_id": "img_xxxxxxxx",
+    "status": "queued",
+    "progress": 0,
+    "model": "gpt-image-2.5-1k",
+    "cost": 0.1,
+    "result": {}
+  }
+}
+```
