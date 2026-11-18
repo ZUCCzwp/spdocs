@@ -1020,7 +1020,6 @@
       },
       "TaskQueryResponse": {
         "type": "object",
-        "description": "Images and videos both return code, msg, and data. Video create and query also include top-level OpenAI video fields for New API.",
         "properties": {
           "code": {
             "type": "integer",
@@ -1031,44 +1030,6 @@
           },
           "data": {
             "$ref": "#/components/schemas/TaskQueryData"
-          },
-          "id": {
-            "type": "string",
-            "description": "Video tasks. Same as data.task_id."
-          },
-          "object": {
-            "type": "string",
-            "description": "video for video tasks."
-          },
-          "task_id": {
-            "type": "string",
-            "description": "Video tasks. Same as id."
-          },
-          "status": {
-            "type": "string",
-            "description": "OpenAI status for video tasks: queued, in_progress, completed, failed. data.status stays the platform status."
-          },
-          "progress": {
-            "type": "integer"
-          },
-          "url": {
-            "type": "string",
-            "description": "Completed video URL. Same as data.result.video_url."
-          },
-          "metadata": {
-            "type": "object",
-            "description": "Contains url once the video is ready.",
-            "properties": {
-              "url": {"type": "string"}
-            }
-          },
-          "error": {
-            "type": "object",
-            "properties": {
-              "message": {"type": "string"},
-              "type": {"type": "string"},
-              "code": {"type": "string"}
-            }
           }
         }
       },

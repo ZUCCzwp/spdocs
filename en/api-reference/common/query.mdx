@@ -7,8 +7,6 @@ openapi: 'GET /v1/videos/{taskId}'
 
 Create and query share the same `data` shape. `data.cost` is the charged amount (credits).
 
-The same JSON also includes an OpenAI video object for New API: top-level `id` (same as `data.task_id`), `object` (`video`), and `status` (`queued` / `in_progress` / `completed` / `failed`). The finished URL is in `url` and `metadata.url`, matching `data.result.video_url`. `data.status` stays the platform status.
-
 For **Kling 4.0** (and similar per-second models with reference videos), query also returns `data.billing_duration` (seconds; upstream values preferred when present):
 
 | Field | Description |

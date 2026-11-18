@@ -7,8 +7,6 @@ openapi: 'GET /v1/videos/{taskId}'
 
 创建与查询返回同一套 `data` 结构；`data.cost` 为本次扣费（积分）。
 
-同一份 JSON 还会带上 OpenAI 视频对象，供 New API 解析：顶层 `id`（与 `data.task_id` 相同）、`object`（`video`）、`status`（`queued` / `in_progress` / `completed` / `failed`）。成片地址在 `url` 和 `metadata.url`，与 `data.result.video_url` 相同。`data.status` 仍是平台原状态。
-
 对 **Kling 4.0** 等按秒计费且含参考视频的任务，查询还会返回 `data.billing_duration`（单位：秒；优先采用上游返回值）：
 
 | 字段 | 说明 |

@@ -1020,7 +1020,6 @@
       },
       "TaskQueryResponse": {
         "type": "object",
-        "description": "图片与视频都返回 code、msg、data。视频创建和查询还会在顶层附带 OpenAI 视频对象字段，供 New API 解析。",
         "properties": {
           "code": {
             "type": "integer",
@@ -1031,44 +1030,6 @@
           },
           "data": {
             "$ref": "#/components/schemas/TaskQueryData"
-          },
-          "id": {
-            "type": "string",
-            "description": "视频任务。与 data.task_id 相同。"
-          },
-          "object": {
-            "type": "string",
-            "description": "视频任务为 video。"
-          },
-          "task_id": {
-            "type": "string",
-            "description": "视频任务。与 id 相同。"
-          },
-          "status": {
-            "type": "string",
-            "description": "视频任务的 OpenAI 状态：queued、in_progress、completed、failed。data.status 仍是平台原状态。"
-          },
-          "progress": {
-            "type": "integer"
-          },
-          "url": {
-            "type": "string",
-            "description": "视频完成后的地址，与 data.result.video_url 相同。"
-          },
-          "metadata": {
-            "type": "object",
-            "description": "视频完成后含 url。",
-            "properties": {
-              "url": {"type": "string"}
-            }
-          },
-          "error": {
-            "type": "object",
-            "properties": {
-              "message": {"type": "string"},
-              "type": {"type": "string"},
-              "code": {"type": "string"}
-            }
           }
         }
       },
