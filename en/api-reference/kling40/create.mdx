@@ -9,9 +9,9 @@ Asynchronously generate **Kling 4.0** videos. Use the shared entry `POST /v1/vid
 
 | `model` | Notes | Duration | Resolution |
 | --- | --- | --- | --- |
-| `kling-4.0` | Open model name; pair with `resolution` for billing | **5–30** s | `720p` (default) / `1080p` |
-| `kling-4.0-720p` | Billing key: 720p | **5–30** s | `720p` |
-| `kling-4.0-1080p` | Billing key: 1080p | **5–30** s | `1080p` |
+| `kling-4.0` | Open model name; pair with `resolution` for billing | **15–30** s | `720p` (default) / `1080p` |
+| `kling-4.0-720p` | Billing key: 720p | **15–30** s | `720p` |
+| `kling-4.0-1080p` | Billing key: 1080p | **15–30** s | `1080p` |
 
 Billing is `per_second`. **Billable seconds = measured output duration + measured reference video durations** (ceil to whole seconds; server-side probe, not client-supplied; reference audio is **not** billed). Create prepays `duration` + probed reference seconds; on completion the output is re-probed and the charge is settled (refund or top-up). See the [model catalog](/en/api-reference/common/model-catalog) and the `cost` field for live unit prices.
 
@@ -40,7 +40,7 @@ Reference media must be public `https://` URLs. File size is enforced on upload;
 | --- | --- | --- | --- |
 | `model` | string | yes | `kling-4.0` / `kling-4.0-720p` / `kling-4.0-1080p` |
 | `prompt` | string | yes | Generation prompt, 1–5000 characters |
-| `duration` / `seconds` | int \| string | yes | **5–30**; string values allowed (e.g. `"10"`) |
+| `duration` / `seconds` | int \| string | yes | **15–30**; defaults to 15 when omitted; string values allowed (e.g. `"15"`) |
 | `aspect_ratio` / `ratio` | string | no | `16:9`, `9:16`, `1:1`; default `16:9` |
 | `resolution` | string | no | `720p` (default) or `1080p`; also inferred from billing model names |
 | `images` / `reference_images` | string[] | no | Reference image URLs, max **10** |
@@ -62,7 +62,7 @@ curl -X POST 'https://sigrunai.com/v1/videos' \
     "prompt": "A night drive through a neon city, cinematic tracking shot",
     "aspect_ratio": "16:9",
     "resolution": "720p",
-    "duration": 8
+    "duration": 15
   }'
 ```
 
@@ -77,7 +77,7 @@ curl -X POST 'https://sigrunai.com/v1/videos' \
     "prompt": "Image 1 for product look; video 1 for camera motion; audio 1 for pacing",
     "aspect_ratio": "16:9",
     "resolution": "720p",
-    "duration": 10,
+    "duration": 15,
     "images": ["https://example.com/ref.png"],
     "videos": ["https://example.com/ref.mp4"],
     "audios": ["https://example.com/ref.mp3"],
@@ -85,7 +85,7 @@ curl -X POST 'https://sigrunai.com/v1/videos' \
   }'
 ```
 
-Create prepays roughly `10 + measured reference seconds`; after completion, if the output probes to 9s, settlement uses `9 + measured reference` (audio is not added).
+Create prepays roughly `15 + measured reference seconds`; after completion, if the output probes to 14s, settlement uses `14 + measured reference` (audio is not added).
 
 ## Response
 
