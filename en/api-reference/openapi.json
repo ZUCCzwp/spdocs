@@ -733,7 +733,7 @@
                 "type": "string"
               }
             ],
-            "description": "omni-10s: fixed 10; seedance2.0-md: 5/10/15; sd2-*-ac: 4–15; sd2-720p-dl: fixed 15; sd2-720p-db: 5/10/15; sd2.0-mini-720p: 4–15; sd2.5-480p / sd2.5-720p / sd2.5-1080p: 5–30; seedance2.5-30s: fixed 30; sd2.5-720p-ac, sd2.5-flash-ac, and sd2.5-720p-933-ac: 4–30; wan3-480p / wan3-720p: 15–30; wan3-1080p: 10–30; wan3.0-prime-720p: 10–30; wan3.0-prime-1080p: 8–30; Muse Video: 1–60, billed as muse-video (1–10, default 5s when omitted) or muse-video-20s through muse-video-60s"
+            "description": "omni-10s: fixed 10; seedance2.0-md: 5/10/15; sd2-*-ac: 4–15; sd2-720p-dl: fixed 15; sd2-720p-db: 5/10/15; sd2.0-mini-720p: 4–15; sd2.5-480p / sd2.5-720p / sd2.5-1080p: 5–30; seedance2.5-30s: fixed 30; sd2.5-720p-ac, sd2.5-flash-ac, and sd2.5-720p-933-ac: 4–30; wan3-480p / wan3-720p: 5–30; wan3-1080p: 10–30; wan3.0-prime-720p: 10–30; wan3.0-prime-1080p: 8–30; Muse Video: 1–60, billed as muse-video (1–10, default 5s when omitted) or muse-video-20s through muse-video-60s"
           },
           "seconds": {
             "oneOf": [
