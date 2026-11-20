@@ -11,7 +11,7 @@ Create a **Wan 3** video asynchronously. Use `POST /v1/videos` with a billing ke
 | --- | --- | --- | --- | --- |
 | `wan3-480p` | Billing key: 480p | **5–30** seconds | `480p` | 10 images / 5 videos / 5 audios |
 | `wan3-720p` | Billing key: 720p | **5–30** seconds | `720p` | 10 images / 5 videos / 5 audios |
-| `wan3-1080p` | Billing key: 1080p | **10–30** seconds | `1080p` | 9 images / 3 videos / 3 audios |
+| `wan3-1080p` | Billing key: 1080p | **5–30** seconds | `1080p` | 10 images / 5 videos / 5 audios |
 
 Billing mode is `per_second`. Cost = the resolution unit price × requested seconds. Live prices come from the [model catalog](/en/api-reference/common/model-catalog) and the `cost` field on the response.
 
@@ -28,11 +28,11 @@ First and last frames are not supported.
 
 ## Reference limits
 
-| Type | `wan3-480p` / `wan3-720p` | `wan3-1080p` |
-| --- | --- | --- |
-| Images | **10** | **9** |
-| Videos | **5** | **3** |
-| Audio | **5** | **3** |
+| Type | Limit |
+| --- | --- |
+| Images | **10** |
+| Videos | **5** |
+| Audio | **5** |
 
 Reference files must be public URLs.
 
@@ -42,12 +42,12 @@ Reference files must be public URLs.
 | --- | --- | --- | --- |
 | `model` | string | yes | `wan3-480p` / `wan3-720p` / `wan3-1080p`. `wan3` plus `resolution` also works |
 | `prompt` | string | yes | 1–10000 characters |
-| `duration` / `seconds` | int \| string | no | **5–30** for `wan3-480p` and `wan3-720p` (default **15**); **10–30** for `wan3-1080p` (default **10**). Strings such as `"15"` are accepted |
+| `duration` / `seconds` | int \| string | no | **5–30**. Omitted duration defaults to **15**. Strings such as `"15"` are accepted |
 | `aspect_ratio` / `ratio` | string | no | `16:9`, `9:16`, `4:3`, `3:4`, `1:1`. Default `16:9` |
 | `resolution` | string | no | `480p`, `720p`, or `1080p`. When the billing key already includes a resolution, omit this or send the same value |
-| `images` / `reference_images` | string[] | no | Image URLs. Up to **10** for `wan3-480p` / `wan3-720p`, **9** for `wan3-1080p` |
-| `videos` / `reference_videos` | string[] | no | Video URLs. Up to **5** for `wan3-480p` / `wan3-720p`, **3** for `wan3-1080p` |
-| `audios` / `reference_audios` | string[] | no | Audio URLs. Up to **5** for `wan3-480p` / `wan3-720p`, **3** for `wan3-1080p` |
+| `images` / `reference_images` | string[] | no | Image URLs. Up to **10** |
+| `videos` / `reference_videos` | string[] | no | Video URLs. Up to **5** |
+| `audios` / `reference_audios` | string[] | no | Audio URLs. Up to **5** |
 | `smart_queue` | bool | no | Default `false`. When `true`, a model with a low recent success rate stays `queued` until it recovers (about 2 hours at most). See [Smart queue](/en/api-reference/common/smart-queue) |
 
 ## Examples

@@ -733,7 +733,7 @@
                 "type": "string"
               }
             ],
-            "description": "omni-10s：固定 10；seedance2.0-md：5/10/15；sd2-*-ac：4–15；sd2-720p-dl：固定 15；sd2-720p-db：5/10/15；sd2.0-mini-720p：4–15；sd2.5-480p / sd2.5-720p / sd2.5-1080p：5–30；seedance2.5-30s：固定 30；sd2.5-720p-ac、sd2.5-flash-ac、sd2.5-720p-933-ac：4–30；wan3-480p / wan3-720p：5–30；wan3-1080p：10–30；wan3.0-prime-720p：10–30；wan3.0-prime-1080p：8–30；Muse Video：1–60，按时长落到 muse-video（1–10，省略时 5 秒）或 muse-video-20s … muse-video-60s"
+            "description": "omni-10s：固定 10；seedance2.0-md：5/10/15；sd2-*-ac：4–15；sd2-720p-dl：固定 15；sd2-720p-db：5/10/15；sd2.0-mini-720p：4–15；sd2.5-480p / sd2.5-720p / sd2.5-1080p：5–30；seedance2.5-30s：固定 30；sd2.5-720p-ac、sd2.5-flash-ac、sd2.5-720p-933-ac：4–30；wan3-480p / wan3-720p / wan3-1080p：5–30；wan3.0-prime-720p：10–30；wan3.0-prime-1080p：8–30；Muse Video：1–60，按时长落到 muse-video（1–10，省略时 5 秒）或 muse-video-20s … muse-video-60s"
           },
           "seconds": {
             "oneOf": [
