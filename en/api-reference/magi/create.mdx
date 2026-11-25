@@ -1,0 +1,103 @@
+---
+title: 'Create a MAGI-2 video'
+openapi: 'POST /v1/videos'
+---
+
+Create a **MAGI-2** video asynchronously. Use `POST /v1/videos` with a billing key: `magi-2-480p-ac`, `magi-2-720p-ac`, or `magi-2-1080p-ac`. On success you get a `task_id`. Poll [Query video task](/en/api-reference/common/query) and read `result.video_url` when the task completes.
+
+## Models
+
+| `model` | Notes | Duration | Resolution | References |
+| --- | --- | --- | --- | --- |
+| `magi-2-480p-ac` | Billing key: 480p | **4–30** seconds | `480p` | 10 images / 5 videos / 3 audios |
+| `magi-2-720p-ac` | Billing key: 720p | **4–30** seconds | `720p` | 10 images / 5 videos / 3 audios |
+| `magi-2-1080p-ac` | Billing key: 1080p | **4–30** seconds | `1080p` | 10 images / 5 videos / 3 audios |
+
+Billing is `per_task`. The charge is the unit price for that resolution. Duration does not multiply the price. Live prices come from the [model catalog](/en/api-reference/common/model-catalog) and the `cost` field on the response.
+
+`model: "magi-2-ac"` or `model: "magi-2"` selects the tier with `resolution` (`480p` / `720p` / `1080p`, default `1080p`). The stored task `model` is the billing key. `MAGI-2` is the same as `magi-2`.
+
+Output has no watermark and includes native stereo audio.
+
+## Input modes
+
+| Mode | How to call |
+| --- | --- |
+| Text to video | Omit `images` / `videos` / `audios`, or send empty arrays |
+| Reference | Send reference images, videos, and/or audios |
+
+This endpoint does not accept first-frame or last-frame fields.
+
+## Reference limits
+
+| Type | Limit |
+| --- | --- |
+| Images | **10** |
+| Videos | **5** (each 2–30 seconds, combined length at most 30 seconds) |
+| Audios | **3** (each 2–30 seconds, combined length at most 30 seconds) |
+
+Reference files must be public URLs.
+
+## Request fields
+
+| Field | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `model` | string | yes | `magi-2-480p-ac` / `magi-2-720p-ac` / `magi-2-1080p-ac`. `magi-2-ac` or `magi-2` plus `resolution` also works |
+| `prompt` | string | yes | 1–20000 characters |
+| `duration` / `seconds` | int \| string | no | **4–30** seconds. Defaults to **5**. A string such as `"5"` is accepted |
+| `aspect_ratio` / `ratio` | string | no | `16:9`, `9:16`, `4:3`, `3:4`, `1:1`, `21:9`. Default `16:9` |
+| `resolution` | string | no | `480p`, `720p`, or `1080p`. Must match the billing key when the key already includes a resolution |
+| `images` / `reference_images` | string[] | no | Up to **10** image URLs |
+| `videos` / `reference_videos` | string[] | no | Up to **5** video URLs |
+| `audios` / `reference_audios` | string[] | no | Up to **3** audio URLs |
+| `smart_queue` | bool | no | Default `false`. When `true`, a very low recent success rate keeps the task `queued` until recovery (up to about 2 hours). See [Smart queue](/en/api-reference/common/smart-queue) |
+
+## Examples
+
+### Text to video
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "magi-2-1080p-ac",
+    "prompt": "A cinematic aerial of a coastal sunset, slow push-in, fine light",
+    "aspect_ratio": "16:9",
+    "duration": 5
+  }'
+```
+
+### 480p
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "magi-2-480p-ac",
+    "prompt": "A cat running across grass, tracking shot",
+    "aspect_ratio": "16:9",
+    "duration": 5
+  }'
+```
+
+### 21:9 with a reference image
+
+```bash
+curl -X POST 'https://sigrunai.com/v1/videos' \
+  -H 'Authorization: Bearer sk_xxx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "magi-2-ac",
+    "prompt": "The person in the reference image walks down a rainy street",
+    "resolution": "720p",
+    "aspect_ratio": "21:9",
+    "duration": 8,
+    "images": ["https://example.com/person.jpg"]
+  }'
+```
+
+## Response
+
+A successful create returns the shared task object (`task_id`, `status`, `cost`, and so on). `data.model` is the billing key, such as `magi-2-1080p-ac`. When the task completes, read `result.video_url` from the query endpoint.

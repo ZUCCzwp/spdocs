@@ -150,6 +150,12 @@
                 ]
               },
               {
+                "group": "MAGI-2",
+                "pages": [
+                  "en/api-reference/magi/create"
+                ]
+              },
+              {
                 "group": "Wan 3",
                 "pages": [
                   "en/api-reference/wan/create",
@@ -315,6 +321,12 @@
                 "group": "Kling 4.0",
                 "pages": [
                   "zh/api-reference/kling40/create"
+                ]
+              },
+              {
+                "group": "MAGI-2",
+                "pages": [
+                  "zh/api-reference/magi/create"
                 ]
               },
               {
