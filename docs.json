@@ -153,6 +153,7 @@
                 "group": "Wan 3",
                 "pages": [
                   "en/api-reference/wan/create",
+                  "en/api-reference/wan/create-ac",
                   "en/api-reference/wan/create-prime"
                 ]
               },
@@ -320,6 +321,7 @@
                 "group": "Wan 3",
                 "pages": [
                   "zh/api-reference/wan/create",
+                  "zh/api-reference/wan/create-ac",
                   "zh/api-reference/wan/create-prime"
                 ]
               },
